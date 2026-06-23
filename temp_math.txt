@@ -1,0 +1,101 @@
+    "requirements": "FORCE RÉGULIÈRE: 12e année ayant les mathématiques avancées (niveau 10), ou Secondaire V (Québec) avec les mathématiques 426 ou 436 / SN IV/TS IV. Aucune expérience requise.",
+                  "12e année ayant les mathématiques avancées (niveau 10), ou Secondaire V (Québec) avec les mathématiques 426 ou 436 / SN IV/TS IV"
+                  "Certificat de 12e en Mathématiques appliquées ou de Mathématiques 526 / SN V/TS V au Québec"
+                  "Certificat de 10e en Mathématiques appliquées ou de Mathématiques 416 / CST IV au Québec"
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou diplôme de Secondaire V, avec mathématiques 536/SN V/TS V et cours de chimie/physique.",
+                  "o Mathématiques théoriques de 12e année ou mathématiques 536 / SN V/TS V au Quebec; et",
+                  "o Mathématiques appliquées de 11e année ou mathématiques 526 / SN V/TS V au Quebec; et",
+                  "o Mathématiques appliquées de 11e année ou mathématiques 526 / SN V/TS V au Quebec; et",
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaire ou de Secondaire V au Québec, comportant: Mathématiques théoriques de 11e année ou mathématique 536 : SN V/TS V au Québec.",
+                  "o Mathématiques théoriques de 11e année ou mathématique 536 : SN V/TS V au Québec"
+                  "12e année d'études en Ontario ou l'équivalent, avec Mathématiques appliquées (niveau 12) ou Québec (Secondaire V) avec les mathématiques 526 ou 536 SN V/TS V ainsi qu'un cours en physique)"
+                  "10e année d'études en Ontario ou équivalent ayant les mathématiques appliquées ou l'équivalent (p. ex., au Québec, le Secondaire IV avec mathématiques 416 / CST IV est considéré comme étant acceptable)"
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaire ou de Secondaire V au Québec, comportant Mathématiques théoriques de 11e année et cours de physiques de 11e année. Aucune expérience requise.",
+                  "o Mathématiques théoriques de 11e année ou mathématique 536 / SN V/TS V au Québec;",
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou Secondaire V au Québec, comportant: Mathématiques appliquées de 12e année ou Mathématiques 526 SN V/TS V; Cours de physique de 12e année ou du Secondaire V. Aucune expérience requise.",
+                  "o Mathématiques appliquées de 12e année ou Mathématiques 526 SN V/TS V;",
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou diplôme de Secondaire V au Québec, comportant : Mathématiques appliquées de 11e année ou mathématiques 426 / SN IV/TS IV au Québec. Expérience en programmes informatiques. OU Tout Baccalauréat ou Diplôme d'études postsecondaire.",
+                  "o Mathématiques appliquées de 11e année ou mathématiques 426 / SN IV/TS IV au Québec"
+                  "o Mathématiques appliquées de 10e année ou mathématiques 416 / CST IV au Québec"
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou de Secondaire V au Québec, comportant : Math appliquées de 12e année ou Math 526 / SN V/TS V au Québec ; Cour de physique 12e année ou du Secondaire V au Québec. Permis de conduire.",
+                  "o Math appliquées de 12e année ou Math 526 / SN V/TS V au Québec :",
+                  "o Math appliquées de 10e année ou Math 416/CST IV au Québec ;",
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou de Secondaire V au Québec, comportant : Math appliquées de 12e année ou Math 526 / SN V/TS V au Québec ; Cour de physique 12e année ou du Secondaire V au Québec. Permis de conduire.",
+                  "o Math appliquées de 12e année ou Math 526 / SN V/TS V au Québec :",
+                  "o Math appliquées de 10e année ou Math 416/CST IV au Québec ;",
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou de Secondaire V au Québec, comportant : Math appliquées de 12e année ou Math 526 / SN V/TS V au Québec ; Cour de physique 12e année ou du Secondaire V au Québec. Permis de conduire.",
+                  "o Math appliquées de 12e année ou Math 526 / SN V/TS V au Québec :",
+                  "o Math appliquées de 10e année ou Math 416/CST IV au Québec ;",
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou l'équivalent, comportant : Mathématiques appliquées 12e année / Sec V; un cours de physique peu importe le niveau.",
+                  "o Mathématiques appliquées 12e année / Sec V",
+                  "o mathématiques générales du 10e année / Sec IV"
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou l'équivalent comportant : mathématiques appliquées de 12e année / Sec V ; un cours de physique peu importe le niveau.",
+                  "o mathématiques appliquées de 12e année / Sec V",
+                  "o mathématiques appliquées de 10e année / Sec IV"
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires ou équivalent: Mathématiques appliquées de 12e année / Sec V ; Cours de sciences physiques tout niveau.",
+                  "o Mathématiques appliquées de 12e année / Sec V",
+                  "o Mathématiques générales de 10e année / Sec IV"
+                  "o Mathématiques appliquées, 10e année / Sec IV"
+                  "o Douzième année en Mathématiques en milieu de travail ou Mathématiques 514 du Québec"
+                  "o Dixième année en Mathématiques en milieu de travail ou Mathématiques 414/Système d'instruction du Canada (SIC) 4 du Québec"
+          "4. Les diplômes en sciences générales et appliquées doivent comporter un curriculum d'environ 75% de physique et de mathématiques, le reste (25 %) étant axé dans n'importe quel autre domaine.",
+          "4. Un diplôme en sciences générales ou appliquées doit sanctionner environ 75 % d'études en physique, en chimie et en mathématiques, les 25 % restants devant porter sur n'importe quel autre domaine.",
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires avec Mathématiques appliquées de 11e année / Sec IV.",
+                  "o Mathématiques appliquées de 12e année / Sec V"
+                  "o Mathématiques appliquées de 11e année ou Sec IV"
+                  "o mathématiques appliquées 12e année / Sec V",
+                  "o mathématiques générales de 10e année / Sec IV"
+                  "o Mathématiques appliquées de 11e / Sec IV",
+                  "o Mathématiques théoriques de 12e année ou mathématiques 536 / SN V/TS V au Québec, et;",
+                  "o Mathématiques appliquées de 10e année ou Mathématiques 416 / CST IV au Québec"
+                  "o Mathématiques théoriques de 12e année ou mathématiques 536 / SN V/TS V au Québec, et;",
+                  "o Mathématiques appliquées de 10e année ou Mathématiques 416 / CST IV au Québec"
+                  "o Mathématiques théoriques de 12e année ou mathématiques 536 / SN V/TS V au Québec, et;",
+                  "o Mathématiques appliquées de 10e année ou Mathématiques 416 / CST IV au Québec"
+                  "o Mathématiques théoriques de 12e année ou mathématiques 536 / SN V/TS V au Québec, et;",
+                  "o Mathématiques appliquées de 10e année ou Mathématiques 416 / CST IV au Québec"
+                  "o Mathématiques théoriques de 12e année ou mathématiques 536 / SN V/TS V au Québec, et;",
+                  "o Mathématiques appliquées de 10e année ou Mathématiques 416 / CST IV au Québec"
+                  "o Mathématiques théoriques de 12e année ou mathématiques 536 / SN V/TS V au Québec, et;",
+                  "o Mathématiques théoriques de 10e année ou mathématiques 416 /CST IV au Québec"
+                  "o Mathématiques appliquées de 11e année ou Mathématiques 526 / SN V/TS V au Québec;",
+                  "o Math appliquées de 12e année ou Math 526 : SN V/TS V au Québec :",
+                  "o Math appliquées de 10e année ou Math 416 : CST IV au Québec;",
+                  "o Mathématiques appliquées de 11e année ou 426 SN IV/TS IV au Québec;",
+    "requirements": "FORCE RÉGULIÈRE: Diplôme d'études secondaires avec Math 536/SN V/TS V et cours de science.",
+                  "o Math théoriques de 12e année ou Math 536 / SN V/TS V au Québec;",
+                  "o Math appliquées de 10e année ou Math 416 / CST IV au Québec"
+                  "La réussite d'un cours de math académiques de 12e année (math 536 : SN V/TS V au Québec) et d'un cours de physique peu importe le niveau est considérée comme étant un atout"
+                  "La réussite d'un cours de math académiques de 10e année (math 436 : SN IV/TS IV au Québec) ou de math appliquées de 10e année (math 426 : SN IV/TS IV au Québec) et d'un cours de physique peu importe le niveau est considérée comme étant un atout"
+                  "La réussite d'un cours de math académiques de 12e année (math 536 : SN V/TS V au Québec) et d'un cours de physique peu importe le niveau est considérée comme étant un atout"
+                  "La réussite d'un cours de math académiques de 10e année (math 436 : SN IV/TS IV au Québec) ou de math appliquées de 10e année (math 426 : SN IV/TS IV au Québec) et d'un cours de physique peu importe le niveau est considérée comme étant un atout"
+          "4. Un baccalauréat général en sciences doit comporter au moins 75 % de cours en physique, chimie et/ou en mathématiques, le 25 % restant étant axé dans n'importe quel autre domaine.",
+                  "Diplôme d'études secondaires ou l'équivalent, incluant : les mathématiques théoriques de 12e année, math 536 / SN V/TS V au Québec, un cours de physique et un autre cours de science, peu importe le niveau"
+                  "10e année secondaire, Secondaire IV au Québec ou l'équivalent, incluant : les mathématiques théoriques de 10e année, math 436 / SN IV/TS IV au Québec, ou les mathématiques appliquées, math 426 / SN IV/TS IV au Québec",
+                  "o Mathématiques appliquées de la 12e année ou Secondaire V ou math 526 SN V/TS V en Quebec."
+                  "o Mathématiques appliquées de la 11e année ou Secondaire V ou math 426 / SN IV/TS IV en Quebec."
+                  "o Mathématiques appliquées de 12e année ou Mathématiques 526 / SN V/TS V au Québec;",
+                  "o Mathématiques appliquées de 10e année ou Mathématiques 416 / CST IV au Québec;",
+                  "o Mathématiques appliquées de 12e année ou Mathématiques 526 / SN V/TS V au Québec;",
+                  "o Mathématiques appliquées de 10e année ou Mathématiques 416 / CST IV au Québec;",
+                  "o Mathématiques appliquées de 12e année ou Mathématiques 526 / SN V/TS V au Québec",
+                  "o Mathématiques théoriques de 12e année ou Mathématique 536 / SN V/TS V au Quebec;",
+                  "o Mathématiques théorique de 10e année ou Mathématiques 426 / SN IV/TS IV au Quebec;",
+                  "o Mathématiques appliquées de 12e année ou mathématiques 526 / SN V/TS V au Quebec"
+                  "o Mathématiques théorique de 10e année ou Mathématiques 426 / SN IV/TS IV AU Quebec;",
+                  "o Mathématiques appliquées de 12e année ou mathématiques 526 / SN V/TS V au Quebec."
+          "4. Les candidats détenant un CEES doivent également avoir suivi un cours de mathématiques théorique de 10e année (ou mathématiques 426) ou de mathématiques appliquées de 12e année (ou mathématiques 526).",
+                  "o Math appliquées de 12e année ou Math 526 / SN V/TS V du Québec"
+                  "o Math appliquées de 10e année"
+                  "o Math appliquées de 10e année"
+                  "o Math appliquées de 12e année ou Math 526 / SN V/TS V du Québec"
+                  "o Math appliquées de 10e année ou Math 416 / CST IV au Quebec"
+                  "o Math appliquées de 10e année ou math 416 / CST IV au Quebec"
+                  "o Math appliquées de 12e année ou Math 526 / SN V/TS V du Québec; et",
+                  "o Math académiques de 10e année; et",
+                  "o Math académiques de 10e année; et",
+                  "o Math appliquées de 12e année ou Math 526 / SN V/TS V du Québec; et",
+                  "o Math académiques de 10e année ou Math 416 / CST IV du Quebec; et",
+                  "o Math appliquées de 10e année ou math SN V/TS V au Québec"
+                  "o mathématiques appliquées de 10e année / Sec IV"
+                  "o mathématiques appliquées de 10e année / Sec IV"

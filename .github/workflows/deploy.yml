@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # ou master selon le nom de ta branche principale
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22 # Utilise une version récente et stable pour éviter les avertissements
+
+      - name: Installation des dépendances
+        run: npm ci # ou 'npm install' si tu n'as pas de package-lock.json
+
+      - name: Build de l'application Angular
+        # REMPLACE "nom-de-ton-projet" par le vrai nom dans ton package.json
+        # REMPLACE "nom-utilisateur-github" par ton pseudo GitHub
+        run: npx ng build --configuration production --base-href /nom-de-ton-projet/
+
+      - name: Déploiement sur GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/nom-de-ton-projet/browser # Pour les versions récentes d'Angular, le build va souvent dans dist/nom-du-projet/browser
+          branch: gh-pages # La branche où GitHub Pages va lire les fichiers compilés

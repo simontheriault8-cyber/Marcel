@@ -311,9 +311,9 @@ export class RecruitmentDataService {
               labelFr: "Floue / illisible",
               labelEn: "Blurred / Illegible",
               instructionFr:
-                "Le document est floue et illisible. Veuillez prendre une nouvelle photo et la téléverser à nouveau. Assurez vous que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+                "La photo de votre certificat de naissance est trop floue pour être lue. Veuillez reprendre une nouvelle photo en vous assurant que toutes les informations soient visibles et lisibles. Retournez ensuite sur votre portail en ligne pour y téléverser la nouvelle photo.",
               instructionEn:
-                "The document is blurred and illegible. Please take a new photo and upload it again. Ensure the image is sharp, without glare, and all information is clearly visible.",
+                "The photo of your birth certificate is too blurry to be read. Please take a new photo, making sure all information is visible and legible. Then return to your online portal to upload the new photo.",
               logNoteFr: "Cerificat de naissance flou",
             },
             {

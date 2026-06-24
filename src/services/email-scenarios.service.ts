@@ -33,6 +33,7 @@ export class EmailScenariosService {
           <li style="margin-top: 10px;"><strong>OPTION 2 :</strong> Le parent ou le tuteur signataire doit contacter un centre de recrutement des Forces canadiennes durant les heures d'ouverture. Il doit mentionner qu'il appelle afin de confirmer verbalement son consentement parental pour votre dossier.</li>
         </ul>
         <p>En raison du volume élevé de candidatures, nous devons prioriser le traitement des dossiers dont toutes les tâches sont complétées.</p>
+        <p><strong>Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.</strong></p>
         <p>Cordialement,</p>
         <p>L’équipe de recrutement des Forces armées canadiennes<br>
         Centre de recrutement des Forces canadiennes Québec<br>
@@ -45,10 +46,11 @@ export class EmailScenariosService {
         <p>We have conducted a preliminary evaluation of your application documents. <strong>Please note that this email must be reviewed with your parent or legal guardian.</strong></p>
         <p>To complete your file, we must obtain confirmation of parental consent. Without this validation, we cannot legally process your file. Here are the two options available to you:</p>
         <ul>
-          <li><strong>OPTION 1:</strong> Please provide a copy of your "long-form" birth certificate (the one listing parents' names) <strong>as an attachment, by replying directly to this email.</strong></li>
+          <li><strong>OPTION 1:</strong> Please provide a copy of your "long-form" birth certificate (the one listing parents' names) as an attachment, by replying directly to this email.</li>
           <li style="margin-top: 10px;"><strong>OPTION 2:</strong> The signing parent or legal guardian must contact a Canadian Forces Recruiting Centre during business hours. They must state that they are calling to verbally confirm their parental consent for your application.</li>
         </ul>
         <p>Due to the high volume of applications, we must prioritize the processing of files where all tasks are complete.</p>
+        <p><strong>If you do not take any action, your file will be automatically deactivated after 30 days.</strong></p>
         <p>Sincerely,</p>
         <p>The Canadian Armed Forces Recruiting Team<br>
         Canadian Forces Recruiting Centre Quebec<br>
@@ -71,6 +73,8 @@ Nous avons procédé à l'évaluation préliminaire de vos documents de candidat
 
 En raison du volume élevé de candidatures, nous devons prioriser le traitement des dossiers dont toutes les tâches sont complétées.
 
+Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.
+
 Cordialement,
 
 L’équipe de recrutement des Forces armées canadiennes
@@ -91,6 +95,8 @@ To complete your file, we must obtain confirmation of parental consent. Without 
 • OPTION 2: The signing parent or legal guardian must contact a Canadian Forces Recruiting Centre during business hours. They must state that they are calling to verbally confirm their parental consent for your application.
 
 Due to the high volume of applications, we must prioritize the processing of files where all tasks are complete.
+
+If you do not take any action, your file will be automatically deactivated after 30 days.
 
 Sincerely,
 
@@ -116,6 +122,7 @@ Help Centre | Canadian Armed Forces`;
         <p>Veuillez noter que nous attendons que vous complétiez ces tâches avant de pouvoir continuer le traitement de votre dossier.</p>
         <p>En raison du volume élevé de candidatures, nous devons prioriser le traitement des dossiers dont toutes les tâches sont complétées.</p>
         <p>Rendez-vous sur votre portail pour les compléter : <a href="https://www.cafoap-pclfac.forces.gc.ca/">https://www.cafoap-pclfac.forces.gc.ca/</a></p>
+        <p><strong>Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.</strong></p>
         <p>Cordialement,</p>
         <p>L’équipe de recrutement des Forces armées canadiennes<br>
         Centre de recrutement des Forces canadiennes Québec<br>
@@ -129,6 +136,7 @@ Help Centre | Canadian Armed Forces`;
         <p>Please note that we are waiting for you to complete these tasks before we can continue processing your file.</p>
         <p>Due to the high volume of applications, we must prioritize the processing of files where all tasks are complete.</p>
         <p>Please log in to your portal to complete them: <a href="https://www.cafoap-pclfac.forces.gc.ca/">https://www.cafoap-pclfac.forces.gc.ca/</a></p>
+        <p><strong>If you do not take any action, your file will be automatically deactivated after 30 days.</strong></p>
         <p>Sincerely,</p>
         <p>The Canadian Armed Forces Recruiting Team<br>
         Canadian Forces Recruiting Centre Quebec<br>
@@ -149,6 +157,8 @@ En raison du volume élevé de candidatures, nous devons prioriser le traitement
 
 Rendez-vous sur votre portail pour les compléter : https://www.cafoap-pclfac.forces.gc.ca/
 
+Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.
+
 Cordialement,
 
 L’équipe de recrutement des Forces armées canadiennes
@@ -167,6 +177,8 @@ Please note that we are waiting for you to complete these tasks before we can co
 Due to the high volume of applications, we must prioritize the processing of files where all tasks are complete.
 
 Please log in to your portal to complete them: https://www.cafoap-pclfac.forces.gc.ca/
+
+If you do not take any action, your file will be automatically deactivated after 30 days.
 
 Sincerely,
 
@@ -206,6 +218,7 @@ Help Centre | Canadian Armed Forces`;
         <p>Pour le moment vous ne répondez pas au critère d’entré académique minimum. Par conséquent, nous devons malheureusement procéder à la fermeture de votre dossier de candidature.</p>
         <p>Si vous répondez à ces critères un jour, vous devez appeler un centre de recrutement pour poursuivre votre demande d’enrôlement.</p>
         <p>Nous vous remercions de votre intérêt envers les Forces armées canadiennes et vous souhaitons du succès dans vos projets futurs.</p>
+        <p><strong>Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.</strong></p>
         <p>Cordialement,</p>
         <p>L’équipe de recrutement des Forces armées canadiennes<br>
         Centre de recrutement des Forces canadiennes Québec<br>
@@ -233,6 +246,7 @@ Help Centre | Canadian Armed Forces`;
         <p>At the moment you do not meet the minimum academic entry requirement. Therefore, we must unfortunately close your application file.</p>
         <p>If you meet these criteria in the future, you must contact a recruiting centre to pursue your enrollment application.</p>
         <p>We thank you for your interest in the Canadian Armed Forces and wish you success in your future endeavors.</p>
+        <p><strong>If you do not take any action, your file will be automatically deactivated after 30 days.</strong></p>
         <p>Sincerely,</p>
         <p>The Canadian Armed Forces Recruiting Team<br>
         Canadian Forces Recruiting Centre Quebec<br>
@@ -268,6 +282,8 @@ Si vous répondez à ces critères un jour, vous devez appeler un centre de recr
 
 Nous vous remercions de votre intérêt envers les Forces armées canadiennes et vous souhaitons du succès dans vos projets futurs.
 
+Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.
+
 Cordialement,
 
 L’équipe de recrutement des Forces armées canadiennes
@@ -301,6 +317,8 @@ At the moment you do not meet the minimum academic entry requirement. Therefore,
 If you meet these criteria in the future, you must contact a recruiting centre to pursue your enrollment application.
 
 We thank you for your interest in the Canadian Armed Forces and wish you success in your future endeavors.
+
+If you do not take any action, your file will be automatically deactivated after 30 days.
 
 Sincerely,
 

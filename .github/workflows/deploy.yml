@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # C'est le chemin de sortie généré par le nouveau builder Angular (application)
-          path: ./dist/outil-d-aide-au-recrutement-fac/browser
+          path: ./dist
 
   deploy:
     environment:

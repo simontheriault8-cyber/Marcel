@@ -31,7 +31,7 @@ export interface JobEntry {
 export const JOBS_DATA: JobEntry[] = [
   {
     id: "00003",
-    title: "MILITAIRE DU RANG",
+    title: "SANS MÉTIER",
     titleEn: "NON-COMMISSIONED MEMBER",
     abbreviation: "MIL RANG",
     requirements:

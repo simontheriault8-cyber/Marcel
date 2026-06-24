@@ -273,6 +273,9 @@ interface JobRule {
                 <div class="relative">
                   <div
                     class="flex items-center border border-slate-300 rounded-lg bg-white shadow-xs focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500"
+                    [class.opacity-50]="isFieldDisabled(1)"
+                    [class.bg-slate-100]="isFieldDisabled(1)"
+                    [class.cursor-not-allowed]="isFieldDisabled(1)"
                   >
                     <input
                       type="text"
@@ -280,11 +283,13 @@ interface JobRule {
                       (ngModelChange)="onQueryChange(1, $event)"
                       (focus)="openDropdown(1)"
                       (blur)="closeDropdownDelayed(1)"
+                      [disabled]="isFieldDisabled(1)"
                       class="w-full px-3 py-2 text-sm outline-none bg-transparent"
+                      [class.cursor-not-allowed]="isFieldDisabled(1)"
                       placeholder="Rechercher..."
                     />
                     <button
-                      *ngIf="!dropdownOpen1()"
+                      *ngIf="!dropdownOpen1() && !isFieldDisabled(1)"
                       class="p-1 px-2 text-slate-400"
                       (click)="openDropdown(1)"
                     >
@@ -303,7 +308,7 @@ interface JobRule {
                       </svg>
                     </button>
                     <button
-                      *ngIf="dropdownOpen1()"
+                      *ngIf="dropdownOpen1() && !isFieldDisabled(1)"
                       class="p-1 px-2 text-slate-400"
                     >
                       <svg
@@ -377,105 +382,107 @@ interface JobRule {
                         {{ s1.job.title }}
                       </p>
 
-                      <div class="space-y-1 text-[11px] text-slate-600">
-                        <!-- Age detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="s1.isAgeAdmissible"
-                            [class.text-rose-600]="!s1.isAgeAdmissible"
-                          >
-                            {{ s1.isAgeAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Âge : </span>
-                            @if (age() === null || age()! <= 0) {
-                              <span class="italic text-slate-500"
-                                >Non renseigné (Contrat :
-                                {{ s1.durationYears }} ans - âge max:
-                                {{ 60 - s1.durationYears }} ans)</span
-                              >
-                            } @else {
-                              <span
-                                >{{ age() }} ans.
-                                @if (!s1.isAgeAdmissible) {
-                                  {{ s1.ageReason }}
+                      @if (s1.job.id !== '00003') {
+                        <div class="space-y-1 text-[11px] text-slate-600">
+                          <!-- Age detail -->
+                          <div class="flex items-start gap-1">
+                            <span
+                              class="font-bold"
+                              [class.text-emerald-600]="s1.isAgeAdmissible"
+                              [class.text-rose-600]="!s1.isAgeAdmissible"
+                            >
+                              {{ s1.isAgeAdmissible ? "✓" : "✗" }}
+                            </span>
+                            <div>
+                              <span class="font-semibold">Âge : </span>
+                              @if (age() === null || age()! <= 0) {
+                                <span class="italic text-slate-500"
+                                  >Non renseigné (Contrat :
+                                  {{ s1.durationYears }} ans - âge max:
+                                  {{ 60 - s1.durationYears }} ans)</span
+                                >
+                              } @else {
+                                <span
+                                  >{{ age() }} ans.
+                                  @if (!s1.isAgeAdmissible) {
+                                    {{ s1.ageReason }}
+                                  } @else {
+                                    OK (Contrat {{ s1.durationYears }} ans).
+                                  }
+                                </span>
+                              }
+                            </div>
+                          </div>
+
+                          <!-- Citizenship detail -->
+                          <div class="flex items-start gap-1">
+                            <span
+                              class="font-bold"
+                              [class.text-emerald-600]="
+                                s1.isCitizenshipAdmissible
+                              "
+                              [class.text-rose-600]="!s1.isCitizenshipAdmissible"
+                            >
+                              {{ s1.isCitizenshipAdmissible ? "✓" : "✗" }}
+                            </span>
+                            <div>
+                              <span class="font-semibold">Statut : </span>
+                              <span>
+                                @if (citizenship() === "Canadian Citizen") {
+                                  Citoyen canadien (OK).
+                                } @else if (citizenship() === "PR > 3 years") {
+                                  R.P. > 3 ans.
+                                  @if (!s1.isCitizenshipAdmissible) {
+                                    {{ s1.citizenshipReason }}
+                                  } @else {
+                                    OK.
+                                  }
                                 } @else {
-                                  OK (Contrat {{ s1.durationYears }} ans).
+                                  R.P. < 3 ans (Inadmissible).
                                 }
                               </span>
-                            }
+                            </div>
                           </div>
-                        </div>
 
-                        <!-- Citizenship detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="
-                              s1.isCitizenshipAdmissible
-                            "
-                            [class.text-rose-600]="!s1.isCitizenshipAdmissible"
-                          >
-                            {{ s1.isCitizenshipAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Statut : </span>
-                            <span>
-                              @if (citizenship() === "Canadian Citizen") {
-                                Citoyen canadien (OK).
-                              } @else if (citizenship() === "PR > 3 years") {
-                                R.P. > 3 ans.
-                                @if (!s1.isCitizenshipAdmissible) {
-                                  {{ s1.citizenshipReason }}
-                                } @else {
-                                  OK.
-                                }
-                              } @else {
-                                R.P. < 3 ans (Inadmissible).
-                              }
-                            </span>
-                          </div>
-                        </div>
-
-                        <!-- Qualifications detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="s1.isEducationAdmissible"
-                            [class.text-rose-600]="!s1.isEducationAdmissible"
-                          >
-                            {{ s1.isEducationAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Scolarité : </span>
+                          <!-- Qualifications detail -->
+                          <div class="flex items-start gap-1">
                             <span
-                              [class.text-rose-700]="!s1.isEducationAdmissible"
-                              [class.text-emerald-700]="
-                                s1.isEducationAdmissible
-                              "
+                              class="font-bold"
+                              [class.text-emerald-600]="s1.isEducationAdmissible"
+                              [class.text-rose-600]="!s1.isEducationAdmissible"
                             >
-                              {{
-                                s1.isEducationAdmissible
-                                  ? "Scolarité/expérience rencontrée (OK)."
-                                  : "Scolarité/expérience non rencontrée."
-                              }}
+                              {{ s1.isEducationAdmissible ? "✓" : "✗" }}
                             </span>
+                            <div>
+                              <span class="font-semibold">Scolarité : </span>
+                              <span
+                                [class.text-rose-700]="!s1.isEducationAdmissible"
+                                [class.text-emerald-700]="
+                                  s1.isEducationAdmissible
+                                "
+                              >
+                                {{
+                                  s1.isEducationAdmissible
+                                    ? "Scolarité/expérience rencontrée (OK)."
+                                    : "Scolarité/expérience non rencontrée."
+                                }}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <!-- SIP Status Warning -->
-                      @if (s1.isJobClosed) {
-                        <div
-                          class="mt-2 p-1.5 bg-red-100 text-red-800 rounded border border-red-200 flex items-start gap-1.5 font-semibold text-[10px] leading-tight"
-                        >
-                          <span>⚠</span>
-                          <div>
-                            Ce métier est présentement FERMÉ dans le SIP
-                            (aucune vacance).
+                        <!-- SIP Status Warning -->
+                        @if (s1.isJobClosed) {
+                          <div
+                            class="mt-2 p-1.5 bg-red-100 text-red-800 rounded border border-red-200 flex items-start gap-1.5 font-semibold text-[10px] leading-tight"
+                          >
+                            <span>⚠</span>
+                            <div>
+                              Ce métier est présentement FERMÉ dans le SIP
+                              (aucune vacance).
+                            </div>
                           </div>
-                        </div>
+                        }
                       }
                     </div>
                   }
@@ -516,6 +523,9 @@ interface JobRule {
                 <div class="relative">
                   <div
                     class="flex items-center border border-slate-300 rounded-lg bg-white shadow-xs focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500"
+                    [class.opacity-50]="isFieldDisabled(2)"
+                    [class.bg-slate-100]="isFieldDisabled(2)"
+                    [class.cursor-not-allowed]="isFieldDisabled(2)"
                   >
                     <input
                       type="text"
@@ -523,11 +533,13 @@ interface JobRule {
                       (ngModelChange)="onQueryChange(2, $event)"
                       (focus)="openDropdown(2)"
                       (blur)="closeDropdownDelayed(2)"
+                      [disabled]="isFieldDisabled(2)"
                       class="w-full px-3 py-2 text-sm outline-none bg-transparent"
+                      [class.cursor-not-allowed]="isFieldDisabled(2)"
                       placeholder="Rechercher..."
                     />
                     <button
-                      *ngIf="!dropdownOpen2()"
+                      *ngIf="!dropdownOpen2() && !isFieldDisabled(2)"
                       class="p-1 px-2 text-slate-400"
                       (click)="openDropdown(2)"
                     >
@@ -546,7 +558,7 @@ interface JobRule {
                       </svg>
                     </button>
                     <button
-                      *ngIf="dropdownOpen2()"
+                      *ngIf="dropdownOpen2() && !isFieldDisabled(2)"
                       class="p-1 px-2 text-slate-400"
                     >
                       <svg
@@ -620,105 +632,107 @@ interface JobRule {
                         {{ s2.job.title }}
                       </p>
 
-                      <div class="space-y-1 text-[11px] text-slate-600">
-                        <!-- Age detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="s2.isAgeAdmissible"
-                            [class.text-rose-600]="!s2.isAgeAdmissible"
-                          >
-                            {{ s2.isAgeAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Âge : </span>
-                            @if (age() === null || age()! <= 0) {
-                              <span class="italic text-slate-500"
-                                >Non renseigné (Contrat :
-                                {{ s2.durationYears }} ans - âge max:
-                                {{ 60 - s2.durationYears }} ans)</span
-                              >
-                            } @else {
-                              <span
-                                >{{ age() }} ans.
-                                @if (!s2.isAgeAdmissible) {
-                                  {{ s2.ageReason }}
+                      @if (s2.job.id !== '00003') {
+                        <div class="space-y-1 text-[11px] text-slate-600">
+                          <!-- Age detail -->
+                          <div class="flex items-start gap-1">
+                            <span
+                              class="font-bold"
+                              [class.text-emerald-600]="s2.isAgeAdmissible"
+                              [class.text-rose-600]="!s2.isAgeAdmissible"
+                            >
+                              {{ s2.isAgeAdmissible ? "✓" : "✗" }}
+                            </span>
+                            <div>
+                              <span class="font-semibold">Âge : </span>
+                              @if (age() === null || age()! <= 0) {
+                                <span class="italic text-slate-500"
+                                  >Non renseigné (Contrat :
+                                  {{ s2.durationYears }} ans - âge max:
+                                  {{ 60 - s2.durationYears }} ans)</span
+                                >
+                              } @else {
+                                <span
+                                  >{{ age() }} ans.
+                                  @if (!s2.isAgeAdmissible) {
+                                    {{ s2.ageReason }}
+                                  } @else {
+                                    OK (Contrat {{ s2.durationYears }} ans).
+                                  }
+                                </span>
+                              }
+                            </div>
+                          </div>
+
+                          <!-- Citizenship detail -->
+                          <div class="flex items-start gap-1">
+                            <span
+                              class="font-bold"
+                              [class.text-emerald-600]="
+                                s2.isCitizenshipAdmissible
+                              "
+                              [class.text-rose-600]="!s2.isCitizenshipAdmissible"
+                            >
+                              {{ s2.isCitizenshipAdmissible ? "✓" : "✗" }}
+                            </span>
+                            <div>
+                              <span class="font-semibold">Statut : </span>
+                              <span>
+                                @if (citizenship() === "Canadian Citizen") {
+                                  Citoyen canadien (OK).
+                                } @else if (citizenship() === "PR > 3 years") {
+                                  R.P. > 3 ans.
+                                  @if (!s2.isCitizenshipAdmissible) {
+                                    {{ s2.citizenshipReason }}
+                                  } @else {
+                                    OK.
+                                  }
                                 } @else {
-                                  OK (Contrat {{ s2.durationYears }} ans).
+                                  R.P. < 3 ans (Inadmissible).
                                 }
                               </span>
-                            }
+                            </div>
                           </div>
-                        </div>
 
-                        <!-- Citizenship detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="
-                              s2.isCitizenshipAdmissible
-                            "
-                            [class.text-rose-600]="!s2.isCitizenshipAdmissible"
-                          >
-                            {{ s2.isCitizenshipAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Statut : </span>
-                            <span>
-                              @if (citizenship() === "Canadian Citizen") {
-                                Citoyen canadien (OK).
-                              } @else if (citizenship() === "PR > 3 years") {
-                                R.P. > 3 ans.
-                                @if (!s2.isCitizenshipAdmissible) {
-                                  {{ s2.citizenshipReason }}
-                                } @else {
-                                  OK.
-                                }
-                              } @else {
-                                R.P. < 3 ans (Inadmissible).
-                              }
-                            </span>
-                          </div>
-                        </div>
-
-                        <!-- Qualifications detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="s2.isEducationAdmissible"
-                            [class.text-rose-600]="!s2.isEducationAdmissible"
-                          >
-                            {{ s2.isEducationAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Scolarité : </span>
+                          <!-- Qualifications detail -->
+                          <div class="flex items-start gap-1">
                             <span
-                              [class.text-rose-700]="!s2.isEducationAdmissible"
-                              [class.text-emerald-700]="
-                                s2.isEducationAdmissible
-                              "
+                              class="font-bold"
+                              [class.text-emerald-600]="s2.isEducationAdmissible"
+                              [class.text-rose-600]="!s2.isEducationAdmissible"
                             >
-                              {{
-                                s2.isEducationAdmissible
-                                  ? "Scolarité/expérience rencontrée (OK)."
-                                  : "Scolarité/expérience non rencontrée."
-                              }}
+                              {{ s2.isEducationAdmissible ? "✓" : "✗" }}
                             </span>
+                            <div>
+                              <span class="font-semibold">Scolarité : </span>
+                              <span
+                                [class.text-rose-700]="!s2.isEducationAdmissible"
+                                [class.text-emerald-700]="
+                                  s2.isEducationAdmissible
+                                "
+                              >
+                                {{
+                                  s2.isEducationAdmissible
+                                    ? "Scolarité/expérience rencontrée (OK)."
+                                    : "Scolarité/expérience non rencontrée."
+                                }}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <!-- SIP Status Warning -->
-                      @if (s2.isJobClosed) {
-                        <div
-                          class="mt-2 p-1.5 bg-red-100 text-red-800 rounded border border-red-200 flex items-start gap-1.5 font-semibold text-[10px] leading-tight"
-                        >
-                          <span>⚠</span>
-                          <div>
-                            Ce métier est présentement FERMÉ dans le SIP
-                            (aucune vacance).
+                        <!-- SIP Status Warning -->
+                        @if (s2.isJobClosed) {
+                          <div
+                            class="mt-2 p-1.5 bg-red-100 text-red-800 rounded border border-red-200 flex items-start gap-1.5 font-semibold text-[10px] leading-tight"
+                          >
+                            <span>⚠</span>
+                            <div>
+                              Ce métier est présentement FERMÉ dans le SIP
+                              (aucune vacance).
+                            </div>
                           </div>
-                        </div>
+                        }
                       }
                     </div>
                   }
@@ -759,6 +773,9 @@ interface JobRule {
                 <div class="relative">
                   <div
                     class="flex items-center border border-slate-300 rounded-lg bg-white shadow-xs focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500"
+                    [class.opacity-50]="isFieldDisabled(3)"
+                    [class.bg-slate-100]="isFieldDisabled(3)"
+                    [class.cursor-not-allowed]="isFieldDisabled(3)"
                   >
                     <input
                       type="text"
@@ -766,11 +783,13 @@ interface JobRule {
                       (ngModelChange)="onQueryChange(3, $event)"
                       (focus)="openDropdown(3)"
                       (blur)="closeDropdownDelayed(3)"
+                      [disabled]="isFieldDisabled(3)"
                       class="w-full px-3 py-2 text-sm outline-none bg-transparent"
+                      [class.cursor-not-allowed]="isFieldDisabled(3)"
                       placeholder="Rechercher..."
                     />
                     <button
-                      *ngIf="!dropdownOpen3()"
+                      *ngIf="!dropdownOpen3() && !isFieldDisabled(3)"
                       class="p-1 px-2 text-slate-400"
                       (click)="openDropdown(3)"
                     >
@@ -789,7 +808,7 @@ interface JobRule {
                       </svg>
                     </button>
                     <button
-                      *ngIf="dropdownOpen3()"
+                      *ngIf="dropdownOpen3() && !isFieldDisabled(3)"
                       class="p-1 px-2 text-slate-400"
                     >
                       <svg
@@ -863,105 +882,107 @@ interface JobRule {
                         {{ s3.job.title }}
                       </p>
 
-                      <div class="space-y-1 text-[11px] text-slate-600">
-                        <!-- Age detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="s3.isAgeAdmissible"
-                            [class.text-rose-600]="!s3.isAgeAdmissible"
-                          >
-                            {{ s3.isAgeAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Âge : </span>
-                            @if (age() === null || age()! <= 0) {
-                              <span class="italic text-slate-500"
-                                >Non renseigné (Contrat :
-                                {{ s3.durationYears }} ans - âge max:
-                                {{ 60 - s3.durationYears }} ans)</span
-                              >
-                            } @else {
-                              <span
-                                >{{ age() }} ans.
-                                @if (!s3.isAgeAdmissible) {
-                                  {{ s3.ageReason }}
+                      @if (s3.job.id !== '00003') {
+                        <div class="space-y-1 text-[11px] text-slate-600">
+                          <!-- Age detail -->
+                          <div class="flex items-start gap-1">
+                            <span
+                              class="font-bold"
+                              [class.text-emerald-600]="s3.isAgeAdmissible"
+                              [class.text-rose-600]="!s3.isAgeAdmissible"
+                            >
+                              {{ s3.isAgeAdmissible ? "✓" : "✗" }}
+                            </span>
+                            <div>
+                              <span class="font-semibold">Âge : </span>
+                              @if (age() === null || age()! <= 0) {
+                                <span class="italic text-slate-500"
+                                  >Non renseigné (Contrat :
+                                  {{ s3.durationYears }} ans - âge max:
+                                  {{ 60 - s3.durationYears }} ans)</span
+                                >
+                              } @else {
+                                <span
+                                  >{{ age() }} ans.
+                                  @if (!s3.isAgeAdmissible) {
+                                    {{ s3.ageReason }}
+                                  } @else {
+                                    OK (Contrat {{ s3.durationYears }} ans).
+                                  }
+                                </span>
+                              }
+                            </div>
+                          </div>
+
+                          <!-- Citizenship detail -->
+                          <div class="flex items-start gap-1">
+                            <span
+                              class="font-bold"
+                              [class.text-emerald-600]="
+                                s3.isCitizenshipAdmissible
+                              "
+                              [class.text-rose-600]="!s3.isCitizenshipAdmissible"
+                            >
+                              {{ s3.isCitizenshipAdmissible ? "✓" : "✗" }}
+                            </span>
+                            <div>
+                              <span class="font-semibold">Statut : </span>
+                              <span>
+                                @if (citizenship() === "Canadian Citizen") {
+                                  Citoyen canadien (OK).
+                                } @else if (citizenship() === "PR > 3 years") {
+                                  R.P. > 3 ans.
+                                  @if (!s3.isCitizenshipAdmissible) {
+                                    {{ s3.citizenshipReason }}
+                                  } @else {
+                                    OK.
+                                  }
                                 } @else {
-                                  OK (Contrat {{ s3.durationYears }} ans).
+                                  R.P. < 3 ans (Inadmissible).
                                 }
                               </span>
-                            }
+                            </div>
                           </div>
-                        </div>
 
-                        <!-- Citizenship detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="
-                              s3.isCitizenshipAdmissible
-                            "
-                            [class.text-rose-600]="!s3.isCitizenshipAdmissible"
-                          >
-                            {{ s3.isCitizenshipAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Statut : </span>
-                            <span>
-                              @if (citizenship() === "Canadian Citizen") {
-                                Citoyen canadien (OK).
-                              } @else if (citizenship() === "PR > 3 years") {
-                                R.P. > 3 ans.
-                                @if (!s3.isCitizenshipAdmissible) {
-                                  {{ s3.citizenshipReason }}
-                                } @else {
-                                  OK.
-                                }
-                              } @else {
-                                R.P. < 3 ans (Inadmissible).
-                              }
-                            </span>
-                          </div>
-                        </div>
-
-                        <!-- Qualifications detail -->
-                        <div class="flex items-start gap-1">
-                          <span
-                            class="font-bold"
-                            [class.text-emerald-600]="s3.isEducationAdmissible"
-                            [class.text-rose-600]="!s3.isEducationAdmissible"
-                          >
-                            {{ s3.isEducationAdmissible ? "✓" : "✗" }}
-                          </span>
-                          <div>
-                            <span class="font-semibold">Scolarité : </span>
+                          <!-- Qualifications detail -->
+                          <div class="flex items-start gap-1">
                             <span
-                              [class.text-rose-700]="!s3.isEducationAdmissible"
-                              [class.text-emerald-700]="
-                                s3.isEducationAdmissible
-                              "
+                              class="font-bold"
+                              [class.text-emerald-600]="s3.isEducationAdmissible"
+                              [class.text-rose-600]="!s3.isEducationAdmissible"
                             >
-                              {{
-                                s3.isEducationAdmissible
-                                  ? "Scolarité/expérience rencontrée (OK)."
-                                  : "Scolarité/expérience non rencontrée."
-                              }}
+                              {{ s3.isEducationAdmissible ? "✓" : "✗" }}
                             </span>
+                            <div>
+                              <span class="font-semibold">Scolarité : </span>
+                              <span
+                                [class.text-rose-700]="!s3.isEducationAdmissible"
+                                [class.text-emerald-700]="
+                                  s3.isEducationAdmissible
+                                "
+                              >
+                                {{
+                                  s3.isEducationAdmissible
+                                    ? "Scolarité/expérience rencontrée (OK)."
+                                    : "Scolarité/expérience non rencontrée."
+                                }}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <!-- SIP Status Warning -->
-                      @if (s3.isJobClosed) {
-                        <div
-                          class="mt-2 p-1.5 bg-red-100 text-red-800 rounded border border-red-200 flex items-start gap-1.5 font-semibold text-[10px] leading-tight"
-                        >
-                          <span>⚠</span>
-                          <div>
-                            Ce métier est présentement FERMÉ dans le SIP
-                            (aucune vacance).
+                        <!-- SIP Status Warning -->
+                        @if (s3.isJobClosed) {
+                          <div
+                            class="mt-2 p-1.5 bg-red-100 text-red-800 rounded border border-red-200 flex items-start gap-1.5 font-semibold text-[10px] leading-tight"
+                          >
+                            <span>⚠</span>
+                            <div>
+                              Ce métier est présentement FERMÉ dans le SIP
+                              (aucune vacance).
+                            </div>
                           </div>
-                        </div>
+                        }
                       }
                     </div>
                   }
@@ -6134,9 +6155,40 @@ o Médecine d’urgence`,
     );
   }
 
+  isFieldDisabled(index: number): boolean {
+    const id1 = this.selectedDossierJobId1();
+    const id2 = this.selectedDossierJobId2();
+    const id3 = this.selectedDossierJobId3();
+    
+    if (index === 1) return (id2 === "00003" || id3 === "00003");
+    if (index === 2) return (id1 === "00003" || id3 === "00003");
+    if (index === 3) return (id1 === "00003" || id2 === "00003");
+    return false;
+  }
+
   selectDossierJob(index: number, jobId: string) {
     const qb = this.jobService.getAllJobs().find((j) => j.id === jobId);
     if (!qb) return;
+
+    if (jobId === "00003") {
+      if (index === 1) {
+        this.selectedDossierJobId2.set("");
+        this.searchDossierQuery2.set("");
+        this.selectedDossierJobId3.set("");
+        this.searchDossierQuery3.set("");
+      } else if (index === 2) {
+        this.selectedDossierJobId1.set("");
+        this.searchDossierQuery1.set("");
+        this.selectedDossierJobId3.set("");
+        this.searchDossierQuery3.set("");
+      } else if (index === 3) {
+        this.selectedDossierJobId1.set("");
+        this.searchDossierQuery1.set("");
+        this.selectedDossierJobId2.set("");
+        this.searchDossierQuery2.set("");
+      }
+    }
+
     if (index === 1) {
       this.selectedDossierJobId1.set(jobId);
       this.searchDossierQuery1.set(`${qb.id} - ${qb.title}`);
@@ -6183,16 +6235,49 @@ o Médecine d’urgence`,
   }
 
   openDropdown(index: number) {
-    if (index === 1) this.dropdownOpen1.set(true);
-    else if (index === 2) this.dropdownOpen2.set(true);
-    else if (index === 3) this.dropdownOpen3.set(true);
+    if (this.isFieldDisabled(index)) return;
+    if (index === 1) {
+      this.dropdownOpen1.set(true);
+      this.searchDossierQuery1.set("");
+    } else if (index === 2) {
+      this.dropdownOpen2.set(true);
+      this.searchDossierQuery2.set("");
+    } else if (index === 3) {
+      this.dropdownOpen3.set(true);
+      this.searchDossierQuery3.set("");
+    }
   }
 
   closeDropdownDelayed(index: number) {
     setTimeout(() => {
-      if (index === 1) this.dropdownOpen1.set(false);
-      else if (index === 2) this.dropdownOpen2.set(false);
-      else if (index === 3) this.dropdownOpen3.set(false);
+      if (index === 1) {
+        this.dropdownOpen1.set(false);
+        const id = this.selectedDossierJobId1();
+        if (id) {
+          const qb = this.jobService.getAllJobs().find((j) => j.id === id);
+          if (qb) this.searchDossierQuery1.set(`${qb.id} - ${qb.title}`);
+        } else {
+          this.searchDossierQuery1.set("");
+        }
+      } else if (index === 2) {
+        this.dropdownOpen2.set(false);
+        const id = this.selectedDossierJobId2();
+        if (id) {
+          const qb = this.jobService.getAllJobs().find((j) => j.id === id);
+          if (qb) this.searchDossierQuery2.set(`${qb.id} - ${qb.title}`);
+        } else {
+          this.searchDossierQuery2.set("");
+        }
+      } else if (index === 3) {
+        this.dropdownOpen3.set(false);
+        const id = this.selectedDossierJobId3();
+        if (id) {
+          const qb = this.jobService.getAllJobs().find((j) => j.id === id);
+          if (qb) this.searchDossierQuery3.set(`${qb.id} - ${qb.title}`);
+        } else {
+          this.searchDossierQuery3.set("");
+        }
+      }
     }, 200);
   }
 
@@ -6254,6 +6339,7 @@ o Médecine d’urgence`,
 
   isAdmissibleOtherThanEducation(jobId: string): boolean {
     if (!jobId) return false;
+    if (jobId === "00003") return false;
     const job = this.jobService.getAllJobs().find((j) => j.id === jobId);
     if (!job) return false;
 
@@ -6293,6 +6379,21 @@ o Médecine d’urgence`,
     if (!jobId) return null;
     const job = this.jobService.getAllJobs().find((j) => j.id === jobId);
     if (!job) return null;
+
+    if (jobId === "00003") {
+      return {
+        job,
+        isEligible: false,
+        isAgeAdmissible: false,
+        ageReason: "",
+        isCitizenshipAdmissible: false,
+        citizenshipReason: "",
+        isEducationAdmissible: false,
+        educationReason: "",
+        durationYears: 3,
+        isJobClosed: false,
+      };
+    }
 
     const ageVal = this.age();
     const citizenshipVal = this.citizenship();

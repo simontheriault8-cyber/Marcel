@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # ou master selon le nom de ta branche principale
+      - main # Change pour 'master' si ta branche principale s'appelle master
 
 permissions:
   contents: write
@@ -19,18 +19,17 @@ jobs:
       - name: Configuration de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 # Utilise une version récente et stable pour éviter les avertissements
+          node-version: 22
 
-      - name: Installation des dépendances
-        run: npm install --legacy-peer-deps # ou 'npm install' si tu n'as pas de package-lock.json
+      - name: Installation des dépendances (Contournement conflit TypeScript)
+        run: npm install --legacy-peer-deps
 
       - name: Build de l'application Angular
-        # REMPLACE "nom-de-ton-projet" par le vrai nom dans ton package.json
-        # REMPLACE "nom-utilisateur-github" par ton pseudo GitHub
-        run: npx ng build --configuration production --base-href /nom-de-ton-projet/
+        # REMPLACE "simontheriault8-cyber" par ton nom de dépôt (repository) si nécessaire
+        run: npx ng build --configuration production --base-href /simontheriault8-cyber/
 
       - name: Déploiement sur GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/nom-de-ton-projet/browser # Pour les versions récentes d'Angular, le build va souvent dans dist/nom-du-projet/browser
-          branch: gh-pages # La branche où GitHub Pages va lire les fichiers compilés
+          folder: dist/simontheriault8-cyber/browser # Vérifie si ton projet compile bien dans ce sous-dossier browser
+          branch: gh-pages

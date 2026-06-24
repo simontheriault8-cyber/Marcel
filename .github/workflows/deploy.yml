@@ -22,7 +22,7 @@ jobs:
           node-version: 22 # Utilise une version récente et stable pour éviter les avertissements
 
       - name: Installation des dépendances
-        run: npm ci # ou 'npm install' si tu n'as pas de package-lock.json
+        run: npm install --legacy-peer-deps # ou 'npm install' si tu n'as pas de package-lock.json
 
       - name: Build de l'application Angular
         # REMPLACE "nom-de-ton-projet" par le vrai nom dans ton package.json

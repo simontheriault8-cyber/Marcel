@@ -1619,17 +1619,15 @@ export class AppComponent implements OnInit {
       return "Étape 1 (En cours) -Big ACE admissible pour les métiers xxx, xxx, xxx. \nQD complété, admissible. Webinaire CAF 101 à faire, tâche planifiez votre consultation attribuée.";
     }
 
-    const closureNote =
-      " (Le dossier devra être fermé après 30 jours si aucune de ces tâches ne sont complétées.)";
-    const generalClosureNote =
-      " (Le dossier devra être fermé après 30 jours s'il y a encore des tâches attribuées non complétées.)";
+    const closureSuffix =
+      " Postulant averti de la fermeture de son dossier si aucune action n'est prise d'ici 30 jours.";
 
     if (
       this.forceGeneralReminder() &&
       this.selectedRejectionKeys().size === 0
     ) {
       return (
-        "Courriel de rappel de tâches envoyé au postulant." + generalClosureNote
+        "Courriel de rappel de tâches envoyé au postulant." + closureSuffix
       );
     }
 
@@ -1676,21 +1674,31 @@ export class AppComponent implements OnInit {
     const combinedReasons = notes.join(" / ");
     const prefix = "Étape 1 (en cours) - ";
 
+    let noteTxt = "";
+
     // MODIFICATION: Logic for Minor Mode Suffix
     if (this.isUnderAge()) {
-      return `${prefix}${combinedReasons}. En attente de la confirmation du consentement parental pour continuer le Big ACE.${hasNormalReassignment ? closureNote : ""}`;
+      noteTxt = `${prefix}${combinedReasons}. En attente de la confirmation du consentement parental pour continuer le Big ACE.`;
+    } else {
+      // Logic for Main/Adult Mode
+      if (hasNameMismatch) {
+        noteTxt = `${prefix}${combinedReasons}.`;
+      } else {
+        if (hasNormalReassignment) {
+          noteTxt = `${prefix}${combinedReasons}, la/les tâches réattribuées et courriel explicatif envoyé.`;
+        } else {
+          noteTxt = `${prefix}${combinedReasons}.`;
+        }
+      }
     }
 
-    // Logic for Main/Adult Mode
-    let noteTxt = "";
-    if (hasNameMismatch) {
-      noteTxt = `${prefix}${combinedReasons}${hasNormalReassignment ? closureNote : ""}`;
-    } else {
-      if (hasNormalReassignment) {
-        noteTxt = `${prefix}${combinedReasons}, la/les tâches réattribuées et courriel explicatif envoyé.${closureNote}`;
-      } else {
-        noteTxt = `${prefix}${combinedReasons}.`;
+    // Clean up trailing dots and spaces, then append closureSuffix
+    if (noteTxt) {
+      noteTxt = noteTxt.trim();
+      if (noteTxt.endsWith(".")) {
+        noteTxt = noteTxt.slice(0, -1);
       }
+      noteTxt += "." + closureSuffix;
     }
 
     if (this.triageMedicalRequis()) {

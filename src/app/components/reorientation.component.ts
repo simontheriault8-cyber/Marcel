@@ -93,7 +93,7 @@ interface JobRule {
               >
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-              Lier courriel de tâche
+              Lier courriel et note
             </span>
           </label>
         </div>
@@ -7129,7 +7129,70 @@ o Médecine d’urgence`,
       metierRaison = parts.join(", ");
     }
 
-    return `Étape 1 (En cours) - Réorientation nécessaire car : ${metierRaison}, courriel de réo envoyé, en attente de la réponse du postulant. Postulant averti de la fermeture de son dossier si aucune action n'est prise d'ici 30 jours.`;
+    const reoNote = `Étape 1 (En cours) - Réorientation nécessaire car inadmissible pour : ${metierRaison}, courriel de réo envoyé, en attente de la réponse du postulant. Postulant averti de la fermeture de son dossier si aucune action n'est prise d'ici 30 jours.`;
+
+    if (this.sharedState.includeLinkedEmail() && this.sharedState.taskNote()) {
+      const taskNoteRaw = this.sharedState.taskNote();
+
+      // Extrait le message médical s'il est présent
+      let medicalSuffix = "";
+      const medicalMarker = "MÉDICAL - TRIAGE PAR MED CHU REQUIS";
+      if (taskNoteRaw.toUpperCase().includes(medicalMarker)) {
+        medicalSuffix = "\n\nMÉDICAL - TRIAGE PAR MED CHU REQUIS";
+      }
+
+      // Normalise les notes en extrayant le préfixe et le suffixe commun
+      const prefixRegex = /^Étape 1 \((En cours|en cours)\)\s*-\s*/i;
+      const suffixString = "Postulant averti de la fermeture de son dossier si aucune action n'est prise d'ici 30 jours.";
+
+      // Pour la note de tâche
+      let taskHasPrefix = prefixRegex.test(taskNoteRaw);
+      let taskClean = taskNoteRaw.replace(prefixRegex, "").trim();
+      // On retire la partie médicale pour le nettoyage
+      const medicalIndex = taskClean.toUpperCase().indexOf(medicalMarker);
+      if (medicalIndex !== -1) {
+        taskClean = taskClean.substring(0, medicalIndex).trim();
+      }
+      // On retire le suffixe de fermeture de dossier
+      const suffixIndexTask = taskClean.toLowerCase().indexOf(suffixString.toLowerCase());
+      if (suffixIndexTask !== -1) {
+        taskClean = taskClean.substring(0, suffixIndexTask).trim();
+      }
+      if (taskClean.endsWith(".")) {
+        taskClean = taskClean.slice(0, -1).trim();
+      }
+
+      // Pour la note de réorientation
+      let reoHasPrefix = prefixRegex.test(reoNote);
+      let reoClean = reoNote.replace(prefixRegex, "").trim();
+      const suffixIndexReo = reoClean.toLowerCase().indexOf(suffixString.toLowerCase());
+      if (suffixIndexReo !== -1) {
+        reoClean = reoClean.substring(0, suffixIndexReo).trim();
+      }
+      if (reoClean.endsWith(".")) {
+        reoClean = reoClean.slice(0, -1).trim();
+      }
+
+      // Combine les textes principaux
+      let combinedCore = "";
+      if (taskClean && reoClean) {
+        if (taskClean === reoClean) {
+          combinedCore = taskClean;
+        } else {
+          combinedCore = `${taskClean} ET ${reoClean}`;
+        }
+      } else {
+        combinedCore = taskClean || reoClean;
+      }
+
+      // Restaure le préfixe si l'une des deux notes l'avait
+      const hasPrefix = taskHasPrefix || reoHasPrefix;
+      const finalPrefix = hasPrefix ? "Étape 1 (En cours) - " : "";
+
+      return `${finalPrefix}${combinedCore}. ${suffixString}${medicalSuffix}`;
+    }
+
+    return reoNote;
   }
 
   async copyNoteRegistry() {

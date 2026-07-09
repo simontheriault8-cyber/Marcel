@@ -7,6 +7,8 @@ export interface RejectionReason {
   instructionFr: string;
   instructionEn: string;
   logNoteFr: string;
+  linkFr?: string;
+  linkEn?: string;
   isConfirmation?: boolean;
 }
 
@@ -239,8 +241,10 @@ export class RecruitmentDataService {
               labelEn: "Blurred / Illegible",
               instructionFr:
                 "La photo de vous et votre pièce d’identité est floue et illisible. Veuillez prendre une nouvelle photo et la téléverser à nouveau. Assurez vous que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              linkFr: "Voici le lien vers un exemple d'<a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">égoportrait</a> acceptable.",
               instructionEn:
                 "The photo of you and your ID is blurred and illegible. Please take a new photo and upload it again. Ensure the image is sharp, without glare, and all information is clearly visible.",
+              linkEn: "Here is a link to an acceptable example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">selfie</a>.",
               logNoteFr: "Égoportrait (Selfie) avec pièce d’identité flou",
             },
             {
@@ -249,8 +253,10 @@ export class RecruitmentDataService {
               labelEn: "Wrong ID",
               instructionFr:
                 "La pièce d'identité que vous tenez dans vos mains sur la photo ne correspond pas à celle que vous avez téléversée au dossier. Si vous avez soumis un permis de conduire, vous devez tenir ce même permis de conduire sur votre égoportrait (selfie). Veuillez téléverser une nouvelle photo correspondante.",
+              linkFr: "Voici le lien vers un exemple d'<a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">égoportrait</a> acceptable.",
               instructionEn:
                 "The ID held does not match the one submitted to the file. Please upload a new photo of yourself holding the ID submitted to the file.",
+              linkEn: "Here is a link to an acceptable example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">selfie</a>.",
               logNoteFr:
                 "La pièce d'identité utilisée dans l'égoportrait (selfie) n'est pas la bonne",
             },
@@ -260,8 +266,10 @@ export class RecruitmentDataService {
               labelEn: "Missing from file",
               instructionFr:
                 "La photo ne se trouve pas dans votre dossier, veuillez prendre un égoportrait (selfie) avec la pièce d'identité qui est dans votre dossier et téléverser cette photo sur votre portail en ligne. Vous devez tenir la pièce d'identité près de votre visage de façon à ce que votre visage et votre pièce d'identité soit clair et lisible.",
+              linkFr: "Voici le lien vers un exemple d'<a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">égoportrait</a> acceptable.",
               instructionEn:
                 "The document is not in your file. Please take a photo and upload it. Ensure the image is sharp, without glare, and all information is clearly visible.",
+              linkEn: "Here is a link to an acceptable example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">selfie</a>.",
               logNoteFr:
                 "Aucun égoportrait (selfie) avec pièce d'identité au dossier",
             },
@@ -369,8 +377,10 @@ export class RecruitmentDataService {
               labelEn: "Missing page 1",
               instructionFr:
                 "Nous n’avons pas la première page de votre certificat de citoyenneté. Veuillez téléverser une photo de cette page.",
+              linkFr: "Voici un lien vers un exemple de la <a href=\"https://simontheriault8-cyber.github.io/Documents/Certificat%20de%20citoyennet%C3%A9%20page%201.png\">page 1 du certificat de citoyenneté</a>.",
               instructionEn:
                 "We do not have the first page of your citizenship certificate. Please upload a photo of this page.",
+              linkEn: "Here is a link to an example of <a href=\"https://simontheriault8-cyber.github.io/Documents/Certificat%20de%20citoyennet%C3%A9%20page%201.png\">page 1 of the citizenship certificate</a>.",
               logNoteFr:
                 "Il manque la première page du certificat de citoyenneté",
             },
@@ -380,8 +390,10 @@ export class RecruitmentDataService {
               labelEn: "Missing page 2",
               instructionFr:
                 "Nous n’avons pas la deuxième page de votre certificat de citoyenneté. Veuillez téléverser une photo de cette page.",
+              linkFr: "Voici un lien vers un exemple de la <a href=\"https://simontheriault8-cyber.github.io/Documents/Certificat%20de%20citoyennet%C3%A9%20page%202.png\">page 2 du certificat de citoyenneté</a>.",
               instructionEn:
                 "We do not have the second page of your citizenship certificate. Please upload a photo of this page.",
+              linkEn: "Here is a link to an example of <a href=\"https://simontheriault8-cyber.github.io/Documents/Certificat%20de%20citoyennet%C3%A9%20page%202.png\">page 2 of the citizenship certificate</a>.",
               logNoteFr:
                 "Il manque la deuxième page du certificat de citoyenneté",
             },
@@ -603,8 +615,10 @@ export class RecruitmentDataService {
               labelEn: "Blurred / Illegible",
               instructionFr:
                 "La photo de votre parent ou tuteur légal et de sa pièce d’identité est floue et illisible. Veuillez prendre une nouvelle photo et la téléverser à nouveau. Assurez vous que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              linkFr: "Voici le lien vers un exemple d'<a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">égoportrait</a> acceptable.",
               instructionEn:
                 "The photo of your parent or legal guardian and their ID is blurred and illegible. Please take a new photo and upload it again. Ensure the image is sharp, without glare, and all information is clearly visible.",
+              linkEn: "Here is a link to an acceptable example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">selfie</a>.",
               logNoteFr:
                 "Photo du parent ou tuteur légal tenant sa pièce d’identité floue",
             },
@@ -614,8 +628,10 @@ export class RecruitmentDataService {
               labelEn: "Wrong ID",
               instructionFr:
                 "La pièce d'identité tenue ne correspond pas à celle soumise au dossier. Veuillez téléverser une nouvelle photo de votre parent ou tuteur légal et de sa pièce d’identité soumise au dossier.",
+              linkFr: "Voici le lien vers un exemple d'<a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">égoportrait</a> acceptable.",
               instructionEn:
                 "The ID held does not match the one submitted to the file. Please upload a new photo of your parent or legal guardian holding the ID submitted to the file.",
+              linkEn: "Here is a link to an acceptable example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">selfie</a>.",
               logNoteFr:
                 "Photo du parent ou tuteur légal tenant une mauvaise pièce d’identité",
             },
@@ -625,8 +641,10 @@ export class RecruitmentDataService {
               labelEn: "Missing from file",
               instructionFr:
                 "La photo ne se trouve pas dans votre dossier, veuillez prendre un égoportrait (selfie) de votre parent avec sa pièce d'identité qui est dans votre dossier et téléverser cette photo sur votre portail en ligne. Il doit tenir la pièce d'identité près de son visage de façon à ce que son visage et sa pièce d'identité soit clair et lisible.",
+              linkFr: "Voici le lien vers un exemple d'<a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">égoportrait</a> acceptable.",
               instructionEn:
                 "The photo is not in your file, please take a selfie of your parent with their identity document that is in your file and upload this photo to your online portal. They must hold the identity document near their face so that their face and identity document are clear and legible.",
+              linkEn: "Here is a link to an acceptable example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">selfie</a>.",
               logNoteFr:
                 "Aucune photo du parent ou tuteur légal tenant sa pièce d’identité n’est au dossier",
             },
@@ -689,17 +707,6 @@ export class RecruitmentDataService {
               instructionEn:
                 "The document is not in your file. Please take a photo and upload it. Ensure the image is sharp, without glare, and all information is clearly visible.",
               logNoteFr: "Aucun relevé d’apprentissage au dossier",
-            },
-            {
-              id: "relev_ecole",
-              labelFr: "Relevé de note de l’école (Bulletin)",
-              labelEn: "School Report Card",
-              instructionFr:
-                "Un simple bulletin scolaire émis par votre école n'est pas accepté comme preuve de scolarité. Vous devez nous fournir le relevé d'apprentissage officiel émis par le Ministère de l'Éducation (avec le sceau ou le format officiel du Ministère). Vous pouvez en faire la demande ici si vous ne l’avez pas : https://formulaires-consultations.education.gouv.qc.ca/dev_ti/412_demande_releves_diplomes_secondaires/",
-              instructionEn:
-                "School report cards are not accepted; please provide the official Ministry transcript.",
-              logNoteFr:
-                "Relevé de note de l’école non acceptés, doit téléverser le relevé d’apprentissage du ministère",
             },
           ],
         },
@@ -802,6 +809,18 @@ export class RecruitmentDataService {
           nameEn: "Document is not a valid transcript or diploma",
           reasons: [
             {
+              id: "educ_aens_sans_releve",
+              labelFr: "Diplôme d'AENS sans le relevé de note",
+              labelEn: "AENS Diploma without transcript",
+              instructionFr:
+                "Vous avez fourni un diplôme d'Attestation d’études de niveau secondaire (AENS). Toutefois, afin de valider votre scolarité, vous devez nous fournir le relevé de notes qui l'accompagne. Veuillez téléverser votre relevé de notes pour l'AENS.",
+              linkFr: "Voici un lien vers un exemple de <a href=\"https://simontheriault8-cyber.github.io/Documents/Relev%C3%A9%20de%20note%20AENS%20d'une%20%C3%A9cole.png\">relevé de notes pour l'AENS</a>.",
+              instructionEn:
+                "You have provided a Secondary School Equivalency Attestation (TENS) diploma. However, in order to validate your education, you must provide the accompanying transcript. Please upload your TENS transcript.",
+              linkEn: "Here is a link to an example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/Relev%C3%A9%20de%20note%20AENS%20d'une%20%C3%A9cole.png\">TENS transcript</a>.",
+              logNoteFr: "Diplôme d'AENS sans le relevé de note",
+            },
+            {
               id: "educ_non_admissible",
               labelFr: "N'a pas les critères académiques de base",
               labelEn: "Does not meet basic academic requirements",
@@ -868,6 +887,17 @@ export class RecruitmentDataService {
               logNoteFr:
                 "Certificat soumis au lieu du Baccalauréat ou secondaire",
             },
+            {
+              id: "relev_ecole",
+              labelFr: "Relevé de note de l’école (Bulletin)",
+              labelEn: "School Report Card",
+              instructionFr:
+                "Un simple bulletin scolaire émis par votre école n'est pas accepté comme preuve de scolarité. Vous devez nous fournir le relevé d'apprentissage officiel émis par le Ministère de l'Éducation (avec le sceau ou le format officiel du Ministère). Vous pouvez en faire la demande ici si vous ne l’avez pas : <a href=\"https://formulaires-consultations.education.gouv.qc.ca/dev_ti/412_demande_releves_diplomes_secondaire/fr\" target=\"_blank\" class=\"text-indigo-600 underline font-medium hover:text-indigo-800\">Demande de relevés et de diplômes du secondaire</a>",
+              instructionEn:
+                "A simple report card issued by your school is not accepted as proof of education. You must provide the official transcript (relevé d'apprentissage) issued by the Ministry of Education (bearing the official Ministry seal or format). You can request it here if you do not have it: <a href=\"https://formulaires-consultations.education.gouv.qc.ca/dev_ti/412_demande_releves_diplomes_secondaire/en/a/FORM\" target=\"_blank\" class=\"text-indigo-600 underline font-medium hover:text-indigo-800\">Request for transcripts and high school diplomas</a>",
+              logNoteFr:
+                "Relevé de note de l’école non acceptés, doit téléverser le relevé d’apprentissage du ministère",
+            },
           ],
         },
       ],
@@ -917,8 +947,10 @@ export class RecruitmentDataService {
               labelEn: "Missing signature Part I",
               instructionFr:
                 "Vous devez signer la partie I et J ainsi que cocher la case de la partie J. Veuillez compléter le formulaire à nouveau dans votre portail.",
+              linkFr: "Voici une image des parties que vous devez obligatoirement remplir : <a href=\"https://simontheriault8-cyber.github.io/Documents/DND%202170%20Partie%20I%20et%20J.png\">Formulaire de demande d'emploi dans les Forces armées canadiennes</a>.",
               instructionEn:
                 "You must sign Parts I and J and check the box in Part J. Please complete the form again in your portal.",
+              linkEn: "Here is an image of the parts you must complete: <a href=\"https://simontheriault8-cyber.github.io/Documents/DND%202170%20Partie%20I%20et%20J.png\">Canadian Armed Forces Employment Application Form</a>.",
               logNoteFr: "Manque la signature à la partie I du DND 2170",
             },
             {
@@ -927,8 +959,10 @@ export class RecruitmentDataService {
               labelEn: "Missing signature Part J",
               instructionFr:
                 "Vous devez signer la partie I et J ainsi que cocher la case de la partie J. Veuillez compléter le formulaire à nouveau dans votre portail.",
+              linkFr: "Voici une image des parties que vous devez obligatoirement remplir : <a href=\"https://simontheriault8-cyber.github.io/Documents/DND%202170%20Partie%20I%20et%20J.png\">Formulaire de demande d'emploi dans les Forces armées canadiennes</a>.",
               instructionEn:
                 "You must sign Parts I and J and check the box in Part J. Please complete the form again in your portal.",
+              linkEn: "Here is an image of the parts you must complete: <a href=\"https://simontheriault8-cyber.github.io/Documents/DND%202170%20Partie%20I%20et%20J.png\">Canadian Armed Forces Employment Application Form</a>.",
               logNoteFr: "Manque la signature à la partie J du DND 2170",
             },
             {
@@ -937,8 +971,10 @@ export class RecruitmentDataService {
               labelEn: "Box unchecked Part J",
               instructionFr:
                 "Vous devez signer la partie I et J ainsi que cocher la case de la partie J. Veuillez compléter le formulaire à nouveau dans votre portail.",
+              linkFr: "Voici une image des parties que vous devez obligatoirement remplir : <a href=\"https://simontheriault8-cyber.github.io/Documents/DND%202170%20Partie%20I%20et%20J.png\">Formulaire de demande d'emploi dans les Forces armées canadiennes</a>.",
               instructionEn:
                 "You must sign Parts I and J and check the box in Part J. Please complete the form again in your portal.",
+              linkEn: "Here is an image of the parts you must complete: <a href=\"https://simontheriault8-cyber.github.io/Documents/DND%202170%20Partie%20I%20et%20J.png\">Canadian Armed Forces Employment Application Form</a>.",
               logNoteFr: "N'a pas coché la case à la partie J du DND 2170",
             },
             {

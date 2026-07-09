@@ -150,23 +150,10 @@ type AppStage = "intro" | "minor-check" | "main";
         <!-- Job Search Button (Intro) -->
         <button
           (click)="toggleJobSearch()"
-          class="absolute top-4 right-16 bg-white p-2 rounded-full shadow-md hover:bg-slate-50 transition-all z-50 text-slate-600"
-          title="Recherche de métiers"
+          class="absolute top-4 right-16 bg-indigo-100 border border-indigo-200 text-indigo-800 hover:bg-indigo-200 h-10 w-10 rounded-full shadow-md transition-all z-50 font-sans flex items-center justify-center text-sm font-black"
+          title="Panneau de Réorientation et Métiers"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          RÉO
         </button>
 
         <!-- Signature Management Button (Intro) -->
@@ -337,27 +324,6 @@ type AppStage = "intro" | "minor-check" | "main";
 
           <!-- RIGHT: Action Buttons (Main) -->
           <div class="flex items-center gap-2 shrink-0">
-            <!-- Tout Conforme Button -->
-            <button
-              (click)="setAllCompliant()"
-              class="bg-emerald-50 p-2 px-3 rounded-full shadow-md transition-all flex items-center gap-2 font-bold text-sm text-emerald-700 border border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300"
-              title="Mettre toutes les tâches instantanément conformes"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span class="hidden sm:inline">Tout Conforme</span>
-            </button>
-
             <!-- Rappel Général Button -->
             <button
               (click)="toggleGeneralReminder()"
@@ -390,23 +356,10 @@ type AppStage = "intro" | "minor-check" | "main";
             <!-- Job Search Button -->
             <button
               (click)="toggleJobSearch()"
-              class="bg-white p-2 rounded-full shadow-md hover:bg-slate-50 transition-all text-slate-600"
-              title="Recherche de métiers"
+              class="bg-indigo-100 border border-indigo-200 text-indigo-800 hover:bg-indigo-200 h-10 w-10 rounded-full shadow-md transition-all font-sans flex items-center justify-center text-sm font-black"
+              title="Panneau de Réorientation et Métiers"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+              RÉO
             </button>
 
             <!-- Signature Management Button -->
@@ -439,16 +392,32 @@ type AppStage = "intro" | "minor-check" | "main";
           <nav
             class="w-[340px] shrink-0 bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden border border-white/50"
           >
-            <div class="p-4 bg-slate-50 border-b border-slate-200 flex-none">
+            <div class="p-3 bg-slate-50 border-b border-slate-200 flex-none flex items-center justify-between">
               <h2
-                class="font-bold text-slate-700 uppercase text-sm tracking-wider flex items-center gap-2"
+                class="font-bold text-slate-700 uppercase text-xs sm:text-sm tracking-wider flex items-center gap-2"
               >
-                <span
-                  class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs"
-                  >1</span
-                >
                 Tâches du Portail
               </h2>
+              <!-- Tout Conforme Button -->
+              <button
+                (click)="setAllCompliant()"
+                class="bg-emerald-50 px-2 py-1.5 rounded-lg shadow-sm transition-all flex items-center gap-1.5 font-bold text-xs text-emerald-700 border border-emerald-100 hover:bg-emerald-100 hover:border-emerald-200 active:scale-95 cursor-pointer"
+                title="Mettre toutes les tâches instantanément conformes"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3.5 w-3.5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span>Tout Conforme</span>
+              </button>
             </div>
             <div class="flex-1 overflow-y-auto p-3 space-y-2">
               @for (task of visibleTasks(); track task.nameFr) {
@@ -500,10 +469,6 @@ type AppStage = "intro" | "minor-check" | "main";
               <h2
                 class="font-bold text-slate-700 uppercase text-sm tracking-wider flex items-center gap-2"
               >
-                <span
-                  class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs"
-                  >2</span
-                >
                 Documents & Vérification
               </h2>
             </div>
@@ -832,13 +797,9 @@ type AppStage = "intro" | "minor-check" | "main";
               <h2
                 class="font-bold text-slate-700 uppercase text-sm tracking-wider flex items-center gap-2"
               >
-                <span
-                  class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs"
-                  >4</span
-                >
                 {{
                   allTasksCompliant()
-                    ? "Instructions & Note"
+                    ? "Instructions, Note & Courriel"
                     : "Courriel & Note"
                 }}
               </h2>
@@ -867,7 +828,7 @@ type AppStage = "intro" | "minor-check" | "main";
                       >
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
-                      Inclure réorientation
+                      Fusion courriel de Tâche(s) et courriel de Réo
                     </span>
                   </label>
                 }
@@ -909,64 +870,31 @@ type AppStage = "intro" | "minor-check" | "main";
                   }
                 </button>
 
-                @if (!allTasksCompliant()) {
-                  <button
-                    (click)="exportToOutlook()"
-                    class="text-xs text-white px-4 py-1.5 rounded-md shadow-md font-medium transition-all active:scale-95 flex items-center gap-2"
-                    [class.bg-slate-800]="!copiedEmail()"
-                    [class.hover:bg-slate-700]="!copiedEmail()"
-                    [class.bg-green-600]="copiedEmail()"
-                  >
-                    @if (copiedEmail()) {
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      Copié ! Ouverture d'Outlook...
-                    } @else {
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                      </svg>
-                      Exporter vers Outlook
-                    }
-                  </button>
-                }
-              </div>
-            </div>
-
-            <div class="flex-1 overflow-y-auto p-6 space-y-8 bg-slate-50/30">
-              <!-- Note Section -->
-              <div
-                class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div
-                  class="bg-slate-100/80 px-4 py-3 border-b border-slate-200 flex justify-between items-center backdrop-blur-sm"
+                <button
+                  (click)="exportToOutlook()"
+                  class="text-xs text-white px-4 py-1.5 rounded-md shadow-md font-medium transition-all active:scale-95 flex items-center gap-2"
+                  [class.bg-slate-800]="!copiedEmail()"
+                  [class.hover:bg-slate-700]="!copiedEmail()"
+                  [class.bg-green-600]="copiedEmail()"
                 >
-                  <h3
-                    class="font-bold text-slate-700 text-sm flex items-center gap-2"
-                  >
+                  @if (copiedEmail()) {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 text-slate-500"
+                      class="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Copié ! Ouverture d'Outlook...
+                  } @else {
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -975,21 +903,16 @@ type AppStage = "intro" | "minor-check" | "main";
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                       />
                     </svg>
-                    Note au Registre (Interne)
-                  </h3>
-                </div>
-                <div class="p-4 bg-slate-50">
-                  <textarea
-                    readonly
-                    class="w-full h-24 bg-transparent text-sm font-mono text-slate-600 resize-none focus:outline-none border-none p-0 leading-relaxed"
-                    >{{ generatedNote() }}</textarea
-                  >
-                </div>
+                    Exporter vers Outlook
+                  }
+                </button>
               </div>
+            </div>
 
+            <div class="flex-1 overflow-y-auto p-6 space-y-8 bg-slate-50/30">
               @if (allTasksCompliant()) {
                 <!-- Instructions pour le recruteur -->
                 <div
@@ -1027,11 +950,10 @@ type AppStage = "intro" | "minor-check" | "main";
                         rempli.
                       </li>
                       <li>
-                        Attribuer la tâche : Planifiez votre consultation.
+                        Attribuer la tâche : Planifiez votre séance d'information des FAC 101.
                       </li>
                       <li>
-                        Cocher le marqueur : Réservation requise pour une
-                        consultation.
+                        Mettre le marqueur ‘’Dispense requise’’ ou ‘’ÉRA requise’’ au besoin, le Ltv Forest fera l’analyse
                       </li>
                       <li>Ajouter la note au registre du postulant.</li>
                       <li>
@@ -1041,41 +963,77 @@ type AppStage = "intro" | "minor-check" | "main";
                     </ol>
                   </div>
                 </div>
-              } @else {
-                <!-- Email Section -->
-                <div
-                  class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div
-                    class="bg-slate-100/80 px-4 py-3 border-b border-slate-200 flex justify-between items-center backdrop-blur-sm"
-                  >
-                    <h3
-                      class="font-bold text-slate-700 text-sm flex items-center gap-2"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 text-slate-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
-                      </svg>
-                      Courriel au Postulant
-                    </h3>
-                  </div>
-                  <!-- Using innerHTML to render bold, yellow highlights and underlines -->
-                  <div
-                    class="p-8 bg-white text-sm text-slate-800 leading-relaxed font-sans border-none focus:outline-none overflow-y-auto max-h-[500px]"
-                    [innerHTML]="generatedEmailHtml()"
-                  ></div>
-                </div>
               }
+
+              <!-- Note Section -->
+              <div
+                class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div
+                  class="bg-slate-100/80 px-4 py-3 border-b border-slate-200 flex justify-between items-center backdrop-blur-sm"
+                >
+                  <h3
+                    class="font-bold text-slate-700 text-sm flex items-center gap-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-slate-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    Note au Registre (Interne)
+                  </h3>
+                </div>
+                <div class="p-4 bg-slate-50">
+                  <textarea
+                    readonly
+                    class="w-full h-24 bg-transparent text-sm font-mono text-slate-600 resize-none focus:outline-none border-none p-0 leading-relaxed"
+                    >{{ displayedNote() }}</textarea
+                  >
+                </div>
+              </div>
+
+              <!-- Email Section -->
+              <div
+                class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div
+                  class="bg-slate-100/80 px-4 py-3 border-b border-slate-200 flex justify-between items-center backdrop-blur-sm"
+                >
+                  <h3
+                    class="font-bold text-slate-700 text-sm flex items-center gap-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-slate-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Courriel au Postulant
+                  </h3>
+                </div>
+                <!-- Using innerHTML to render bold, yellow highlights and underlines -->
+                <div
+                  class="p-8 bg-white text-sm text-slate-800 leading-relaxed font-sans border-none focus:outline-none overflow-y-auto max-h-[500px]"
+                  [innerHTML]="generatedEmailHtml()"
+                ></div>
+              </div>
             </div>
           </section>
         }
@@ -1213,6 +1171,7 @@ export class AppComponent implements OnInit {
     this.taskNotCompletedKeys.set(new Set());
     this.compliantDocKeys.set(new Set());
     this.forceGeneralReminder.set(false);
+    this.sharedState.includeLinkedEmail.set(false);
   }
 
   setAllCompliant() {
@@ -1366,6 +1325,23 @@ export class AppComponent implements OnInit {
         newSet.delete(reasonKey);
       } else {
         newSet.add(reasonKey);
+        
+        // Uncheck others if "Inexistant au dossier" is selected, and vice versa
+        if (reason.id.includes("inexist")) {
+          // Uncheck all other reasons for this document
+          doc.reasons.forEach(r => {
+            if (r.id !== reason.id) {
+               newSet.delete(this.getReasonKey(doc, r));
+            }
+          });
+        } else {
+          // If we check another reason, uncheck "Inexistant au dossier"
+          doc.reasons.forEach(r => {
+            if (r.id.includes("inexist")) {
+               newSet.delete(this.getReasonKey(doc, r));
+            }
+          });
+        }
       }
       return newSet;
     });
@@ -1708,6 +1684,13 @@ export class AppComponent implements OnInit {
     return noteTxt;
   });
 
+  displayedNote = computed(() => {
+    if (this.sharedState.includeLinkedEmail() && this.sharedState.reoMergedNote()) {
+      return this.sharedState.reoMergedNote();
+    }
+    return this.generatedNote();
+  });
+
   // Check if current selection triggers a specific Email Scenario
   activeEmailScenario = computed<EmailScenario | null>(() => {
     if (
@@ -1746,8 +1729,101 @@ export class AppComponent implements OnInit {
     return null;
   });
 
+  getCompliantEmailHtml(): string {
+    let html = `<div style="font-family: Calibri, sans-serif; font-size: 11pt; color: #000;">`;
+
+    // --- FRENCH BLOCK ---
+    html += `<p><span style="background-color: yellow; font-weight: bold; padding: 0 4px;">English message will follow.</span></p>`;
+    html += `<p>Bonjour,</p>`;
+    html += `<p>Merci beaucoup d’avoir fourni vos documents et fait votre choix de profession.</p>`;
+    html += `<p>Afin de pouvoir continuer votre processus, vous devrez <span style="background-color: #00FF00; font-weight: bold; padding: 0 4px;">OBLIGATOIREMENT</span> :</p>`;
+    
+    html += `<p><strong>1-Vous informer :</strong></p>`;
+    html += `<ul style="margin-top: 0; margin-bottom: 15px; list-style-type: disc; padding-left: 20px;">`;
+    html += `  <li style="margin-bottom: 5px;">Regarder et comprendre le contenu de la présentation suivante : <a href="https://simontheriault8-cyber.github.io/Documents/Pr%C3%A9sentation%20Forces%20101.pdf" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Présentation Forces 101</a></li>`;
+    html += `  <li style="margin-bottom: 5px;">Regarder la vidéo et description du ou des métier/s pour lesquels vous êtes inscrits <a href="https://forces.ca/fr/carrieres/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Carrières | Forces armées canadiennes</a></li>`;
+    html += `  <li style="margin-bottom: 5px;">Explorer et bien comprendre la section <a href="https://forces.ca/fr/instruction-de-base/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Instruction de base</a> du site Forces.ca</li>`;
+    html += `</ul>`;
+
+    html += `<p><strong>2-Après avoir regardé la vidéo, Prendre rendez-vous pour une consultation via le calendrier de votre portail.</strong> <a href="https://www.cafoap-pclfac.forces.gc.ca/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Lien vers le Portail d'enrôlement des Forces armées canadiennes</a>&nbsp;<span style="background-color: #00FF00; padding: 0 4px; font-weight: 500;">De nouvelles plages horaires ouvriront d’ici 14 jours sur votre portail.</span></p>`;
+
+    html += `<p>Cette consultation auprès d’un recruteur sera nécessaire afin de valider votre connaissance des professions militaires qui vous intéressent, de la nature du cours de qualification militaire de base (QMB) et des exigences que comporte un engagement au sein de la force régulière des Forces armées canadiennes. Cette consultation n’est pas une entrevue officielle. Lorsque votre dossier sera distribué à un gestionnaire de dossier, celui-ci vous attribuera une tâche pour prendre un rendez-vous avec un conseiller en carrière militaire et c’est avec ce conseiller que vous ferez votre entrevue officielle pour un emploie dans les forces armées canadienne.</p>`;
+
+    html += `<p>Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.</p>`;
+    html += `<p>Merci encore et au plaisir de votre faire votre connaissance.</p>`;
+
+    html += `<p>` + this.sharedState.getHtmlSignatureFr() + `</p>`;
+
+    html += `<br><hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;"><br>`;
+
+    // --- ENGLISH BLOCK ---
+    html += `<p>Hello,</p>`;
+    html += `<p>Thank you very much for providing your documents and selecting your preferred occupation.</p>`;
+    html += `<p>In order to continue your application process, You will be <span style="background-color: #00FF00; font-weight: bold; padding: 0 4px;">REQUIRED</span> to:</p>`;
+
+    html += `<p><strong>1- Inform yourself :</strong></p>`;
+    html += `<ul style="margin-top: 0; margin-bottom: 15px; list-style-type: disc; padding-left: 20px;">`;
+    html += `  <li style="margin-bottom: 5px;">Watch and understand the content of the following presentation: <a href="https://simontheriault8-cyber.github.io/Documents/Forces%20101%20Presentation.pdf" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Forces 101 Presentation</a></li>`;
+    html += `  <li style="margin-bottom: 5px;">Watch the video and review the description of the trade(s) you are registered for. <a href="https://forces.ca/en/careers/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Careers | Canadian Armed Forces</a></li>`;
+    html += `  <li style="margin-bottom: 5px;">Explore and fully understand the <a href="https://forces.ca/en/basic-training/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Basic Training</a> section of the Forces.ca website.</li>`;
+    html += `</ul>`;
+
+    html += `<p><strong>2-After viewing the video, <span style="font-weight: bold;">Schedule an appointment</span> for a consultation through your portal calendar.</strong> <a href="https://www.cafoap-pclfac.forces.gc.ca/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Canadian Armed Forces enrolment Portal link</a>&nbsp;<span style="background-color: #00FF00; padding: 0 4px; font-weight: 500;">New time slots will open on your portal within 14 days.</span></p>`;
+
+    html += `<p>This consultation with a recruiter will be required to validate your understanding of the military occupations that interest you, the nature of the Basic Military Qualification (BMQ), and the requirements associated with enrolling in the Regular Force of the Canadian Armed Forces. This consultation is not an official interview. Once your file has been assigned to a file administrator, you will be given a task to schedule an appointment with a Military Career Counsellor. It is with this counsellor that you will complete your official interview for employment with the Canadian Armed Forces.</p>`;
+
+    html += `<p>If no action is taken, your file will be automatically deactivated after 30 days.</p>`;
+    html += `<p>Thank you again, and we look forward to meeting you.</p>`;
+
+    html += `<p>` + this.sharedState.getHtmlSignatureEn() + `</p>`;
+
+    html += `</div>`;
+    return html;
+  }
+
+  getCompliantEmailPlain(): string {
+    let plain = "";
+
+    // --- FRENCH ---
+    plain += `English message will follow.\n\n`;
+    plain += `Bonjour,\n\n`;
+    plain += `Merci beaucoup d’avoir fourni vos documents et fait votre choix de profession.\n\n`;
+    plain += `Afin de pouvoir continuer votre processus, vous devrez OBLIGATOIREMENT :\n\n`;
+    plain += `1-Vous informer :\n`;
+    plain += `•\tRegarder et comprendre le contenu de la présentation suivante : Présentation Forces 101 (https://simontheriault8-cyber.github.io/Documents/Pr%C3%A9sentation%20Forces%20101.pdf)\n`;
+    plain += `•\tRegarder la vidéo et description du ou des métier/s pour lesquels vous êtes inscrits Carrières | Forces armées canadiennes (https://forces.ca/fr/carrieres/)\n`;
+    plain += `•\tExplorer et bien comprendre la section Instruction de base du site Forces.ca (https://forces.ca/fr/instruction-de-base/)\n\n`;
+    plain += `2-Après avoir regardé la vidéo, Prendre rendez-vous pour une consultation via le calendrier de votre portail. Lien vers le Portail d'enrôlement des Forces armées canadiennes (https://www.cafoap-pclfac.forces.gc.ca/) De nouvelles plages horaires ouvriront d’ici 14 jours sur votre portail.\n\n`;
+    plain += `Cette consultation auprès d’un recruteur sera nécessaire afin de valider votre connaissance des professions militaires qui vous intéressent, de la nature du cours de qualification militaire de base (QMB) et des exigences que comporte un engagement au sein de la force régulière des Forces armées canadiennes. Cette consultation n’est pas une entrevue officielle. Lorsque votre dossier sera distribué à un gestionnaire de dossier, celui-ci vous attribuera une tâche pour prendre un rendez-vous avec un conseiller en carrière militaire et c’est avec ce conseiller que vous ferez votre entrevue officielle pour un emploie dans les forces armées canadienne.\n\n`;
+    plain += `Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.\n\n`;
+    plain += `Merci encore et au plaisir de votre faire votre connaissance.\n\n`;
+    plain += this.sharedState.customSignatureFr();
+
+    plain += `\n\n______________________________________________________________________________\n\n`;
+
+    // --- ENGLISH ---
+    plain += `Hello,\n\n`;
+    plain += `Thank you very much for providing your documents and selecting your preferred occupation.\n\n`;
+    plain += `In order to continue your application process, You will be REQUIRED to:\n\n`;
+    plain += `1- Inform yourself :\n`;
+    plain += `•\tWatch and understand the content of the following presentation: Forces 101 Presentation (https://simontheriault8-cyber.github.io/Documents/Forces%20101%20Presentation.pdf)\n`;
+    plain += `•\tWatch the video and review the description of the trade(s) you are registered for. Careers | Canadian Armed Forces (https://forces.ca/en/careers/)\n`;
+    plain += `•\tExplore and fully understand the Basic Training section of the Forces.ca website (https://forces.ca/en/basic-training/)\n\n`;
+    plain += `2-After viewing the video, Schedule an appointment for a consultation through your portal calendar. Canadian Armed Forces enrolment Portal link (https://www.cafoap-pclfac.forces.gc.ca/) New time slots will open on your portal within 14 days.\n\n`;
+    plain += `This consultation with a recruiter will be required to validate your understanding of the military occupations that interest you, the nature of the Basic Military Qualification (BMQ), and the requirements associated with enrolling in the Regular Force of the Canadian Armed Forces. This consultation is not an official interview. Once your file has been assigned to a file administrator, you will be given a task to schedule an appointment with a Military Career Counsellor. It is with this counsellor that you will complete your official interview for employment with the Canadian Armed Forces.\n\n`;
+    plain += `If no action is taken, your file will be automatically deactivated after 30 days.\n\n`;
+    plain += `Thank you again, and we look forward to meeting you.\n\n`;
+    plain += this.sharedState.customSignatureEn();
+
+    return plain;
+  }
+
   // Plain Text Version (for fallback)
   generatedEmailPlain = computed(() => {
+    if (this.allTasksCompliant()) {
+      return this.getCompliantEmailPlain();
+    }
+
     // 1. Check if scenario is active
     const scenario = this.activeEmailScenario();
     if (scenario) {
@@ -1793,10 +1869,39 @@ export class AppComponent implements OnInit {
           emailFr += `\n    ◦ Vous n'avez pas complété cette tâche sur votre portail.`;
           emailFr += `\n      → Veuillez vous connecter à votre portail et la compléter.`;
         }
+        const groupedItems = new Map<any, any[]>();
         for (const item of items) {
-          let docNameFr = item.doc.nameFr;
-          emailFr += `\n    ◦ ${docNameFr} : ${item.reason.labelFr}`;
-          emailFr += `\n      → ${item.reason.instructionFr.replace(/\n/g, "\n        ")}`;
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          const labels = docItems.map((i: any) => i.reason.labelFr);
+          let labelsStr = "";
+          if (labels.length === 1) {
+            labelsStr = labels[0];
+          } else if (labels.length === 2) {
+            labelsStr = `${labels[0]} et ${labels[1]}`;
+          } else {
+            labelsStr = labels.slice(0, -1).join(', ') + ' et ' + labels[labels.length - 1];
+          }
+          
+          emailFr += `\n    ◦ ${doc.nameFr} : ${labelsStr}`;
+          
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionFr)) {
+              uniqueInstructions.add(item.reason.instructionFr);
+              emailFr += `\n      → ${item.reason.instructionFr.replace(/\n/g, "\n        ")}`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
+              uniqueLinks.add(item.reason.linkFr);
+              emailFr += `\n      🔗 ${item.reason.linkFr}`;
+            }
+          }
+          
         }
       }
     }
@@ -1808,10 +1913,39 @@ export class AppComponent implements OnInit {
         emailFr += `\n\nAfin de poursuivre le traitement de votre dossier, nous avons besoin d'une confirmation de votre part. Veuillez répondre directement à ce courriel avec les informations demandées pour l'élément suivant :`;
       }
       for (const [task, items] of confirmationTasks.entries()) {
+        const groupedItems = new Map<any, any[]>();
         for (const item of items) {
-          let docNameFr = item.doc.nameFr;
-          emailFr += `\n\n• ${docNameFr} : ${item.reason.labelFr}`;
-          emailFr += `\n  → ${item.reason.instructionFr.replace(/\n/g, "\n    ")}`;
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          const labels = docItems.map((i: any) => i.reason.labelFr);
+          let labelsStr = "";
+          if (labels.length === 1) {
+            labelsStr = labels[0];
+          } else if (labels.length === 2) {
+            labelsStr = `${labels[0]} et ${labels[1]}`;
+          } else {
+            labelsStr = labels.slice(0, -1).join(', ') + ' et ' + labels[labels.length - 1];
+          }
+          
+          emailFr += `\n\n• ${doc.nameFr} : ${labelsStr}`;
+          
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionFr)) {
+              uniqueInstructions.add(item.reason.instructionFr);
+              emailFr += `\n  → ${item.reason.instructionFr.replace(/\n/g, "\n    ")}`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
+              uniqueLinks.add(item.reason.linkFr);
+              emailFr += `\n  🔗 ${item.reason.linkFr}`;
+            }
+          }
+          
         }
       }
     }
@@ -1837,10 +1971,39 @@ export class AppComponent implements OnInit {
           emailEn += `\n    ◦ You have not completed this task on your portal.`;
           emailEn += `\n      → Please log in to your portal and complete it.`;
         }
+        const groupedItems = new Map<any, any[]>();
         for (const item of items) {
-          let docNameEn = item.doc.nameEn;
-          emailEn += `\n    ◦ ${docNameEn} : ${item.reason.labelEn}`;
-          emailEn += `\n      → ${item.reason.instructionEn.replace(/\n/g, "\n        ")}`;
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          const labels = docItems.map((i: any) => i.reason.labelEn);
+          let labelsStr = "";
+          if (labels.length === 1) {
+            labelsStr = labels[0];
+          } else if (labels.length === 2) {
+            labelsStr = `${labels[0]} and ${labels[1]}`;
+          } else {
+            labelsStr = labels.slice(0, -1).join(', ') + ' and ' + labels[labels.length - 1];
+          }
+          
+          emailEn += `\n    ◦ ${doc.nameEn} : ${labelsStr}`;
+          
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionEn)) {
+              uniqueInstructions.add(item.reason.instructionEn);
+              emailEn += `\n      → ${item.reason.instructionEn.replace(/\n/g, "\n        ")}`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
+              uniqueLinks.add(item.reason.linkEn);
+              emailEn += `\n      🔗 ${item.reason.linkEn}`;
+            }
+          }
+          
         }
       }
     }
@@ -1852,10 +2015,39 @@ export class AppComponent implements OnInit {
         emailEn += `\n\nTo continue processing your application, we require confirmation from you. Please reply directly to this email with the requested information for the following item:`;
       }
       for (const [task, items] of confirmationTasks.entries()) {
+        const groupedItems = new Map<any, any[]>();
         for (const item of items) {
-          let docNameEn = item.doc.nameEn;
-          emailEn += `\n\n• ${docNameEn} : ${item.reason.labelEn}`;
-          emailEn += `\n  → ${item.reason.instructionEn.replace(/\n/g, "\n    ")}`;
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          const labels = docItems.map((i: any) => i.reason.labelEn);
+          let labelsStr = "";
+          if (labels.length === 1) {
+            labelsStr = labels[0];
+          } else if (labels.length === 2) {
+            labelsStr = `${labels[0]} and ${labels[1]}`;
+          } else {
+            labelsStr = labels.slice(0, -1).join(', ') + ' and ' + labels[labels.length - 1];
+          }
+          
+          emailEn += `\n\n• ${doc.nameEn} : ${labelsStr}`;
+          
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionEn)) {
+              uniqueInstructions.add(item.reason.instructionEn);
+              emailEn += `\n  → ${item.reason.instructionEn.replace(/\n/g, "\n    ")}`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
+              uniqueLinks.add(item.reason.linkEn);
+              emailEn += `\n  🔗 ${item.reason.linkEn}`;
+            }
+          }
+          
         }
       }
     }
@@ -1874,14 +2066,26 @@ export class AppComponent implements OnInit {
 
   // HTML Version (for rich text display and Copy/Paste)
   generatedEmailHtml = computed((): SafeHtml => {
-    // 1. Check if scenario is active
+    if (this.allTasksCompliant()) {
+      return this.sanitizer.bypassSecurityTrustHtml(this.getCompliantEmailHtml());
+    }
+
+    // 1. Check if Reo merge is active
+    if (this.sharedState.includeLinkedEmail()) {
+      const mergedHtml = this.sharedState.reoMergedEmailHtml();
+      if (mergedHtml) {
+        return this.sanitizer.bypassSecurityTrustHtml(mergedHtml);
+      }
+    }
+
+    // 2. Check if scenario is active
     const scenario = this.activeEmailScenario();
     if (scenario) {
       const customBodyHtml = this.sharedState.getCustomizedScenarioHtml(scenario.bodyHtml);
       return this.sanitizer.bypassSecurityTrustHtml(customBodyHtml);
     }
 
-    // 2. Default Logic
+    // 3. Default Logic
     const rawHtml = this.getRawHtmlString();
     return this.sanitizer.bypassSecurityTrustHtml(rawHtml);
   });
@@ -1936,11 +2140,39 @@ export class AppComponent implements OnInit {
           html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; Veuillez vous connecter à votre portail et la compléter.</span>`;
           html += `</li>`;
         }
+        const groupedItems = new Map<any, any[]>();
         for (const item of items) {
-          let docNameFr = item.doc.nameFr;
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          const labels = docItems.map((i: any) => i.reason.labelFr);
+          let labelsStr = "";
+          if (labels.length === 1) {
+            labelsStr = labels[0];
+          } else if (labels.length === 2) {
+            labelsStr = `${labels[0]} et ${labels[1]}`;
+          } else {
+            labelsStr = labels.slice(0, -1).join(', ') + ' et ' + labels[labels.length - 1];
+          }
+          
           html += `<li style="margin-bottom: 10px;">`;
-          html += `<span style="background-color: yellow; padding: 0 2px;">${docNameFr} : <span style="color: #FF0000;">${item.reason.labelFr}</span></span>`;
-          html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+          html += `<span style="background-color: yellow; padding: 0 2px;">${doc.nameFr} : <span style="color: #FF0000;">${labelsStr}</span></span>`;
+          
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionFr)) {
+              uniqueInstructions.add(item.reason.instructionFr);
+              html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
+              uniqueLinks.add(item.reason.linkFr);
+              html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</span>`;
+            }
+          }
           html += `</li>`;
         }
         html += `</ul></li>`;
@@ -1956,10 +2188,38 @@ export class AppComponent implements OnInit {
       }
       html += `<ul style="margin-top: 0; list-style-type: none; padding-left: 0;">`;
       for (const [task, items] of confirmationTasks.entries()) {
+        const groupedItems = new Map<any, any[]>();
         for (const item of items) {
-          let docNameFr = item.doc.nameFr;
-          html += `<li style="margin-bottom: 15px; margin-left: 10px;"><strong>&bull; <span style="background-color: yellow; padding: 0 2px;">${docNameFr} : <span style="color: #d97706;">${item.reason.labelFr}</span></span></strong>`;
-          html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          const labels = docItems.map((i: any) => i.reason.labelFr);
+          let labelsStr = "";
+          if (labels.length === 1) {
+            labelsStr = labels[0];
+          } else if (labels.length === 2) {
+            labelsStr = `${labels[0]} et ${labels[1]}`;
+          } else {
+            labelsStr = labels.slice(0, -1).join(', ') + ' et ' + labels[labels.length - 1];
+          }
+          
+          html += `<li style="margin-bottom: 15px; margin-left: 10px;"><strong>&bull; <span style="background-color: yellow; padding: 0 2px;">${doc.nameFr} : <span style="color: #d97706;">${labelsStr}</span></span></strong>`;
+          
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionFr)) {
+              uniqueInstructions.add(item.reason.instructionFr);
+              html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
+              uniqueLinks.add(item.reason.linkFr);
+              html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</span>`;
+            }
+          }
           html += `</li>`;
         }
       }
@@ -1995,11 +2255,39 @@ export class AppComponent implements OnInit {
           html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; Please log in to your portal and complete it.</span>`;
           html += `</li>`;
         }
+        const groupedItems = new Map<any, any[]>();
         for (const item of items) {
-          let docNameEn = item.doc.nameEn;
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          const labels = docItems.map((i: any) => i.reason.labelEn);
+          let labelsStr = "";
+          if (labels.length === 1) {
+            labelsStr = labels[0];
+          } else if (labels.length === 2) {
+            labelsStr = `${labels[0]} and ${labels[1]}`;
+          } else {
+            labelsStr = labels.slice(0, -1).join(', ') + ' and ' + labels[labels.length - 1];
+          }
+          
           html += `<li style="margin-bottom: 10px;">`;
-          html += `<span style="background-color: yellow; padding: 0 2px;">${docNameEn} : <span style="color: #FF0000;">${item.reason.labelEn}</span></span>`;
-          html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+          html += `<span style="background-color: yellow; padding: 0 2px;">${doc.nameEn} : <span style="color: #FF0000;">${labelsStr}</span></span>`;
+          
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionEn)) {
+              uniqueInstructions.add(item.reason.instructionEn);
+              html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
+              uniqueLinks.add(item.reason.linkEn);
+              html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</span>`;
+            }
+          }
           html += `</li>`;
         }
         html += `</ul></li>`;
@@ -2015,10 +2303,38 @@ export class AppComponent implements OnInit {
       }
       html += `<ul style="margin-top: 0; list-style-type: none; padding-left: 0;">`;
       for (const [task, items] of confirmationTasks.entries()) {
+        const groupedItems = new Map<any, any[]>();
         for (const item of items) {
-          let docNameEn = item.doc.nameEn;
-          html += `<li style="margin-bottom: 15px; margin-left: 10px;"><strong>&bull; <span style="background-color: yellow; padding: 0 2px;">${docNameEn} : <span style="color: #d97706;">${item.reason.labelEn}</span></span></strong>`;
-          html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          const labels = docItems.map((i: any) => i.reason.labelEn);
+          let labelsStr = "";
+          if (labels.length === 1) {
+            labelsStr = labels[0];
+          } else if (labels.length === 2) {
+            labelsStr = `${labels[0]} and ${labels[1]}`;
+          } else {
+            labelsStr = labels.slice(0, -1).join(', ') + ' and ' + labels[labels.length - 1];
+          }
+          
+          html += `<li style="margin-bottom: 15px; margin-left: 10px;"><strong>&bull; <span style="background-color: yellow; padding: 0 2px;">${doc.nameEn} : <span style="color: #d97706;">${labelsStr}</span></span></strong>`;
+          
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionEn)) {
+              uniqueInstructions.add(item.reason.instructionEn);
+              html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
+              uniqueLinks.add(item.reason.linkEn);
+              html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</span>`;
+            }
+          }
           html += `</li>`;
         }
       }
@@ -2051,7 +2367,13 @@ export class AppComponent implements OnInit {
       let textContent: string;
       const subject = "Forces armées canadiennes/Canadian Armed Forces";
 
-      if (scenario) {
+      if (this.allTasksCompliant()) {
+        htmlContent = this.getCompliantEmailHtml();
+        textContent = this.getCompliantEmailPlain();
+      } else if (this.sharedState.includeLinkedEmail() && this.sharedState.reoMergedEmailHtml()) {
+        htmlContent = this.sharedState.reoMergedEmailHtml();
+        textContent = this.sharedState.reoMergedEmailPlain();
+      } else if (scenario) {
         htmlContent = this.sharedState.getCustomizedScenarioHtml(scenario.bodyHtml);
         textContent = this.sharedState.getCustomizedScenarioText(scenario.bodyText);
       } else {
@@ -2093,7 +2415,7 @@ export class AppComponent implements OnInit {
 
   async copyNote() {
     try {
-      await navigator.clipboard.writeText(this.generatedNote());
+      await navigator.clipboard.writeText(this.displayedNote());
       this.copiedNote.set(true);
       setTimeout(() => this.copiedNote.set(false), 2000);
     } catch (err) {

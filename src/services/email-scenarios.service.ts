@@ -38,7 +38,7 @@ export class EmailScenariosService {
         <p>L’équipe de recrutement des Forces armées canadiennes<br>
         Centre de recrutement des Forces canadiennes Québec<br>
         Commandement du Personnel militaire / Forces armées canadiennes<br>
-        <a href="https://forces.ca/fr/centre-dassistance/#/">Centre d’assistance</a> | Forces armées canadiennes</p>
+        <a href="https://forces.ca/fr/centre-dassistance/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Centre d’assistance | Forces armées canadiennes</a></p>
         
         <br><p>______________________________________________________________________________</p><br>
 
@@ -55,7 +55,7 @@ export class EmailScenariosService {
         <p>The Canadian Armed Forces Recruiting Team<br>
         Canadian Forces Recruiting Centre Quebec<br>
         Military Personnel Command / Canadian Armed Forces<br>
-        <a href="https://forces.ca/en/help-centre/#/">Help Centre</a> | Canadian Armed Forces</p>
+        <a href="https://forces.ca/en/help-centre/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Help Centre | Canadian Armed Forces</a></p>
       </div>
     `;
 
@@ -127,7 +127,7 @@ Help Centre | Canadian Armed Forces`;
         <p>L’équipe de recrutement des Forces armées canadiennes<br>
         Centre de recrutement des Forces canadiennes Québec<br>
         Commandement du Personnel militaire / Forces armées canadiennes<br>
-        <a href="https://forces.ca/fr/centre-dassistance/#/">Centre d’assistance</a> | Forces armées canadiennes</p>
+        <a href="https://forces.ca/fr/centre-dassistance/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Centre d’assistance | Forces armées canadiennes</a></p>
         
         <br><p>______________________________________________________________________________</p><br>
 
@@ -141,7 +141,7 @@ Help Centre | Canadian Armed Forces`;
         <p>The Canadian Armed Forces Recruiting Team<br>
         Canadian Forces Recruiting Centre Quebec<br>
         Military Personnel Command / Canadian Armed Forces<br>
-        <a href="https://forces.ca/en/help-centre/#/">Help Centre</a> | Canadian Armed Forces</p>
+        <a href="https://forces.ca/en/help-centre/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Help Centre | Canadian Armed Forces</a></p>
       </div>
     `;
 
@@ -223,7 +223,7 @@ Help Centre | Canadian Armed Forces`;
         <p>L’équipe de recrutement des Forces armées canadiennes<br>
         Centre de recrutement des Forces canadiennes Québec<br>
         Commandement du Personnel militaire / Forces armées canadiennes<br>
-        <a href="https://forces.ca/fr/centre-dassistance/#/">Centre d’assistance</a> | Forces armées canadiennes</p>
+        <a href="https://forces.ca/fr/centre-dassistance/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Centre d’assistance | Forces armées canadiennes</a></p>
         
         <br><p>______________________________________________________________________________</p><br>
 
@@ -251,7 +251,7 @@ Help Centre | Canadian Armed Forces`;
         <p>The Canadian Armed Forces Recruiting Team<br>
         Canadian Forces Recruiting Centre Quebec<br>
         Military Personnel Command / Canadian Armed Forces<br>
-        <a href="https://forces.ca/en/help-centre/#/">Help Centre</a> | Canadian Armed Forces</p>
+        <a href="https://forces.ca/en/help-centre/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Help Centre | Canadian Armed Forces</a></p>
       </div>
     `;
 

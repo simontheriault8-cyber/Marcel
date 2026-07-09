@@ -1,4 +1,4 @@
-import { Component, computed, signal, inject } from "@angular/core";
+import { Component, computed, signal, inject, effect, untracked } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { JobDatabaseService } from "../../services/job-database.service";
@@ -70,7 +70,7 @@ interface JobRule {
             </p>
           </div>
         </div>
-        <div class="flex items-center gap-3 mt-1">
+        <div class="flex flex-col gap-2 mt-1">
           <label
             class="flex items-center gap-2 text-sm font-semibold text-slate-700 cursor-pointer select-none"
           >
@@ -93,7 +93,32 @@ interface JobRule {
               >
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-              Lier courriel et note
+              Fusion courriel de Tâche(s) et courriel de Réo
+            </span>
+          </label>
+          <label
+            class="flex items-center gap-2 text-sm font-semibold text-slate-700 cursor-pointer select-none"
+          >
+            <input
+              type="checkbox"
+              class="peer h-4 w-4 appearance-none rounded border border-slate-300 bg-white checked:bg-indigo-600 checked:border-indigo-600 focus:outline-none transition-all"
+              [checked]="ignoreSip()"
+              (change)="toggleIgnoreSip()"
+            />
+            <span class="relative">
+              <svg
+                class="absolute -left-[1.15rem] top-1/2 -translate-y-1/2 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Ignorer le SIP
             </span>
           </label>
         </div>
@@ -196,9 +221,7 @@ interface JobRule {
                 Âge limite dépassé (Retraite forcée)
               </p>
               <p class="text-xs text-red-700 mt-0.5">
-                L'âge maximal de service est de 59 ans. À 60 ans ou plus, un
-                postulant ne peut pas s'enrôler car la retraite forcée
-                s'applique.
+                L'âge maximal d'admissibilité est de 56 ans, et le postulant doit pouvoir compléter le contrat initial avant l'âge de 60 ans.
               </p>
             </div>
           </div>
@@ -1925,8 +1948,27 @@ export class ReorientationComponent {
   jobService = inject(JobDatabaseService);
   sharedState = inject(SharedStateService);
 
+  constructor() {
+    effect(() => {
+      const html = this.buildBilingualEmail(true);
+      const plain = this.buildBilingualEmail(false);
+      const note = this.generateNoteRegistry();
+      untracked(() => {
+        this.sharedState.reoMergedEmailHtml.set(html);
+        this.sharedState.reoMergedEmailPlain.set(plain);
+        this.sharedState.reoMergedNote.set(note);
+      });
+    });
+  }
+
   toggleIncludeReo() {
     this.sharedState.includeLinkedEmail.update((v) => !v);
+  }
+
+  ignoreSip = signal<boolean>(false);
+
+  toggleIgnoreSip() {
+    this.ignoreSip.update((v) => !v);
   }
 
   age = signal<number | null>(null);
@@ -4024,7 +4066,7 @@ o Médecine d’urgence`,
       customCheck: (selected) => {
         return (
           (selected.has("sec4_24_credits") &&
-            selected.has("base_math_11_gen")) ||
+            selected.has("base_math_10_gen")) ||
           selected.has("cs_dep_cuisine")
         );
       },
@@ -5589,6 +5631,7 @@ o Médecine d’urgence`,
     this.dropdownOpen1.set(false);
     this.dropdownOpen2.set(false);
     this.dropdownOpen3.set(false);
+    this.sharedState.includeLinkedEmail.set(false);
   }
 
   toggleManualCriterion(id: string) {
@@ -5993,16 +6036,16 @@ o Médecine d’urgence`,
           }
 
           // Exclude closed (SIP) jobs
-          if (this.jobService.isJobClosed(jId)) {
+          if (!this.ignoreSip() && this.jobService.isJobClosed(jId)) {
             continue;
           }
 
           // Age qualification logic:
-          // Maximum service age is 59 (must retire at 60).
+          // Maximum enrollment age is 56.
           // A candidate must have time to complete the initial contract length before reaching 60.
           if (ageVal !== null && ageVal > 0) {
-            // Forced retirement at 60
-            if (ageVal >= 60) {
+            // Absolute max enrollment age is 56
+            if (ageVal > 56) {
               continue;
             }
             const job = this.jobService.getAllJobs().find((j) => j.id === jId);
@@ -6016,11 +6059,11 @@ o Médecine d’urgence`,
                   ? parseInt(firstContract.duration.match(/(\d+)\s*an/)![1], 10)
                   : 3
                 : 3;
-              if (ageVal + durationYears > 60) {
+              if (ageVal + durationYears >= 60) {
                 continue;
               }
             } else {
-              if (ageVal + 3 > 60) {
+              if (ageVal + 3 >= 60) {
                 continue;
               }
             }
@@ -6088,7 +6131,7 @@ o Médecine d’urgence`,
           }
 
           // Exclude closed (SIP) jobs
-          if (this.jobService.isJobClosed(jId)) {
+          if (!this.ignoreSip() && this.jobService.isJobClosed(jId)) {
             continue;
           }
 
@@ -6104,12 +6147,12 @@ o Médecine d’urgence`,
                 : 3
               : 3;
 
-            if (ageVal + durationYears > 60) {
+            if (ageVal > 56 || ageVal + durationYears >= 60) {
               excluded.push({
                 id: job.id,
                 title: job.title,
                 duration: durationYears,
-                requiredAge: 60 - durationYears,
+                requiredAge: Math.min(56, 59 - durationYears),
               });
             }
           }
@@ -6359,7 +6402,7 @@ o Médecine d’urgence`,
       : 3;
 
     if (ageVal !== null && ageVal > 0) {
-      if (ageVal >= 60 || ageVal + durationYears > 60) {
+      if (ageVal > 56 || ageVal + durationYears >= 60) {
         return false;
       }
     }
@@ -6409,13 +6452,13 @@ o Médecine d’urgence`,
       : 3;
 
     if (ageVal !== null && ageVal > 0) {
-      if (ageVal >= 60) {
+      if (ageVal > 56) {
         isAgeAdmissible = false;
         ageReason =
-          "L'âge maximal de service est de 59 ans (retraite forcée à 60 ans).";
-      } else if (ageVal + durationYears > 60) {
+          "L'âge maximal d'admissibilité est de 56 ans.";
+      } else if (ageVal + durationYears >= 60) {
         isAgeAdmissible = false;
-        ageReason = `L'âge limite dépasse avant la fin du contrat initial (${durationYears} ans). L'âge maximal de l'enrôlement est de ${60 - durationYears} ans.`;
+        ageReason = `L'âge limite dépasse avant la fin du contrat initial (${durationYears} ans). L'âge maximal d'enrôlement pour ce métier est de ${59 - durationYears} ans.`;
       }
     }
 
@@ -7649,6 +7692,96 @@ o Médecine d’urgence`,
       }
     }
 
+    const renderHtmlList = (jobs: string[], isOfficer: boolean, isFrench: boolean) => {
+      let out = "";
+      const openJobs = jobs.filter(j => !this.jobService.isJobClosed(j));
+      const closedJobs = jobs.filter(j => this.jobService.isJobClosed(j));
+      
+      const titleColor = isOfficer ? "purple-800" : "blue-800";
+      const inlineTitleColor = isOfficer ? "#6b21a8" : "#1e40af";
+      
+      let openTitle = isOfficer ? (isFrench ? "Officiers" : "Officers") : (isFrench ? "Militaires du rang" : "Non-Commissioned Members");
+      let closedTitle = isOfficer ? (isFrench ? "Officiers (Fermés)" : "Officers (Closed)") : (isFrench ? "Militaires du rang (Fermés)" : "Non-Commissioned Members (Closed)");
+      
+      if (this.ignoreSip()) {
+        openTitle += isFrench ? " (Ouverts)" : " (Open)";
+      }
+
+      const buildSection = (jobList: string[], title: string, color: string, inlineColor: string, isClosed: boolean) => {
+        let sec = "";
+        if (jobList.length > 0) {
+          sec += `<p class="font-bold text-${color} mt-4" style="color: ${inlineColor}; font-weight: bold; margin-top: 16px;">${title} :</p>\n`;
+          sec += '<ul class="list-disc pl-5 mt-1 mb-2" style="padding-left: 20px; margin-top: 4px; margin-bottom: 8px;">\n';
+          for (const jId of jobList) {
+            let itemStyle = isClosed ? ' style="color: #b91c1c;"' : '';
+            let itemClass = isClosed ? ' class="mt-0.5 text-red-700"' : ' class="mt-0.5"';
+            sec += `  <li${itemClass}${itemStyle}><strong>${jId} - ${this.getJobLinkMarkup(jId, isFrench, true)}</strong></li>\n`;
+          }
+          sec += "</ul>\n";
+          
+          const proofsMap = new Map<string, string[]>();
+          for (const jId of jobList) {
+            const missing = this.getMissingProofs(jId);
+            const proofs = isFrench ? missing.fr : missing.en;
+            if (proofs.length > 0) proofsMap.set(jId, proofs);
+          }
+          if (proofsMap.size > 0) {
+            sec += `<p class="mt-2 text-xs text-red-800 font-semibold font-sans" style="color: #991b1b; font-weight: 600; font-size: 12px; margin-top: 8px;">${isFrench ? "Vous devrez fournir ces documents/preuves supplémentaires si vous choisissez les métiers suivants :" : "You will need to provide these additional documents/proofs if you choose the following occupations:"}</p>\n`;
+            sec += '<ul class="list-disc pl-5 mt-1 mb-2 text-xs text-slate-600" style="color: #475569; padding-left: 20px; margin-top: 4px; margin-bottom: 8px; font-size: 12px;">\n';
+            for (const [jId, proofs] of proofsMap.entries()) {
+              sec += `  <li class="mt-0.5"><strong>${isFrench ? "Pour" : "For"} ${jId} - ${this.getJobLinkMarkup(jId, isFrench, true)} :</strong> ` + proofs.join(", ") + "</li>\n";
+            }
+            sec += "</ul>\n";
+          }
+        }
+        return sec;
+      };
+
+      out += buildSection(openJobs, openTitle, titleColor, inlineTitleColor, false);
+      out += buildSection(closedJobs, closedTitle, "red-800", "#991b1b", true);
+      return out;
+    };
+
+    const renderPlainList = (jobs: string[], isOfficer: boolean, isFrench: boolean) => {
+      let out = "";
+      const openJobs = jobs.filter(j => !this.jobService.isJobClosed(j));
+      const closedJobs = jobs.filter(j => this.jobService.isJobClosed(j));
+      
+      let openTitle = isOfficer ? (isFrench ? "Officiers" : "Officers") : (isFrench ? "Militaires du rang" : "Non-Commissioned Members");
+      let closedTitle = isOfficer ? (isFrench ? "Officiers (Fermés)" : "Officers (Closed)") : (isFrench ? "Militaires du rang (Fermés)" : "Non-Commissioned Members (Closed)");
+      
+      if (this.ignoreSip()) {
+        openTitle += isFrench ? " (Ouverts)" : " (Open)";
+      }
+
+      const buildSection = (jobList: string[], title: string) => {
+        let sec = "";
+        if (jobList.length > 0) {
+          sec += `\n${title} :\n`;
+          for (const jId of jobList) {
+            sec += `  - ${jId} - ${this.getJobLinkMarkup(jId, isFrench, false)}\n`;
+          }
+          const proofsMap = new Map<string, string[]>();
+          for (const jId of jobList) {
+            const missing = this.getMissingProofs(jId);
+            const proofs = isFrench ? missing.fr : missing.en;
+            if (proofs.length > 0) proofsMap.set(jId, proofs);
+          }
+          if (proofsMap.size > 0) {
+            sec += `\n  ${isFrench ? "Documents supplémentaires requis :" : "Additional documents required:"}\n`;
+            for (const [jId, proofs] of proofsMap.entries()) {
+              sec += `    * ${isFrench ? "Pour" : "For"} ${jId} : ` + proofs.join(", ") + "\n";
+            }
+          }
+        }
+        return sec;
+      };
+
+      out += buildSection(openJobs, openTitle);
+      out += buildSection(closedJobs, closedTitle);
+      return out;
+    };
+
     const dossierIds = [
       this.selectedDossierJobId1(),
       this.selectedDossierJobId2(),
@@ -7658,22 +7791,23 @@ o Médecine d’urgence`,
     const hasNoJobCode = dossierIds.includes("00003");
     const realDossierIds = dossierIds.filter((id) => id !== "00003");
 
-    // Determine if the *only* reason is that the dossier jobs are closed in SIP
-    let isOnlyClosedJobsReason = dossierIds.length > 0;
-    for (const id of dossierIds) {
+    // Determine which dossier jobs are closed but otherwise admissible
+    const closedButAdmissibleJobs: string[] = [];
+    for (const id of realDossierIds) {
       const s = this.evaluateJobAdmissibility(id);
       if (s) {
         if (
-          !s.isJobClosed ||
-          !s.isAgeAdmissible ||
-          !s.isCitizenshipAdmissible ||
-          !s.isEducationAdmissible
+          s.isJobClosed &&
+          s.isAgeAdmissible &&
+          s.isCitizenshipAdmissible &&
+          s.isEducationAdmissible
         ) {
-          isOnlyClosedJobsReason = false;
-          break;
+          closedButAdmissibleJobs.push(id);
         }
       }
     }
+    const hasClosedButAdmissibleJobs = closedButAdmissibleJobs.length > 0;
+    const allRealDossierJobsAreClosedButAdmissible = realDossierIds.length > 0 && closedButAdmissibleJobs.length === realDossierIds.length;
 
     // Split eligible jobs into NCM and Officer
     const OFFICER_JOB_IDS = new Set([
@@ -7798,7 +7932,7 @@ o Médecine d’urgence`,
             }
             if (!s.isAgeAdmissible) {
               reasonsFrList.push(
-                `Votre âge actuel ne vous permet pas de compléter le contrat initial du métier (${s.durationYears} ans) avant l'âge de 60 ans.`,
+                `L'âge maximal est de 56 ans et votre âge ne permet pas de compléter le contrat initial (${s.durationYears} ans) avant 60 ans.`,
               );
             }
             if (!s.isCitizenshipAdmissible) {
@@ -7830,14 +7964,27 @@ o Médecine d’urgence`,
       // Options French
       h +=
         '<p class="mt-4 font-semibold text-slate-800">Voici les options qui s\'offrent à vous :</p>\n';
-      if (isOnlyClosedJobsReason) {
-        h +=
-          '<p class="mt-2 text-sm"><strong>Option 1 : Conserver vos choix de métier actuels et attendre leur réouverture</strong><br>Vous pouvez choisir de garder vos choix de métier actuels et de patienter jusqu\'en avril prochain pour la réouverture des positions. Si vous sélectionnez cette option, <strong>votre dossier de candidature actuel sera fermé</strong> et il sera de votre entière responsabilité de nous recontacter vers la fin du mois de mars prochain pour réactiver votre processus.</p>\n';
+      if (hasClosedButAdmissibleJobs) {
+        if (allRealDossierJobsAreClosedButAdmissible) {
+          h +=
+            '<p class="mt-2 text-sm"><strong>Option 1 : Conserver vos choix de métier actuels et attendre leur réouverture</strong><br>Vous pouvez choisir de garder vos choix de métier actuels et de patienter jusqu\'en avril prochain pour la réouverture des positions. Si vous sélectionnez cette option, <span style="background-color: #fef08a; font-weight: bold;">votre dossier de candidature actuel sera fermé</span> et il sera de <span style="background-color: #fef08a; font-weight: bold;">votre entière responsabilité de nous recontacter vers la fin du mois de mars prochain</span> pour réactiver votre processus.</p>\n';
+        } else {
+          h +=
+            '<p class="mt-2 text-sm"><strong>Option 1 : Conserver certains de vos choix de métier actuels et attendre leur réouverture</strong><br>Vous pouvez choisir de garder le ou les métiers suivants pour lesquels vous êtes admissible : <strong>' + closedButAdmissibleJobs.join(", ") + '</strong>, et de patienter jusqu\'en avril prochain pour la réouverture des positions. Si vous sélectionnez cette option, <span style="background-color: #fef08a; font-weight: bold;">votre dossier de candidature actuel sera fermé</span> et il sera de <span style="background-color: #fef08a; font-weight: bold;">votre entière responsabilité de nous recontacter vers la fin du mois de mars prochain</span> pour réactiver votre processus pour ce ou ces métiers.</p>\n';
+        }
         h +=
           '<p class="mt-4 text-sm"><strong>Option 2 : Choisir un autre métier parmi la liste des métiers admissibles</strong><br>Vous pouvez réorienter votre candidature vers d\'autres choix de métiers admissibles dès maintenant. Consultez la liste ci-dessous.</p>\n';
       } else {
         h +=
           '<p class="mt-2 text-sm"><strong>Choisir un autre métier parmi la liste des métiers admissibles</strong><br>Vous devez réorienter votre candidature vers un choix de métier pour lequel vous êtes admissible afin de poursuivre le processus d\'enrôlement. Veuillez consulter la liste ci-dessous.</p>\n';
+      }
+
+      if (this.ignoreSip()) {
+        h +=
+          '<div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-900" style="margin-top: 16px; padding: 12px; background-color: #fefce8; border: 1px solid #fef08a; border-radius: 4px; font-size: 14px; color: #713f12;">\n';
+        h +=
+          '  <strong>Note importante concernant les métiers fermés :</strong> La liste ci-dessous inclut des métiers actuellement ouverts et fermés. Si vous choisissez un <span style="background-color: #fef08a; font-weight: bold;">métier ouvert</span>, nous pourrons poursuivre le traitement de votre demande d\'emploi immédiatement. Par contre, si vous choisissez un <span style="background-color: #fecaca; color: #991b1b; font-weight: bold;">métier fermé</span> (marqué en rouge), nous devrons fermer votre dossier et ce sera <span style="background-color: #fef08a; font-weight: bold;">votre entière responsabilité de nous rappeler vers la fin du mois de mars prochain</span> pour faire rouvrir votre dossier dans ce métier.\n';
+        h += '</div>\n';
       }
 
       // Eligible Jobs French Division
@@ -7846,66 +7993,8 @@ o Médecine d’urgence`,
       h +=
         '<p class="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">MÉTIERS ADMISSIBLES :</p>\n';
 
-      // NCM
-      if (listNCM.length > 0) {
-        h +=
-          '<p class="font-bold text-blue-800 mt-2">Militaires du rang :</p>\n';
-        h += '<ul class="list-disc pl-5 mt-1 mb-2">\n';
-        for (const jId of listNCM) {
-          h += `  <li class="mt-0.5"><strong>${jId} - ${this.getJobLinkMarkup(jId, true, true)}</strong></li>\n`;
-        }
-        h += "</ul>\n";
-
-        const proofsMap = new Map<string, string[]>();
-        for (const jId of listNCM) {
-          const missing = this.getMissingProofs(jId);
-          if (missing.fr.length > 0) {
-            proofsMap.set(jId, missing.fr);
-          }
-        }
-        if (proofsMap.size > 0) {
-          h +=
-            '<p class="mt-2 text-xs text-red-800 font-semibold font-sans">Vous devrez fournir ces documents/preuves supplémentaires si vous choisissez les métiers suivants :</p>\n';
-          h += '<ul class="list-disc pl-5 mt-1 mb-2 text-xs text-slate-600">\n';
-          for (const [jId, proofs] of proofsMap.entries()) {
-            h +=
-              `  <li class="mt-0.5"><strong>Pour ${jId} - ${this.getJobLinkMarkup(jId, true, true)} :</strong> ` +
-              proofs.join(", ") +
-              "</li>\n";
-          }
-          h += "</ul>\n";
-        }
-      }
-
-      // Officers
-      if (listOFF.length > 0) {
-        h += '<p class="font-bold text-purple-800 mt-4">Officiers :</p>\n';
-        h += '<ul class="list-disc pl-5 mt-1 mb-2">\n';
-        for (const jId of listOFF) {
-          h += `  <li class="mt-0.5"><strong>${jId} - ${this.getJobLinkMarkup(jId, true, true)}</strong></li>\n`;
-        }
-        h += "</ul>\n";
-
-        const proofsMap = new Map<string, string[]>();
-        for (const jId of listOFF) {
-          const missing = this.getMissingProofs(jId);
-          if (missing.fr.length > 0) {
-            proofsMap.set(jId, missing.fr);
-          }
-        }
-        if (proofsMap.size > 0) {
-          h +=
-            '<p class="mt-2 text-xs text-red-800 font-semibold font-sans">Vous devrez fournir ces documents/preuves supplémentaires si vous choisissez les métiers suivants :</p>\n';
-          h += '<ul class="list-disc pl-5 mt-1 mb-2 text-xs text-slate-600">\n';
-          for (const [jId, proofs] of proofsMap.entries()) {
-            h +=
-              `  <li class="mt-0.5"><strong>Pour ${jId} - ${this.getJobLinkMarkup(jId, true, true)} :</strong> ` +
-              proofs.join(", ") +
-              "</li>\n";
-          }
-          h += "</ul>\n";
-        }
-      }
+      h += renderHtmlList(listNCM, false, true);
+      h += renderHtmlList(listOFF, true, true);
       h += "</div>\n";
 
       // Conclusion French
@@ -8027,14 +8116,27 @@ o Médecine d’urgence`,
       // Options English
       h +=
         '<p class="mt-4 font-semibold text-slate-800">Here are the options available to you:</p>\n';
-      if (isOnlyClosedJobsReason) {
-        h +=
-          '<p class="mt-2 text-sm"><strong>Option 1: Retain your current occupational choices and wait for their reopening</strong><br>You can choose to keep your current choices and wait until next April for the reopening of recruiting positions. If you select this option, <strong>your current application file will be closed</strong> and it will be your sole responsibility to contact us towards the end of next March to reactivate your process.</p>\n';
+      if (hasClosedButAdmissibleJobs) {
+        if (allRealDossierJobsAreClosedButAdmissible) {
+          h +=
+            '<p class="mt-2 text-sm"><strong>Option 1: Retain your current occupational choices and wait for their reopening</strong><br>You can choose to keep your current choices and wait until next April for the reopening of recruiting positions. If you select this option, <span style="background-color: #fef08a; font-weight: bold;">your current application file will be closed</span> and it will be <span style="background-color: #fef08a; font-weight: bold;">your sole responsibility to contact us towards the end of next March</span> to reactivate your process.</p>\n';
+        } else {
+          h +=
+            '<p class="mt-2 text-sm"><strong>Option 1: Retain some of your current occupational choices and wait for their reopening</strong><br>You can choose to keep the following occupation(s) for which you are eligible: <strong>' + closedButAdmissibleJobs.join(", ") + '</strong>, and wait until next April for the reopening of recruiting positions. If you select this option, <span style="background-color: #fef08a; font-weight: bold;">your current application file will be closed</span> and it will be <span style="background-color: #fef08a; font-weight: bold;">your sole responsibility to contact us towards the end of next March</span> to reactivate your process for this or these occupations.</p>\n';
+        }
         h +=
           '<p class="mt-4 text-sm"><strong>Option 2: Choose another occupation from the list of eligible occupations</strong><br>You can redirect your application to other eligible occupational choices right now. Please consult the list below.</p>\n';
       } else {
         h +=
           '<p class="mt-2 text-sm"><strong>Choose another occupation from the list of eligible occupations</strong><br>You must redirect your application to an occupational choice for which you are eligible to continue the enrollment process. Please consult the list below.</p>\n';
+      }
+
+      if (this.ignoreSip()) {
+        h +=
+          '<div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-900" style="margin-top: 16px; padding: 12px; background-color: #fefce8; border: 1px solid #fef08a; border-radius: 4px; font-size: 14px; color: #713f12;">\n';
+        h +=
+          '  <strong>Important note regarding closed occupations:</strong> The list below includes both currently open and closed occupations. If you choose an <span style="background-color: #fef08a; font-weight: bold;">open occupation</span>, we can continue processing your application immediately. However, if you choose a <span style="background-color: #fecaca; color: #991b1b; font-weight: bold;">closed occupation</span> (marked in red), we will have to close your file and it will be <span style="background-color: #fef08a; font-weight: bold;">your sole responsibility to call us back towards the end of next March</span> to reopen your file for this occupation.\n';
+        h += '</div>\n';
       }
 
       // Eligible Jobs English Division
@@ -8043,66 +8145,8 @@ o Médecine d’urgence`,
       h +=
         '<p class="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">ELIGIBLE OCCUPATIONS:</p>\n';
 
-      // NCM English
-      if (listNCM.length > 0) {
-        h +=
-          '<p class="font-bold text-blue-800 mt-2">Non-Commissioned Members (NCM):</p>\n';
-        h += '<ul class="list-disc pl-5 mt-1 mb-2">\n';
-        for (const jId of listNCM) {
-          h += `  <li class="mt-0.5"><strong>${jId} - ${this.getJobLinkMarkup(jId, false, true)}</strong></li>\n`;
-        }
-        h += "</ul>\n";
-
-        const proofsMapEn = new Map<string, string[]>();
-        for (const jId of listNCM) {
-          const missing = this.getMissingProofs(jId);
-          if (missing.en.length > 0) {
-            proofsMapEn.set(jId, missing.en);
-          }
-        }
-        if (proofsMapEn.size > 0) {
-          h +=
-            '<p class="mt-2 text-xs text-red-800 font-semibold font-sans">You will need to provide these additional documents/proofs if you choose the following occupations:</p>\n';
-          h += '<ul class="list-disc pl-5 mt-1 mb-2 text-xs text-slate-600">\n';
-          for (const [jId, proofs] of proofsMapEn.entries()) {
-            h +=
-              `  <li class="mt-0.5"><strong>For ${jId} - ${this.getJobLinkMarkup(jId, false, true)}:</strong> ` +
-              proofs.join(", ") +
-              "</li>\n";
-          }
-          h += "</ul>\n";
-        }
-      }
-
-      // Officers English
-      if (listOFF.length > 0) {
-        h += '<p class="font-bold text-purple-800 mt-4">Officers:</p>\n';
-        h += '<ul class="list-disc pl-5 mt-1 mb-2">\n';
-        for (const jId of listOFF) {
-          h += `  <li class="mt-0.5"><strong>${jId} - ${this.getJobLinkMarkup(jId, false, true)}</strong></li>\n`;
-        }
-        h += "</ul>\n";
-
-        const proofsMapEn = new Map<string, string[]>();
-        for (const jId of listOFF) {
-          const missing = this.getMissingProofs(jId);
-          if (missing.en.length > 0) {
-            proofsMapEn.set(jId, missing.en);
-          }
-        }
-        if (proofsMapEn.size > 0) {
-          h +=
-            '<p class="mt-2 text-xs text-red-800 font-semibold font-sans">You will need to provide these additional documents/proofs if you choose the following occupations:</p>\n';
-          h += '<ul class="list-disc pl-5 mt-1 mb-2 text-xs text-slate-600">\n';
-          for (const [jId, proofs] of proofsMapEn.entries()) {
-            h +=
-              `  <li class="mt-0.5"><strong>For ${jId} - ${this.getJobLinkMarkup(jId, false, true)}:</strong> ` +
-              proofs.join(", ") +
-              "</li>\n";
-          }
-          h += "</ul>\n";
-        }
-      }
+      h += renderHtmlList(listNCM, false, false);
+      h += renderHtmlList(listOFF, true, false);
       h += "</div>\n";
 
       // Conclusion English
@@ -8161,7 +8205,7 @@ o Médecine d’urgence`,
             }
             if (!s.isAgeAdmissible) {
               reasonsFrList.push(
-                `Votre âge actuel ne vous permet pas de compléter le contrat initial du métier (${s.durationYears} ans) avant l'âge de 60 ans.`,
+                `L'âge maximal est de 56 ans et votre âge ne permet pas de compléter le contrat initial (${s.durationYears} ans) avant 60 ans.`,
               );
             }
             if (!s.isCitizenshipAdmissible) {
@@ -8192,81 +8236,33 @@ o Médecine d’urgence`,
 
       // Options French
       p += "Voici les options qui s'offrent à vous :\n\n";
-      if (isOnlyClosedJobsReason) {
-        p +=
-          "Option 1 : Conserver vos choix de métier actuels et attendre leur réouverture\n";
-        p +=
-          "Vous pouvez choisir de garder vos choix de métier actuels et de patienter jusqu'en avril prochain pour la réouverture des positions. Si vous sélectionnez cette option, votre dossier de candidature actuel sera fermé et il sera de votre entière responsabilité de nous recontacter vers la fin du mois de mars prochain pour réactiver votre processus.\n\n";
-        p +=
-          "Option 2 : Choisir un autre métier parmi la liste des métiers admissibles\n";
-        p +=
-          "Vous pouvez réorienter votre candidature vers d'autres choix de métiers admissibles dès maintenant. Consultez la liste ci-dessous.\n\n";
+      if (hasClosedButAdmissibleJobs) {
+        if (allRealDossierJobsAreClosedButAdmissible) {
+          p += "Option 1 : Conserver vos choix de métier actuels et attendre leur réouverture\n";
+          p += "Vous pouvez choisir de garder vos choix de métier actuels et de patienter jusqu'en avril prochain pour la réouverture des positions. Si vous sélectionnez cette option, votre dossier de candidature actuel sera fermé et il sera de votre entière responsabilité de nous recontacter vers la fin du mois de mars prochain pour réactiver votre processus.\n\n";
+        } else {
+          p += "Option 1 : Conserver certains de vos choix de métier actuels et attendre leur réouverture\n";
+          p += "Vous pouvez choisir de garder le ou les métiers suivants pour lesquels vous êtes admissible : " + closedButAdmissibleJobs.join(", ") + ", et de patienter jusqu'en avril prochain pour la réouverture des positions. Si vous sélectionnez cette option, votre dossier de candidature actuel sera fermé et il sera de votre entière responsabilité de nous recontacter vers la fin du mois de mars prochain pour réactiver votre processus pour ce ou ces métiers.\n\n";
+        }
+        p += "Option 2 : Choisir un autre métier parmi la liste des métiers admissibles\n";
+        p += "Vous pouvez réorienter votre candidature vers d'autres choix de métiers admissibles dès maintenant. Consultez la liste ci-dessous.\n\n";
       } else {
         p += "Choisir un autre métier parmi la liste des métiers admissibles\n";
-        p +=
-          "Vous devez réorienter votre candidature vers un choix de métier pour lequel vous êtes admissible afin de poursuivre le processus d'enrôlement. Veuillez consulter la liste ci-dessous.\n\n";
+        p += "Vous devez réorienter votre candidature vers un choix de métier pour lequel vous êtes admissible afin de poursuivre le processus d'enrôlement. Veuillez consulter la liste ci-dessous.\n\n";
+      }
+
+      if (this.ignoreSip()) {
+        p += "Note importante concernant les métiers fermés :\n";
+        p += "La liste ci-dessous inclut des métiers actuellement ouverts et fermés. Si vous choisissez un métier ouvert, nous pourrons poursuivre le traitement de votre demande d'emploi immédiatement. Par contre, si vous choisissez un métier fermé, nous devrons fermer votre dossier et ce sera votre entière responsabilité de nous rappeler vers la fin du mois de mars prochain pour faire rouvrir votre dossier dans ce métier.\n\n";
       }
 
       // Eligible Jobs French Division
       p += "--------------------------------------------------\n";
       p += "MÉTIERS ADMISSIBLES :\n";
-      p += "--------------------------------------------------\n\n";
+      p += "--------------------------------------------------\n";
 
-      // NCM
-      if (listNCM.length > 0) {
-        p += "Militaires du rang :\n";
-        for (const jId of listNCM) {
-          p += `- ${jId} - ${this.getJobLinkMarkup(jId, true, false)}\n`;
-        }
-        p += "\n";
-
-        const proofsMap = new Map<string, string[]>();
-        for (const jId of listNCM) {
-          const missing = this.getMissingProofs(jId);
-          if (missing.fr.length > 0) {
-            proofsMap.set(jId, missing.fr);
-          }
-        }
-        if (proofsMap.size > 0) {
-          p +=
-            "Vous devrez fournir ces documents/preuves supplémentaires si vous choisissez les métiers suivants :\n";
-          for (const [jId, proofs] of proofsMap.entries()) {
-            p +=
-              `- Pour ${jId} - ${this.getJobLinkMarkup(jId, true, false)} : ` +
-              proofs.join(", ") +
-              "\n";
-          }
-          p += "\n";
-        }
-      }
-
-      // Officers
-      if (listOFF.length > 0) {
-        p += "Officiers :\n";
-        for (const jId of listOFF) {
-          p += `- ${jId} - ${this.getJobLinkMarkup(jId, true, false)}\n`;
-        }
-        p += "\n";
-
-        const proofsMap = new Map<string, string[]>();
-        for (const jId of listOFF) {
-          const missing = this.getMissingProofs(jId);
-          if (missing.fr.length > 0) {
-            proofsMap.set(jId, missing.fr);
-          }
-        }
-        if (proofsMap.size > 0) {
-          p +=
-            "Vous devrez fournir ces documents/preuves supplémentaires si vous choisissez les métiers suivants :\n";
-          for (const [jId, proofs] of proofsMap.entries()) {
-            p +=
-              `- Pour ${jId} - ${this.getJobLinkMarkup(jId, true, false)} : ` +
-              proofs.join(", ") +
-              "\n";
-          }
-          p += "\n";
-        }
-      }
+      p += renderPlainList(listNCM, false, true);
+      p += renderPlainList(listOFF, true, true);
 
       // Conclusion French
       p +=
@@ -8355,82 +8351,33 @@ o Médecine d’urgence`,
 
       // Options English
       p += "Here are the options available to you:\n\n";
-      if (isOnlyClosedJobsReason) {
-        p +=
-          "Option 1: Retain your current occupational choices and wait for their reopening\n";
-        p +=
-          "You can choose to keep your current choices and wait until next April for the reopening of recruiting positions. If you select this option, your current application file will be closed and it will be your sole responsibility to contact us towards the end of next March to reactivate your process.\n\n";
-        p +=
-          "Option 2: Choose another occupation from the list of eligible occupations\n";
-        p +=
-          "You can redirect your application to other eligible occupational choices right now. Please consult the list below.\n\n";
+      if (hasClosedButAdmissibleJobs) {
+        if (allRealDossierJobsAreClosedButAdmissible) {
+          p += "Option 1: Retain your current occupational choices and wait for their reopening\n";
+          p += "You can choose to keep your current choices and wait until next April for the reopening of recruiting positions. If you select this option, your current application file will be closed and it will be your sole responsibility to contact us towards the end of next March to reactivate your process.\n\n";
+        } else {
+          p += "Option 1: Retain some of your current occupational choices and wait for their reopening\n";
+          p += "You can choose to keep the following occupation(s) for which you are eligible: " + closedButAdmissibleJobs.join(", ") + ", and wait until next April for the reopening of recruiting positions. If you select this option, your current application file will be closed and it will be your sole responsibility to contact us towards the end of next March to reactivate your process for this or these occupations.\n\n";
+        }
+        p += "Option 2: Choose another occupation from the list of eligible occupations\n";
+        p += "You can redirect your application to other eligible occupational choices right now. Please consult the list below.\n\n";
       } else {
-        p +=
-          "Choose another occupation from the list of eligible occupations\n";
-        p +=
-          "You must redirect your application to an occupational choice for which you are eligible to continue the enrollment process. Please consult the list below.\n\n";
+        p += "Choose another occupation from the list of eligible occupations\n";
+        p += "You must redirect your application to an occupational choice for which you are eligible to continue the enrollment process. Please consult the list below.\n\n";
+      }
+
+      if (this.ignoreSip()) {
+        p += "Important note regarding closed occupations:\n";
+        p += "The list below includes both currently open and closed occupations. If you choose an open occupation, we can continue processing your application immediately. However, if you choose a closed occupation, we will have to close your file and it will be your sole responsibility to call us back towards the end of next March to reopen your file for this occupation.\n\n";
       }
 
       // Eligible Jobs English Division
       p += "--------------------------------------------------\n";
       p += "ELIGIBLE OCCUPATIONS:\n";
-      p += "--------------------------------------------------\n\n";
+      p += "--------------------------------------------------\n";
 
-      // NCM English
-      if (listNCM.length > 0) {
-        p += "Non-Commissioned Members (NCM):\n";
-        for (const jId of listNCM) {
-          p += `- ${jId} - ${this.getJobLinkMarkup(jId, false, false)}\n`;
-        }
-        p += "\n";
-
-        const proofsMapEn = new Map<string, string[]>();
-        for (const jId of listNCM) {
-          const missing = this.getMissingProofs(jId);
-          if (missing.en.length > 0) {
-            proofsMapEn.set(jId, missing.en);
-          }
-        }
-        if (proofsMapEn.size > 0) {
-          p +=
-            "You will need to provide these additional documents/proofs if you choose the following occupations:\n";
-          for (const [jId, proofs] of proofsMapEn.entries()) {
-            p +=
-              `- For ${jId} - ${this.getJobLinkMarkup(jId, false, false)}: ` +
-              proofs.join(", ") +
-              "\n";
-          }
-          p += "\n";
-        }
-      }
-
-      // Officers English
-      if (listOFF.length > 0) {
-        p += "Officers:\n";
-        for (const jId of listOFF) {
-          p += `- ${jId} - ${this.getJobLinkMarkup(jId, false, false)}\n`;
-        }
-        p += "\n";
-
-        const proofsMapEn = new Map<string, string[]>();
-        for (const jId of listOFF) {
-          const missing = this.getMissingProofs(jId);
-          if (missing.en.length > 0) {
-            proofsMapEn.set(jId, missing.en);
-          }
-        }
-        if (proofsMapEn.size > 0) {
-          p +=
-            "You will need to provide these additional documents/proofs if you choose the following occupations:\n";
-          for (const [jId, proofs] of proofsMapEn.entries()) {
-            p +=
-              `- For ${jId} - ${this.getJobLinkMarkup(jId, false, false)}: ` +
-              proofs.join(", ") +
-              "\n";
-          }
-          p += "\n";
-        }
-      }
+      p += renderPlainList(listNCM, false, false);
+      p += renderPlainList(listOFF, true, false);
 
       // Conclusion English
       p +=

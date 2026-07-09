@@ -65,20 +65,7 @@ type ModalTab = "catalogue" | "reorientation";
                 selectedJob()?.title
               }}</span>
             } @else {
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+              <span class="bg-indigo-600 text-white text-[11px] font-black px-1.5 py-0.5 rounded tracking-wider leading-none">RÉO</span>
               <span class="hidden sm:inline">Portail Carrière</span>
             }
           </div>

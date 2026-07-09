@@ -25,7 +25,7 @@ interface JobRule {
   customCheck?: (
     selected: Set<string>,
     criteriaCoursSpecialiseIds: string[],
-  ) => boolean;
+  ) => boolean | { passed: boolean; missingFr?: string; missingEn?: string };
   jobs: string[];
   allowPR?: boolean;
 }
@@ -3938,7 +3938,12 @@ o Médecine d’urgence`,
           selected.has("univ_1er_cycle_global") ||
           Array.from(selected).some((id) => id.startsWith("bacc_"));
 
-        return hasDESAndLang || hasCoursSpecialises || has1erCycle;
+        if (hasDESAndLang || hasCoursSpecialises || has1erCycle) return { passed: true };
+        return {
+          passed: false,
+          missingFr: "DES avec Français/Anglais de sec 5 (ou Cours spécialisé / Diplôme universitaire)",
+          missingEn: "High School Diploma with Grade 11 English/French (or Specialized Course / University Degree)"
+        };
       },
     },
     {
@@ -3949,7 +3954,28 @@ o Médecine d’urgence`,
         const hasMath11App = selected.has("base_math_11_app");
         const hasChemOrPhys =
           selected.has("chimie_sec5_11e") || selected.has("physique_sec5_11e");
-        return hasDES && hasMath11App && hasChemOrPhys;
+        
+        if (hasDES && hasMath11App && hasChemOrPhys) return { passed: true };
+
+        const missingFr = [];
+        const missingEn = [];
+        if (!hasDES) {
+          missingFr.push("DES ou 12e année");
+          missingEn.push("High School Diploma or Grade 12");
+        }
+        if (!hasMath11App) {
+          missingFr.push("Mathématiques de sec 5/11e (appliquées)");
+          missingEn.push("Grade 11 Math (Applied)");
+        }
+        if (!hasChemOrPhys) {
+          missingFr.push("Chimie ou Physique de sec 5/11e année");
+          missingEn.push("Grade 11 Chemistry or Physics");
+        }
+        return {
+          passed: false,
+          missingFr: missingFr.join(" et "),
+          missingEn: missingEn.join(" and "),
+        };
       },
     },
 
@@ -3982,7 +4008,14 @@ o Médecine d’urgence`,
         const has1erCycle =
           selected.has("univ_1er_cycle_global") ||
           Array.from(selected).some((id) => id.startsWith("bacc_"));
-        return has24PropsAndMath || has1erCycle;
+        
+        if (has24PropsAndMath || has1erCycle) return { passed: true };
+
+        return {
+            passed: false,
+            missingFr: "24 crédits de sec 4 avec Mathématiques de sec 4/10e (appliquées) (ou Diplôme universitaire)",
+            missingEn: "24 credits of Grade 10 with Grade 10 Math (Applied) (or University Degree)"
+        };
       },
     },
     {
@@ -4017,12 +4050,18 @@ o Médecine d’urgence`,
       jobs: ["00137"],
       allowPR: true, // RP
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("des_12e_annee") ||
           selected.has("cs_photo_multimedia") ||
           selected.has("bacc_arts_communications") ||
           selected.has("bacc_arts_communication_visuelle")
         );
+        if (passed) return { passed: true };
+        return {
+            passed: false,
+            missingFr: "DES, Cours de spécialisation en Photographie/Multimédia, ou Bacc en Communications",
+            missingEn: "High School Diploma, Specialized Course in Photography/Multimedia, or Bachelor's in Communications"
+        };
       },
     },
     {
@@ -4037,7 +4076,13 @@ o Médecine d’urgence`,
         const hasEducation =
           selected.has("des_12e_annee") && selected.has("base_math_10_app");
         const hasFireTech = selected.has("cs_sec_incendie");
-        return hasEducation || hasFireTech;
+        const passed = hasEducation || hasFireTech;
+        if (passed) return { passed: true };
+        return {
+            passed: false,
+            missingFr: "DES avec Mathématiques de sec 4/10e (appliquées) (ou Formation en sécurité incendie)",
+            missingEn: "High School Diploma with Grade 10 Math (Applied) (or Fire Security Training)"
+        };
       },
     },
     {
@@ -4064,20 +4109,32 @@ o Médecine d’urgence`,
       jobs: ["00164"],
       allowPR: true, // RP
       customCheck: (selected) => {
-        return (
+        const passed = (
           (selected.has("sec4_24_credits") &&
             selected.has("base_math_10_gen")) ||
           selected.has("cs_dep_cuisine")
         );
+        if (passed) return { passed: true };
+        return {
+            passed: false,
+            missingFr: "24 crédits de sec 4 avec Mathématiques de sec 4/10e (générales) (ou DEP en cuisine)",
+            missingEn: "24 credits of Grade 10 with Grade 10 Math (General) (or DEP in cooking)"
+        };
       },
     },
     {
       jobs: ["00166"],
       allowPR: true, // RP
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("des_12e_annee") || selected.has("cs_etude_musique")
         );
+        if (passed) return { passed: true };
+        return {
+            passed: false,
+            missingFr: "DES ou 12e année (ou Études en musique)",
+            missingEn: "High School Diploma or Grade 12 (or Music Studies)"
+        };
       },
     },
     {
@@ -4104,11 +4161,13 @@ o Médecine d’urgence`,
       jobs: ["00301"],
       allowPR: true, // RP
       customCheck: (selected) => {
-        return (
+        const passed = (
           (selected.has("sec4_24_credits") &&
             selected.has("base_math_10_app")) ||
           selected.has("cs_dep_refrigeration")
         );
+        if (passed) return { passed: true };
+        return { passed: false, missingFr: "24 crédits de sec 4 avec Math appliquées de sec 4/10e (ou DEP en réfrigération)", missingEn: "24 credits of Grade 10 with Applied Math Grade 10 (or DEP in refrigeration)" };
       },
     },
     {
@@ -4122,51 +4181,61 @@ o Médecine d’urgence`,
           selected.has("des_12e_annee") &&
           selected.has("base_math_11_adv") &&
           selected.has("physique_sec5_11e");
-        return option1 || option2 || option3;
+        const passed = option1 || option2 || option3;
+        if (passed) return { passed: true };
+        return { passed: false, missingFr: "24 crédits de sec 4 avec Math appliquées de sec 4/10e (ou DEP en électricité, ou DES avec Math avancées de sec 5/11e et Physique de sec 5/11e)", missingEn: "24 credits of Grade 10 with Applied Math Grade 10 (or DEP in electricity, or High School Diploma with Grade 11 Advanced Math and Grade 11 Physics)" };
       },
     },
     {
       jobs: ["00303"],
       allowPR: true, // RP
       customCheck: (selected) => {
-        return (
+        const passed = (
           (selected.has("sec4_24_credits") &&
             selected.has("base_math_10_app")) ||
           selected.has("cs_dep_electricite")
         );
+        if (passed) return { passed: true };
+        return { passed: false, missingFr: "24 crédits de sec 4 avec Math appliquées de sec 4/10e (ou DEP en électricité)", missingEn: "24 credits of Grade 10 with Applied Math Grade 10 (or DEP in electricity)" };
       },
     },
     {
       jobs: ["00304"],
       allowPR: true, // RP
       customCheck: (selected) => {
-        return (
+        const passed = (
           (selected.has("sec4_24_credits") &&
             selected.has("base_math_10_app")) ||
           selected.has("cs_dep_plomberie_chauffage")
         );
+        if (passed) return { passed: true };
+        return { passed: false, missingFr: "24 crédits de sec 4 avec Math appliquées de sec 4/10e (ou DEP en plomberie et chauffage)", missingEn: "24 credits of Grade 10 with Applied Math Grade 10 (or DEP in plumbing and heating)" };
       },
     },
     {
       jobs: ["00305"],
       allowPR: true, // RP
       customCheck: (selected) => {
-        return (
+        const passed = (
           (selected.has("sec4_24_credits") &&
             selected.has("base_math_10_app")) ||
           selected.has("cs_aec_eaux")
         );
+        if (passed) return { passed: true };
+        return { passed: false, missingFr: "24 crédits de sec 4 avec Math appliquées de sec 4/10e (ou AEC en traitement des eaux)", missingEn: "24 credits of Grade 10 with Applied Math Grade 10 (or AEC in water treatment)" };
       },
     },
     {
       jobs: ["00306"],
       allowPR: true, // RP
       customCheck: (selected) => {
-        return (
+        const passed = (
           (selected.has("sec4_24_credits") &&
             selected.has("base_math_10_app")) ||
           selected.has("cs_dep_charpenterie")
         );
+        if (passed) return { passed: true };
+        return { passed: false, missingFr: "24 crédits de sec 4 avec Math appliquées de sec 4/10e (ou DEP en charpenterie)", missingEn: "24 credits of Grade 10 with Applied Math Grade 10 (or DEP in carpentry)" };
       },
     },
     {
@@ -4212,10 +4281,12 @@ o Médecine d’urgence`,
       jobs: ["00370"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           (selected.has("des_12e_annee") && selected.has("base_math_11_app")) ||
           selected.has("cs_dep_arpentage_topo")
         );
+        if (passed) return { passed: true };
+        return { passed: false, missingFr: "DES avec Math appliquées de sec 5/11e (ou DEP en arpentage et topographie)", missingEn: "High School Diploma with Applied Math Grade 11 (or DEP in surveying and topography)" };
       },
     },
     {
@@ -4245,11 +4316,13 @@ o Médecine d’urgence`,
       jobs: ["00378"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           (selected.has("des_12e_annee") && selected.has("base_math_11_adv")) ||
           (selected.has("des_12e_annee") && selected.has("info_sec5_12e")) ||
           selected.has("cs_dip_cyber")
         );
+        if (passed) return { passed: true };
+        return { passed: false, missingFr: "DES avec Math avancées de sec 5/11e ou Informatique de sec 5/12e (ou Diplôme en cybersécurité)", missingEn: "High School Diploma with Advanced Math Grade 11 or Grade 12 Computer Science (or Diploma in cybersecurity)" };
       },
     },
     {
@@ -5646,6 +5719,10 @@ o Médecine d’urgence`,
         current.add("sec4_24_credits");
       }
 
+      if (id === "chimie_sec5_11e" || id === "physique_sec5_11e") {
+        current.add("sci_tech4_sci10");
+      }
+
       if (id.startsWith("cs_")) {
         const crit = this.manualCriteria.find((c) => c.id === id);
         if (
@@ -6020,7 +6097,8 @@ o Médecine d’urgence`,
     for (const rule of this.jobRules) {
       let meetsRule = false;
       if (rule.customCheck) {
-        meetsRule = rule.customCheck(selected, coursSpecialisesIds);
+        const checkResult = rule.customCheck(selected, coursSpecialisesIds);
+        meetsRule = typeof checkResult === "boolean" ? checkResult : checkResult.passed;
       } else if (
         rule.requiredCriteriaIds &&
         rule.requiredCriteriaIds.length > 0
@@ -6116,7 +6194,8 @@ o Médecine d’urgence`,
     for (const rule of this.jobRules) {
       let meetsRule = false;
       if (rule.customCheck) {
-        meetsRule = rule.customCheck(selected, coursSpecialisesIds);
+        const checkResult = rule.customCheck(selected, coursSpecialisesIds);
+        meetsRule = typeof checkResult === "boolean" ? checkResult : checkResult.passed;
       } else if (
         rule.requiredCriteriaIds &&
         rule.requiredCriteriaIds.length > 0
@@ -6331,7 +6410,19 @@ o Médecine d’urgence`,
     return false;
   }
 
-  checkJobEducationEligibility(jobId: string): { eligible: boolean } {
+  isOfficerJob(jobId: string): boolean {
+    const OFFICER_JOB_IDS = new Set([
+      "00178", "00179", "00180", "00181", "00182", "00183", "00184", "00185",
+      "00187", "00189", "00190", "00191", "00194", "00195", "00196", "00201",
+      "00204", "00207", "00213", "00225", "00227", "00228", "00234", "00282",
+      "00328", "00340", "00341", "00344", "00345", "00346", "00348", "00349",
+      "00350", "00353", "00355", "00357", "00358", "00360", "00373", "00377",
+      "00379", "00388"
+    ]);
+    return OFFICER_JOB_IDS.has(jobId);
+  }
+
+  checkJobEducationEligibility(jobId: string): { eligible: boolean; missingFr?: string; missingEn?: string } {
     const rules = this.jobRules.filter((r) => r.jobs.includes(jobId));
     if (rules.length === 0) {
       return { eligible: true };
@@ -6342,7 +6433,7 @@ o Médecine d’urgence`,
 
     const allMathOptions = Object.values(this.MATH_COURSES).reduce(
       (acc, courses) => acc.concat(courses),
-      [],
+      [] as any[],
     );
     const selectedMaths = allMathOptions.filter((m) => selected.has(m.id));
 
@@ -6362,22 +6453,73 @@ o Médecine d’urgence`,
 
     const coursSpecialisesIds = this.criteriaCoursSpecialise().map((c) => c.id);
 
+    const missingFrList: string[] = [];
+    const missingEnList: string[] = [];
+
+    const getLabel = (id: string, isFr: boolean) => {
+        const crit = this.manualCriteria.find(c => c.id === id);
+        if (crit) {
+            if (id === "des_12e_annee") return isFr ? "DES ou 12e année" : "High School Diploma or Grade 12";
+            if (id === "sec4_24_credits") return isFr ? "Sec 4 (24 crédits) ou 10e année" : "Grade 10 (24 credits)";
+            if (id === "francais_sec4_10e") return isFr ? "Français/Anglais de sec 4 ou 10e année" : "Grade 10 English/French";
+            if (id === "francais_sec5_11e") return isFr ? "Français/Anglais de sec 5 ou 11e année" : "Grade 11 English/French";
+            if (id === "sci_tech4_sci10") return isFr ? "Science et technologie de sec 4 ou 10e année" : "Grade 10 Science";
+            if (id === "chimie_sec5_11e") return isFr ? "Chimie de sec 5 ou 11e année" : "Grade 11 Chemistry";
+            if (id === "physique_sec5_11e") return isFr ? "Physique de sec 5 ou 11e année" : "Grade 11 Physics";
+            return crit.label;
+        }
+        if (id === "base_math_10_gen") return isFr ? "Mathématiques de sec 4/10e (générales)" : "Grade 10 Math (General)";
+        if (id === "base_math_10_app") return isFr ? "Mathématiques de sec 4/10e (appliquées)" : "Grade 10 Math (Applied)";
+        if (id === "base_math_10_adv") return isFr ? "Mathématiques de sec 4/10e (avancées)" : "Grade 10 Math (Advanced)";
+        if (id === "base_math_11_gen") return isFr ? "Mathématiques de sec 5/11e (générales)" : "Grade 11 Math (General)";
+        if (id === "base_math_11_app") return isFr ? "Mathématiques de sec 5/11e (appliquées)" : "Grade 11 Math (Applied)";
+        if (id === "base_math_11_adv") return isFr ? "Mathématiques de sec 5/11e (avancées)" : "Grade 11 Math (Advanced)";
+        if (id === "base_math_12_gen") return isFr ? "Mathématiques de 12e (générales)" : "Grade 12 Math (General)";
+        if (id === "base_math_12_app") return isFr ? "Mathématiques de 12e (appliquées)" : "Grade 12 Math (Applied)";
+        if (id === "base_math_12_adv") return isFr ? "Mathématiques de 12e (avancées)" : "Grade 12 Math (Advanced)";
+        return id;
+    };
+
     for (const rule of rules) {
       let meetsRule = false;
       if (rule.customCheck) {
-        meetsRule = rule.customCheck(selected, coursSpecialisesIds);
+        const checkResult = rule.customCheck(selected, coursSpecialisesIds);
+        if (typeof checkResult === "boolean") {
+            meetsRule = checkResult;
+            if (!meetsRule) {
+                missingFrList.push("Des exigences spécifiques (ex: DEP, Mathématiques ou Sciences) sont manquantes");
+                missingEnList.push("Specific requirements (e.g. DEP, Math or Science) are missing");
+            }
+        } else {
+            meetsRule = checkResult.passed;
+            if (!meetsRule) {
+                if (checkResult.missingFr) missingFrList.push(checkResult.missingFr);
+                if (checkResult.missingEn) missingEnList.push(checkResult.missingEn);
+            }
+        }
       } else if (
         rule.requiredCriteriaIds &&
         rule.requiredCriteriaIds.length > 0
       ) {
-        meetsRule = rule.requiredCriteriaIds.every((id) => selected.has(id));
+        const missingIds = rule.requiredCriteriaIds.filter((id) => !selected.has(id));
+        if (missingIds.length === 0) {
+            meetsRule = true;
+        } else {
+            missingFrList.push(missingIds.map(id => getLabel(id, true)).join(" et "));
+            missingEnList.push(missingIds.map(id => getLabel(id, false)).join(" and "));
+        }
       }
 
       if (meetsRule) {
         return { eligible: true };
       }
     }
-    return { eligible: false };
+    
+    return { 
+        eligible: false, 
+        missingFr: Array.from(new Set(missingFrList)).join(" OU "),
+        missingEn: Array.from(new Set(missingEnList)).join(" OR ")
+    };
   }
 
   isAdmissibleOtherThanEducation(jobId: string): boolean {
@@ -6433,6 +6575,7 @@ o Médecine d’urgence`,
         citizenshipReason: "",
         isEducationAdmissible: false,
         educationReason: "",
+        educationReasonEn: "",
         durationYears: 3,
         isJobClosed: false,
       };
@@ -6479,10 +6622,20 @@ o Médecine d’urgence`,
 
     let isEducationAdmissible = true;
     let educationReason = "";
+    let educationReasonEn = "";
     const eduCheckSubmit = this.checkJobEducationEligibility(jobId);
     if (!eduCheckSubmit.eligible) {
       isEducationAdmissible = false;
-      educationReason = "Les critères requis ne sont pas rencontrés.";
+      if (this.isOfficerJob(jobId)) {
+        educationReason = "Vous n'avez pas les études universitaires requises pour satisfaire aux exigences académiques.";
+        educationReasonEn = "You do not have the required university education to meet the academic requirements.";
+      } else if (eduCheckSubmit.missingFr) {
+        educationReason = "Votre scolarité ou votre expérience ne satisfait pas aux exigences minimales (" + eduCheckSubmit.missingFr + ").";
+        educationReasonEn = "Your academic level or experience does not meet the minimum requirements (" + eduCheckSubmit.missingEn + ").";
+      } else {
+        educationReason = "Votre scolarité ou votre expérience ne satisfait pas aux exigences minimales.";
+        educationReasonEn = "Your academic level or experience does not meet the minimum requirements.";
+      }
     }
 
     const isEligible =
@@ -6498,6 +6651,7 @@ o Médecine d’urgence`,
       citizenshipReason,
       isEducationAdmissible,
       educationReason,
+      educationReasonEn,
       durationYears,
       isJobClosed,
     };
@@ -7932,7 +8086,7 @@ o Médecine d’urgence`,
             }
             if (!s.isAgeAdmissible) {
               reasonsFrList.push(
-                `L'âge maximal est de 56 ans et votre âge ne permet pas de compléter le contrat initial (${s.durationYears} ans) avant 60 ans.`,
+                `Votre âge ne permet pas de compléter le contrat initial (${s.durationYears} ans) avant 60 ans.`,
               );
             }
             if (!s.isCitizenshipAdmissible) {
@@ -7941,9 +8095,7 @@ o Médecine d’urgence`,
               );
             }
             if (!s.isEducationAdmissible) {
-              reasonsFrList.push(
-                "Votre scolarité ou votre expérience ne satisfait pas aux exigences minimales.",
-              );
+              reasonsFrList.push(s.educationReason);
             }
 
             if (reasonsFrList.length > 0) {
@@ -8093,9 +8245,7 @@ o Médecine d’urgence`,
               );
             }
             if (!s.isEducationAdmissible) {
-              reasonsEnList.push(
-                "Your academic level or experience does not meet the minimum requirements.",
-              );
+              reasonsEnList.push(s.educationReasonEn);
             }
 
             if (reasonsEnList.length > 0) {
@@ -8205,7 +8355,7 @@ o Médecine d’urgence`,
             }
             if (!s.isAgeAdmissible) {
               reasonsFrList.push(
-                `L'âge maximal est de 56 ans et votre âge ne permet pas de compléter le contrat initial (${s.durationYears} ans) avant 60 ans.`,
+                `Votre âge ne permet pas de compléter le contrat initial (${s.durationYears} ans) avant 60 ans.`,
               );
             }
             if (!s.isCitizenshipAdmissible) {
@@ -8214,9 +8364,7 @@ o Médecine d’urgence`,
               );
             }
             if (!s.isEducationAdmissible) {
-              reasonsFrList.push(
-                "Votre scolarité ou votre expérience ne satisfait pas aux exigences minimales.",
-              );
+              reasonsFrList.push(s.educationReason);
             }
 
             if (reasonsFrList.length > 0) {
@@ -8329,9 +8477,7 @@ o Médecine d’urgence`,
               );
             }
             if (!s.isEducationAdmissible) {
-              reasonsEnList.push(
-                "Your academic level or experience does not meet the minimum requirements.",
-              );
+              reasonsEnList.push(s.educationReasonEn);
             }
 
             if (reasonsEnList.length > 0) {

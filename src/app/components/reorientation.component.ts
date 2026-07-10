@@ -4562,37 +4562,57 @@ o Médecine d’urgence`,
       jobs: ["00190"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_sante_physiotherapie") ||
           selected.has("maitrise_sante_physiotherapie")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat ou Maîtrise en physiothérapie, avec un permis/licence d'exercice de physiothérapeute en règle (actif) d'un organisme provincial/territorial et une attestation de bonne conduite",
+          missingEn: "Bachelor's or Master's degree in Physiotherapy, with a valid, active license/permit to practice as a physiotherapist from a provincial/territorial regulatory body and a letter of good standing"
+        };
       },
     },
     {
       jobs: ["00191"],
       allowPR: true,
       customCheck: (selected) => {
-        return selected.has("bacc_sante_medecine_dentaire");
+        const passed = selected.has("bacc_sante_medecine_dentaire");
+        return {
+          passed,
+          missingFr: "Doctorat ou Baccalauréat en médecine dentaire, réussite des examens du BNED, permis d'exercice provincial/territorial actif, attestation de bonne conduite et au moins 5 ans de pratique clinique démontrée dans un CV",
+          missingEn: "Doctor of Dental Medicine or Bachelor of Dental Surgery, completion of NDEB examinations, active provincial/territorial license, letter of good standing, and at least 5 years of clinical practice shown in a CV"
+        };
       },
     },
     {
       jobs: ["00194"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_sante_pharmacie") ||
           selected.has("doctorat_sante_pharmacie")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat ou Doctorat en pharmacie, avec un permis d'exercice de pharmacien actif d'une province/territoire canadien et une attestation de bonne conduite",
+          missingEn: "Bachelor's or Doctorate in Pharmacy, with a valid active license to practice pharmacy in a Canadian province/territory and a letter of good standing"
+        };
       },
     },
     {
       jobs: ["00195"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_sante_sciences_soins_infirmiers") ||
           selected.has("bacc_sante_sciences_infirmieres")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat en sciences infirmières ou en sciences des soins infirmiers, avec un permis d'exercice actif et sans restriction d'infirmier(ère) autorisé(e) émis par un organisme provincial/territorial",
+          missingEn: "Bachelor's degree in Nursing or Nursing Science, with a valid, unrestricted license to practice as a registered nurse from a provincial/territorial regulatory body"
+        };
       },
     },
     {
@@ -4622,21 +4642,31 @@ o Médecine d’urgence`,
           selected.has("maitrise_sante_genie_biomedical") ||
           selected.has("maitrise_sante_diplome_sciences_vie");
 
-        return hasBacc || hasMaitrise;
+        const passed = hasBacc || hasMaitrise;
+        return {
+          passed,
+          missingFr: "Baccalauréat ou Maîtrise dans un domaine des sciences biologiques ou de la santé (ex: biologie, kinésiologie, biochimie, microbiologie, sciences de la vie, génie biomédical, physiologie ou santé publique) [Aucune expérience clinique ou professionnelle préalable requise pour l'enrôlement direct]",
+          missingEn: "Bachelor's or Master's degree in a bioscience or health-related field (e.g., biology, kinesiology, biochemistry, microbiology, life sciences, biomedical engineering, physiology, or public health) [No prior clinical or professional work experience required for direct entry]"
+        };
       },
     },
     {
       jobs: ["00198"],
       allowPR: true,
       customCheck: (selected) => {
-        return selected.has("maitrise_sante_service_social");
+        const passed = selected.has("maitrise_sante_service_social");
+        return {
+          passed,
+          missingFr: "Maîtrise en service social, avec un permis d'exercice actif de travailleur social émis par un organisme provincial/territorial canadien et une attestation de bonne conduite",
+          missingEn: "Master's degree in Social Work, with a valid, active license to practice social work from a provincial/territorial regulatory body and a letter of good standing"
+        };
       },
     },
     {
       jobs: ["00203"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_arts_communications") ||
           selected.has("bacc_arts_relations_intern") ||
           selected.has("bacc_arts_journalisme") ||
@@ -4666,13 +4696,23 @@ o Médecine d’urgence`,
           selected.has("maitrise_arts_sociologie") ||
           selected.has("maitrise_arts_linguistique")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat ou Maîtrise en communication, relations publiques, journalisme, relations internationales, science politique, langues, marketing, médias numériques ou sciences humaines, avec au moins une (1) année d'expérience cumulative à temps plein dans au moins deux de ces domaines (journalisme, relations publiques, marketing, affaires publiques, communications, médias numériques)",
+          missingEn: "Bachelor's or Master's degree in communications, public relations, journalism, international relations, political science, languages, marketing, digital media, or social sciences, with at least one (1) year of cumulative full-time experience in at least two of these fields (journalism, public relations, marketing, public affairs, communications, digital media)"
+        };
       },
     },
     {
       jobs: ["00204"],
       allowPR: true,
       customCheck: (selected) => {
-        return selected.has("bacc_arts_droit");
+        const passed = selected.has("bacc_arts_droit");
+        return {
+          passed,
+          missingFr: "Baccalauréat en droit (LL.B. ou B.C.L.), être membre actif en règle d'un barreau provincial ou territorial canadien et fournir une lettre d'attestation de bonne conduite",
+          missingEn: "Bachelor's degree in Law (LL.B. or B.C.L.), being an active member in good standing of a provincial or territorial Canadian bar and providing a letter of good standing"
+        };
       },
     },
     {
@@ -4689,7 +4729,7 @@ o Médecine d’urgence`,
       jobs: ["00208"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_arts_psychologie") ||
           selected.has("bacc_arts_sociologie") ||
           selected.has("maitrise_arts_psychologie_industrielle_orga") ||
@@ -4702,13 +4742,18 @@ o Médecine d’urgence`,
           selected.has("maitrise_arts_psychologie_sociale_culturale") ||
           selected.has("maitrise_arts_psychologie_conseil")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat en psychologie ou sociologie, ou Maîtrise en psychologie, sociologie ou anthropologie sociale (Si admis via un baccalauréat : requiert au moins 1 an d'expérience de travail à temps plein en sélection, recrutement/RH, recherche en sciences sociales ou orientation scolaire/professionnelle)",
+          missingEn: "Bachelor's degree in psychology or sociology, or Master's degree in psychology, sociology, or social anthropology (If applying with a Bachelor's degree: requires at least 1 year of full-time work experience in selection, recruiting/HR, social science research, or educational/vocational counseling)"
+        };
       },
     },
     {
       jobs: ["00211"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_arts_education_professionnelle") ||
           selected.has("bacc_arts_education_adultes") ||
           selected.has("bacc_arts_education_physique") ||
@@ -4716,13 +4761,18 @@ o Médecine d’urgence`,
           selected.has("bacc_arts_ressources_humaines") ||
           selected.has("maitrise_arts_education")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat ou Maîtrise en éducation (générale, physique, des adultes, professionnelle) ou en ressources humaines, avec au moins trois (3) ans cumulatifs d'expérience à temps plein dans l'élaboration de programmes d'études, la formation de personnel, l'enseignement ou comme expert-conseil pédagogique",
+          missingEn: "Bachelor's or Master's degree in education (general, physical, adult, vocational) or human resources, with at least three (3) cumulative years of full-time experience in curriculum development, staff training, teaching, or instructional consulting"
+        };
       },
     },
     {
       jobs: ["00214"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_arts_justice_criminelle") ||
           selected.has("bacc_arts_criminologie") ||
           selected.has("bacc_arts_gestion_urgences") ||
@@ -4737,6 +4787,11 @@ o Médecine d’urgence`,
           selected.has("bacc_arts_etudes_militaires") ||
           selected.has("bacc_arts_etudes_internationales_cmr")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat en criminologie, justice criminelle, sciences policières, sécurité publique, gestion des urgences, droit, psychologie, sociologie, administration ou études militaires, ainsi qu'un permis de conduire civil valide",
+          missingEn: "Bachelor's degree in criminology, criminal justice, police sciences, public safety, emergency management, law, psychology, sociology, administration, or military studies, and a valid civilian driver's license"
+        };
       },
     },
     {
@@ -4950,35 +5005,55 @@ o Médecine d’urgence`,
       jobs: ["00349"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_arts_theologie") ||
           selected.has("maitrise_theologie")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat ou Maîtrise en théologie ou études religieuses, être accrédité et reconnu comme leader spirituel par l'autorité d'une tradition de foi au Canada, être endossé par le CIAMC, et réussir l'entrevue d'aptitude",
+          missingEn: "Bachelor's or Master's degree in Theology or Religious Studies, being accredited and recognized as a spiritual leader by a faith tradition authority in Canada, being endorsed by the ICCDF, and passing a suitability interview"
+        };
       },
     },
     {
       jobs: ["00374"],
       allowPR: true,
       customCheck: (selected) => {
-        return (
+        const passed = (
           selected.has("bacc_sante_adjoint_medecin") ||
           selected.has("maitrise_adjoint_medecin") ||
           selected.has("doctorat_adjoint_medecin")
         );
+        return {
+          passed,
+          missingFr: "Baccalauréat, Maîtrise ou Doctorat d'adjoint au médecin, certificat du Conseil de certification des adjoints au médecin du Canada (CCAMC), permis d'exercice provincial/territorial actif et attestation de bonne conduite",
+          missingEn: "Bachelor's, Master's, or Doctorate in Physician Assistant studies, certification from the Physician Assistant Certification Council of Canada (PACCC), active provincial/territorial license, and a letter of good standing"
+        };
       },
     },
     {
       jobs: ["00390"],
       allowPR: true,
       customCheck: (selected) => {
-        return selected.has("doctorat_medecine");
+        const passed = selected.has("doctorat_medecine");
+        return {
+          passed,
+          missingFr: "Doctorat en médecine (M.D.), achèvement d'une formation spécialisée (résidence) agréée par le Collège royal des médecins et chirurgiens du Canada dans l'une des spécialités requises, certification et titre de fellow du Collège royal, permis de spécialiste valide sans restriction, attestation de bonne conduite et emploi clinique civil à temps plein",
+          missingEn: "Doctorate in Medicine (M.D.), completion of a specialized residency program accredited by the Royal College of Physicians and Surgeons of Canada in a required specialty, certification and fellowship from the Royal College, valid unrestricted specialist license, letter of good standing, and active full-time civilian clinical employment"
+        };
       },
     },
     {
       jobs: ["00393"],
       allowPR: true,
       customCheck: (selected) => {
-        return selected.has("doctorat_medecine");
+        const passed = selected.has("doctorat_medecine");
+        return {
+          passed,
+          missingFr: "Doctorat en médecine (M.D.), autorisation d'exercer active et sans restriction la médecine familiale dans une province ou un territoire canadien, certification en médecine familiale du Collège des médecins de famille du Canada (CMFC) et attestation de bonne conduite",
+          missingEn: "Doctorate in Medicine (M.D.), active unrestricted license to practice family medicine in a Canadian province or territory, family medicine certification from the College of Family Physicians of Canada (CFPC), and a letter of good standing"
+        };
       },
     },
     {
@@ -5041,7 +5116,12 @@ o Médecine d’urgence`,
 
         const option4 = baccSanteSaufPlusHaut || dEsSanteSaufPlusHaut;
 
-        return option1 || option2 || option3 || option4;
+        const passed = option1 || option2 || option3 || option4;
+        return {
+          passed,
+          missingFr: "Baccalauréat ou Maîtrise en gestion des services de santé, administration (des affaires ou publique), ressources humaines, ou tout autre diplôme universitaire dans le domaine de la santé",
+          missingEn: "Bachelor's or Master's degree in health services management, administration (business or public), human resources, or any other university degree in a health-related field"
+        };
       },
     },
   ];
@@ -6411,15 +6491,7 @@ o Médecine d’urgence`,
   }
 
   isOfficerJob(jobId: string): boolean {
-    const OFFICER_JOB_IDS = new Set([
-      "00178", "00179", "00180", "00181", "00182", "00183", "00184", "00185",
-      "00187", "00189", "00190", "00191", "00194", "00195", "00196", "00201",
-      "00204", "00207", "00213", "00225", "00227", "00228", "00234", "00282",
-      "00328", "00340", "00341", "00344", "00345", "00346", "00348", "00349",
-      "00350", "00353", "00355", "00357", "00358", "00360", "00373", "00377",
-      "00379", "00388"
-    ]);
-    return OFFICER_JOB_IDS.has(jobId);
+    return this.jobService.isOfficerJob(jobId);
   }
 
   checkJobEducationEligibility(jobId: string): { eligible: boolean; missingFr?: string; missingEn?: string } {
@@ -6487,8 +6559,13 @@ o Médecine d’urgence`,
         if (typeof checkResult === "boolean") {
             meetsRule = checkResult;
             if (!meetsRule) {
-                missingFrList.push("Des exigences spécifiques (ex: DEP, Mathématiques ou Sciences) sont manquantes");
-                missingEnList.push("Specific requirements (e.g. DEP, Math or Science) are missing");
+                if (this.isOfficerJob(jobId)) {
+                    missingFrList.push("Des études universitaires spécifiques sont manquantes");
+                    missingEnList.push("Specific university studies are missing");
+                } else {
+                    missingFrList.push("Des exigences spécifiques (ex: DEP, Mathématiques ou Sciences) sont manquantes");
+                    missingEnList.push("Specific requirements (e.g. DEP, Math or Science) are missing");
+                }
             }
         } else {
             meetsRule = checkResult.passed;
@@ -6626,9 +6703,15 @@ o Médecine d’urgence`,
     const eduCheckSubmit = this.checkJobEducationEligibility(jobId);
     if (!eduCheckSubmit.eligible) {
       isEducationAdmissible = false;
+      const specializedOfficers = ["00190", "00191", "00194", "00195", "00197", "00198", "00203", "00204", "00208", "00211", "00214", "00349", "00374", "00390", "00393", "00398"];
       if (this.isOfficerJob(jobId)) {
-        educationReason = "Vous n'avez pas les études universitaires requises pour satisfaire aux exigences académiques.";
-        educationReasonEn = "You do not have the required university education to meet the academic requirements.";
+        if (specializedOfficers.includes(jobId) && eduCheckSubmit.missingFr) {
+          educationReason = "Vous n'avez pas les études universitaires requises pour satisfaire aux exigences académiques (" + eduCheckSubmit.missingFr + ").";
+          educationReasonEn = "You do not have the required university education to meet the academic requirements (" + eduCheckSubmit.missingEn + ").";
+        } else {
+          educationReason = "Vous n'avez pas les études universitaires requises pour satisfaire aux exigences académiques.";
+          educationReasonEn = "You do not have the required university education to meet the academic requirements.";
+        }
       } else if (eduCheckSubmit.missingFr) {
         educationReason = "Votre scolarité ou votre expérience ne satisfait pas aux exigences minimales (" + eduCheckSubmit.missingFr + ").";
         educationReasonEn = "Your academic level or experience does not meet the minimum requirements (" + eduCheckSubmit.missingEn + ").";
@@ -7964,47 +8047,10 @@ o Médecine d’urgence`,
     const allRealDossierJobsAreClosedButAdmissible = realDossierIds.length > 0 && closedButAdmissibleJobs.length === realDossierIds.length;
 
     // Split eligible jobs into NCM and Officer
-    const OFFICER_JOB_IDS = new Set([
-      "00178",
-      "00179",
-      "00180",
-      "00181",
-      "00182",
-      "00183",
-      "00184",
-      "00185",
-      "00187",
-      "00189",
-      "00190",
-      "00191",
-      "00194",
-      "00195",
-      "00197",
-      "00198",
-      "00203",
-      "00208",
-      "00211",
-      "00328",
-      "00345",
-      "00349",
-      "00374",
-      "00389",
-      "00390",
-      "00393",
-      "00398",
-      "00204",
-      "00207",
-      "00213",
-      "00214",
-      "00340",
-      "00341",
-      "00344",
-    ]);
-
     const listNCM: string[] = [];
     const listOFF: string[] = [];
     for (const jId of jobIds) {
-      if (OFFICER_JOB_IDS.has(jId)) {
+      if (this.isOfficerJob(jId)) {
         listOFF.push(jId);
       } else {
         listNCM.push(jId);

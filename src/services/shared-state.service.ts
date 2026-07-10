@@ -5,14 +5,14 @@ export const DEFAULT_SIG_FR = `Cordialement,
 L’équipe de recrutement des Forces armées canadiennes
 Centre de recrutement des Forces canadiennes Québec
 Commandement du Personnel militaire / Forces armées canadiennes
-Centre d’assistance (https://forces.ca/fr/centre-dassistance/#/) | Forces armées canadiennes`;
+Centre d’assistance | Forces armées canadiennes`;
 
 export const DEFAULT_SIG_EN = `Sincerely,
 
 The Canadian Armed Forces Recruiting Team
 Canadian Forces Recruiting Centre Quebec
 Military Personnel Command / Canadian Armed Forces
-Help Centre (https://forces.ca/en/help-centre/#/) | Canadian Armed Forces`;
+Help Centre | Canadian Armed Forces`;
 
 @Injectable({
   providedIn: "root",
@@ -51,18 +51,22 @@ export class SharedStateService {
 
   getHtmlSignatureFr(): string {
     const sig = this.customSignatureFr();
-    if (sig === DEFAULT_SIG_FR) {
-      return `Cordialement,<br><br>L’équipe de recrutement des Forces armées canadiennes<br>Centre de recrutement des Forces canadiennes Québec<br>Commandement du Personnel militaire / Forces armées canadiennes<br><a href="https://forces.ca/fr/centre-dassistance/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Centre d’assistance | Forces armées canadiennes</a>`;
-    }
-    return this.getHtmlSignature(sig);
+    let html = this.getHtmlSignature(sig);
+    html = html.replace(
+      "Centre d’assistance | Forces armées canadiennes",
+      `<a href="https://forces.ca/fr/centre-dassistance/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Centre d’assistance</a> | <a href="https://forces.ca/fr/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Forces armées canadiennes</a>`
+    );
+    return html;
   }
 
   getHtmlSignatureEn(): string {
     const sig = this.customSignatureEn();
-    if (sig === DEFAULT_SIG_EN) {
-      return `Sincerely,<br><br>The Canadian Armed Forces Recruiting Team<br>Canadian Forces Recruiting Centre Quebec<br>Military Personnel Command / Canadian Armed Forces<br><a href="https://forces.ca/en/help-centre/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Help Centre | Canadian Armed Forces</a>`;
-    }
-    return this.getHtmlSignature(sig);
+    let html = this.getHtmlSignature(sig);
+    html = html.replace(
+      "Help Centre | Canadian Armed Forces",
+      `<a href="https://forces.ca/en/help-centre/#/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Help Centre</a> | <a href="https://forces.ca/en/" target="_blank" class="text-blue-600 hover:underline" style="color: #2563eb; text-decoration: underline;">Canadian Armed Forces</a>`
+    );
+    return html;
   }
 
   getHtmlSignature(sig: string): string {
@@ -86,31 +90,26 @@ export class SharedStateService {
 
   getCustomizedScenarioText(bodyText: string): string {
     let text = bodyText;
-    // Replace French plain text signature
-    text = text.replace(
-      /Cordialement,[\s\S]*?Centre d’assistance \| Forces armées canadiennes/,
-      this.customSignatureFr()
-    );
-    // Replace English plain text signature
-    text = text.replace(
-      /Sincerely,[\s\S]*?Help Centre \| Canadian Armed Forces/,
-      this.customSignatureEn()
-    );
+    
+    let regexFr = new RegExp("Cordialement,[\\s\\S]*?Centre d’assistance \\| Forces armées canadiennes", "g");
+    text = text.replace(regexFr, this.customSignatureFr());
+    
+    let regexEn = new RegExp("Sincerely,[\\s\\S]*?Help Centre \\| Canadian Armed Forces", "g");
+    text = text.replace(regexEn, this.customSignatureEn());
+    
     return text;
   }
 
   getCustomizedScenarioHtml(bodyHtml: string): string {
     let html = bodyHtml;
-    // Replace French HTML signature
-    html = html.replace(
-      /<p>Cordialement,<\/p>[\s\S]*?Forces armées canadiennes<\/p>/,
-      `<p>` + this.getHtmlSignatureFr() + `</p>`
-    );
-    // Replace English HTML signature
-    html = html.replace(
-      /<p>Sincerely,<\/p>[\s\S]*?Canadian Armed Forces<\/p>/,
-      `<p>` + this.getHtmlSignatureEn() + `</p>`
-    );
+    // Basic string replace for HTML
+    
+    let regexFr = new RegExp("<p>Cordialement,<\\/p>[\\s\\S]*?Forces armées canadiennes(?:<\\/a>)?<\\/p>", "g");
+    html = html.replace(regexFr, "<p>" + this.getHtmlSignatureFr() + "</p>");
+    
+    let regexEn = new RegExp("<p>Sincerely,<\\/p>[\\s\\S]*?Canadian Armed Forces(?:<\\/a>)?<\\/p>", "g");
+    html = html.replace(regexEn, "<p>" + this.getHtmlSignatureEn() + "</p>");
+    
     return html;
   }
 }

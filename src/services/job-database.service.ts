@@ -13,6 +13,9 @@ export class JobDatabaseService {
   // Signal for closed jobs to make it reactive across components
   closedJobs: WritableSignal<Set<string>> = signal(new Set(SIP_DATA.closedJobs || []));
 
+  // Date when SIP was last updated
+  sipDate = signal<string>(SIP_DATA.date || "");
+
   // Set of permanent resident (RP) allowed jobs as per the PDF logic
   // Set of Officer Jobs
   readonly OFFICER_JOBS = new Set([

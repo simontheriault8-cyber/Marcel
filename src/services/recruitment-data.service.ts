@@ -356,16 +356,6 @@ export class RecruitmentDataService {
                 "The photocopy of the birth certificate makes it invalid. You must take a photo of your document and upload this photo to your online portal. Ensure the image is sharp, without glare, and all information is clearly visible.",
               logNoteFr: "Certificat de naissance est une photocopie",
             },
-            {
-              id: "naiss_inexistant",
-              labelFr: "Inexistant au dossier",
-              labelEn: "Missing from file",
-              instructionFr:
-                "Le document n’est pas à votre dossier. Veuillez prendre une photo et la téléverser. Assurez vous que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
-              instructionEn:
-                "The document is not in your file. Please take a photo and upload it. Ensure the image is sharp, without glare, and all information is clearly visible.",
-              logNoteFr: "Aucun certificat de naissance au dossier",
-            },
           ],
         },
         {

@@ -10,6 +10,7 @@ export interface RejectionReason {
   linkFr?: string;
   linkEn?: string;
   isConfirmation?: boolean;
+  isAdditionalDoc?: boolean;
 }
 
 export interface DocumentItem {
@@ -354,6 +355,16 @@ export class RecruitmentDataService {
               instructionEn:
                 "The photocopy of the birth certificate makes it invalid. You must take a photo of your document and upload this photo to your online portal. Ensure the image is sharp, without glare, and all information is clearly visible.",
               logNoteFr: "Certificat de naissance est une photocopie",
+            },
+            {
+              id: "naiss_inexistant",
+              labelFr: "Inexistant au dossier",
+              labelEn: "Missing from file",
+              instructionFr:
+                "Le document n’est pas à votre dossier. Veuillez prendre une photo et la téléverser. Assurez vous que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is not in your file. Please take a photo and upload it. Ensure the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Aucun certificat de naissance au dossier",
             },
           ],
         },
@@ -801,6 +812,18 @@ export class RecruitmentDataService {
               instructionEn:
                 "Please provide an official copy of your comparative evaluation. To help you find resources for this step, please visit the following site: https://canalliance.org/en/",
               logNoteFr: "Évaluation comparative non officielle",
+            },
+            {
+              id: "eval_releves_etrangers",
+              labelFr: "Relevés de notes à l'étranger (en cas de dispense)",
+              labelEn: "Foreign transcripts (in case of exemption)",
+              instructionFr:
+                "Merci de nous avoir fourni votre évaluation comparative de vos études. Par contre, pour confirmer votre admissibilité académique aux métiers que vous avez choisis, nous aurons besoin de vos relevés de notes étrangers originaux s'ils sont écrits en français ou en anglais. Sinon, veuillez les faire traduire avant de les téléverser sur votre portail.",
+              instructionEn:
+                "Thank you for providing your comparative evaluation of your studies. However, to confirm your academic eligibility for the occupations you have chosen, we will need your original foreign transcripts if they are written in French or English. Otherwise, please have them translated before uploading them to your portal.",
+              logNoteFr:
+                "Demande de relevés de notes étrangers (en cas de dispense d'évaluation comparative)",
+              isAdditionalDoc: true,
             },
           ],
         },
@@ -1315,6 +1338,16 @@ export class RecruitmentDataService {
                 "The submitted document is not the medical questionnaire. Please complete the task in your portal.",
               logNoteFr:
                 "Mauvais document soumis pour le questionnaire médical",
+            },
+            {
+              id: "medq_mauvais_format",
+              labelFr: "Mauvais format de fichier",
+              labelEn: "Wrong file format",
+              instructionFr:
+                "Le fichier soumis n'est pas dans un format accepté. Le seul format de fichier accepté pour le questionnaire médical est le format PDF. Veuillez convertir ou enregistrer votre document en format PDF et le téléverser à nouveau sur votre portail.",
+              instructionEn:
+                "The submitted file is not in an accepted format. The only accepted file format for the medical questionnaire is PDF. Please convert or save your document as a PDF and upload it again to your portal.",
+              logNoteFr: "Mauvais format de fichier pour le questionnaire médical (doit être PDF)",
             },
           ],
         },

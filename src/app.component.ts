@@ -644,7 +644,8 @@ type AppStage = "intro" | "minor-check" | "main";
                             @for (reason of doc.reasons; track reason.id) {
                               @if (
                                 shouldShowReason(task, doc, reason) &&
-                                !reason.isConfirmation
+                                !reason.isConfirmation &&
+                                !reason.isAdditionalDoc
                               ) {
                                 <label
                                   class="flex items-start gap-3 p-2 rounded-lg cursor-pointer transition-all select-none border border-transparent hover:bg-slate-50"
@@ -720,6 +721,65 @@ type AppStage = "intro" | "minor-check" | "main";
                                     <input
                                       type="checkbox"
                                       class="peer h-4 w-4 appearance-none rounded border-2 border-slate-300 bg-white checked:bg-amber-600 checked:border-amber-600 focus:outline-none transition-all"
+                                      [checked]="isReasonSelected(doc, reason)"
+                                      (change)="toggleReason(task, doc, reason)"
+                                    />
+                                    <svg
+                                      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      stroke-width="3"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                    >
+                                      <polyline
+                                        points="20 6 9 17 4 12"
+                                      ></polyline>
+                                    </svg>
+                                  </div>
+                                  <span
+                                    class="text-xs text-slate-600 leading-snug pt-0.5 transition-colors"
+                                    [class.font-semibold]="
+                                      isReasonSelected(doc, reason)
+                                    "
+                                    [class.text-slate-800]="
+                                      isReasonSelected(doc, reason)
+                                    "
+                                    >{{ reason.labelFr }}</span
+                                  >
+                                </label>
+                              }
+                            }
+                          }
+
+                          @if (hasAdditionalDocReasons(doc)) {
+                            <div
+                              class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2 ml-1 mt-4"
+                            >
+                              Documents supplémentaires
+                            </div>
+                            @for (reason of doc.reasons; track reason.id) {
+                              @if (
+                                shouldShowReason(task, doc, reason) &&
+                                reason.isAdditionalDoc
+                              ) {
+                                <label
+                                  class="flex items-start gap-3 p-2 rounded-lg cursor-pointer transition-all select-none border border-transparent hover:bg-slate-50"
+                                  [class.bg-blue-50]="
+                                    isReasonSelected(doc, reason)
+                                  "
+                                  [class.border-blue-100]="
+                                    isReasonSelected(doc, reason)
+                                  "
+                                >
+                                  <div
+                                    class="relative flex items-center mt-0.5"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      class="peer h-4 w-4 appearance-none rounded border-2 border-slate-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition-all"
                                       [checked]="isReasonSelected(doc, reason)"
                                       (change)="toggleReason(task, doc, reason)"
                                     />
@@ -1407,8 +1467,12 @@ export class AppComponent implements OnInit {
     return doc.reasons.some((r) => r.isConfirmation);
   }
 
+  hasAdditionalDocReasons(doc: DocumentItem): boolean {
+    return doc.reasons.some((r) => r.isAdditionalDoc);
+  }
+
   hasNormalReasons(doc: DocumentItem): boolean {
-    return doc.reasons.some((r) => !r.isConfirmation);
+    return doc.reasons.some((r) => !r.isConfirmation && !r.isAdditionalDoc);
   }
 
   // A document is Compliant only if explicitly marked so

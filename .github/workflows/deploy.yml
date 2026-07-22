@@ -1,0 +1,50 @@
+name: Deploy Angular to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Assurez-vous que c'est bien votre branche principale
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        # L'argument --legacy-peer-deps permet de contourner l'erreur ERESOLVE
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        # Remplacez /NOM_DU_DEPOT/ par le nom exact de votre dépôt Github
+        # Exemple: si votre URL est github.com/simon/mon-app, mettez --base-href=/mon-app/
+        # S'il n'y a pas de sous-dossier, laissez --base-href=/
+        run: npm run build -- --base-href=/Marcel/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # C'est le chemin de sortie généré par le nouveau builder Angular (application)
+          path: ./dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

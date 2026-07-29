@@ -4,25 +4,26 @@ export interface MelLimitation {
   id: string;
   category: 'Geographic' | 'Occupational';
   text: string;
+  textFr?: string;
 }
 
 export const MEL_LIMITATIONS: MelLimitation[] = [
-  { id: 'geo_1', category: 'Geographic', text: 'Requires periodic medical follow-up no more frequently than every six months' },
-  { id: 'geo_2', category: 'Geographic', text: 'Requires annual specialist follow-up' },
-  { id: 'geo_3', category: 'Geographic', text: 'Requires regular access to (select from: laboratory services, diagnostic imaging) every 6 months' },
-  { id: 'geo_4', category: 'Geographic', text: 'Requires screening with a medical officer before selection for an operational environment or tasking to a remote location to confirm deployability' },
-  { id: 'geo_5', category: 'Geographic', text: 'Requires screening with a medical specialist before selection for an operational environment or tasking to a remote location to confirm deployability' },
-  { id: 'geo_6', category: 'Geographic', text: 'Member has a chronic medical condition with a <10% risk of recurrence over 10 years. In the event of a recurrence, the member will require Level 1 medical care within 24 hours.' },
+  { id: 'geo_1', category: 'Geographic', text: 'Requires periodic medical follow-up no more frequently than every six months', textFr: 'Nécessite un suivi médical périodique pas plus fréquemment que tous les six mois' },
+  { id: 'geo_2', category: 'Geographic', text: 'Requires annual specialist follow-up', textFr: 'Nécessite un suivi annuel par un spécialiste' },
+  { id: 'geo_3', category: 'Geographic', text: 'Requires regular access to (select from: laboratory services, diagnostic imaging) every 6 months', textFr: 'Nécessite un accès régulier à des services de laboratoire ou d’imagerie diagnostique tous les 6 mois' },
+  { id: 'geo_4', category: 'Geographic', text: 'Requires screening with a medical officer before selection for an operational environment or tasking to a remote location to confirm deployability', textFr: 'Exige un contrôle par un médecin militaire avant la sélection pour un environnement opérationnel ou une affectation dans un endroit éloigné afin de confirmer la déployabilité' },
+  { id: 'geo_5', category: 'Geographic', text: 'Requires screening with a medical specialist before selection for an operational environment or tasking to a remote location to confirm deployability', textFr: 'Exige un contrôle par un médecin spécialiste militaire avant la sélection pour un environnement opérationnel ou une affectation dans un endroit éloigné afin de confirmer la déployabilité' },
+  { id: 'geo_6', category: 'Geographic', text: 'Member has a chronic medical condition with a <10% risk of recurrence over 10 years. In the event of a recurrence, the member will require Level 1 medical care within 24 hours.', textFr: 'Affection médicale chronique avec un risque de récidive < 10 % sur 10 ans. En cas de récidive, nécessite des soins médicaux de niveau 1 dans les 24 heures.' },
   
-  { id: 'occ_1', category: 'Occupational', text: 'Required to carry self-administered medication at all times' },
-  { id: 'occ_2', category: 'Occupational', text: 'May require use of medication prior to physical activities, in cold weather or in high altitude environments' },
-  { id: 'occ_3', category: 'Occupational', text: 'Should avoid routinely handling material weighing more than 20 Kg (lifting, pushing, pulling, holding)' },
-  { id: 'occ_4', category: 'Occupational', text: 'Should avoid rucksack marching beyond what is required to comply with basic training requirements' },
-  { id: 'occ_5', category: 'Occupational', text: 'Unable to perform drill and parades for longer than 40 minutes' },
-  { id: 'occ_6', category: 'Occupational', text: 'Medically unable to tolerate sea environment (ship\'s motion at sea)' },
-  { id: 'occ_7', category: 'Occupational', text: 'Unable to tolerate shaving (to follow CAF standards for beard trimming and to shave only when training/operationally required)' },
-  { id: 'occ_8', category: 'Occupational', text: 'Should use specialized electrical equipment during sleep (AC/DC)' },
-  { id: 'occ_9', category: 'Occupational', text: 'Should avoid dehydration as this may exacerbate a chronic medical condition' }
+  { id: 'occ_1', category: 'Occupational', text: 'Required to carry self-administered medication at all times', textFr: 'Doit porter sur soi des médicaments à auto-administrer en tout temps' },
+  { id: 'occ_2', category: 'Occupational', text: 'May require use of medication prior to physical activities, in cold weather or in high altitude environments', textFr: 'Peut nécessiter l’utilisation de médicaments avant des activités physiques, par temps froid ou en haute altitude' },
+  { id: 'occ_3', category: 'Occupational', text: 'Should avoid routinely handling material weighing more than 20 Kg (lifting, pushing, pulling, holding)', textFr: 'Doit éviter de manipuler de façon routinière du matériel pesant plus de 20 kg' },
+  { id: 'occ_4', category: 'Occupational', text: 'Should avoid rucksack marching beyond what is required to comply with basic training requirements', textFr: 'Doit éviter les marches avec sac à dos au-delà des exigences de l’instruction de base' },
+  { id: 'occ_5', category: 'Occupational', text: 'Unable to perform drill and parades for longer than 40 minutes', textFr: 'Incapable d’exécuter l’exercice militaire et les rassemblements pendant plus de 40 minutes' },
+  { id: 'occ_6', category: 'Occupational', text: 'Medically unable to tolerate sea environment (ship\'s motion at sea)', textFr: 'Incapable médicalement de tolérer l’environnement maritime (mouvement du navire en mer)' },
+  { id: 'occ_7', category: 'Occupational', text: 'Unable to tolerate shaving (to follow CAF standards for beard trimming and to shave only when training/operationally required)', textFr: 'Incapable de tolérer le rasage (doit respecter les normes des FAC pour la taille de la barbe)' },
+  { id: 'occ_8', category: 'Occupational', text: 'Should use specialized electrical equipment during sleep (AC/DC)', textFr: 'Doit utiliser un équipement électrique spécialisé pendant le sommeil (CA/CC)' },
+  { id: 'occ_9', category: 'Occupational', text: 'Should avoid dehydration as this may exacerbate a chronic medical condition', textFr: 'Doit éviter la déshydratation car cela peut exacerber une affection médicale chronique' }
 ];
 
 export interface MelOccupation {

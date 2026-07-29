@@ -7027,16 +7027,16 @@ o Médecine d’urgence`,
     const failingEn: string[] = [];
 
     if (v !== null && v > std.v) {
-      failingFr.push(`V: ${v} > max ${std.v}`);
-      failingEn.push(`V: ${v} > max ${std.v}`);
+      failingFr.push(`Votre vue (V) ne rencontre pas la norme minimale du métier (votre cote : V${v}, norme requise : V${std.v} max)`);
+      failingEn.push(`Your vision (V) does not meet the minimum standard for this occupation (your score: V${v}, required: V${std.v} max)`);
     }
     if (cv !== null && cv > std.cv) {
-      failingFr.push(`CV: ${cv} > max ${std.cv}`);
-      failingEn.push(`CV: ${cv} > max ${std.cv}`);
+      failingFr.push(`Votre perception des couleurs (CV) ne rencontre pas la norme minimale du métier (votre cote : CV${cv}, norme requise : CV${std.cv} max)`);
+      failingEn.push(`Your color vision (CV) does not meet the minimum standard for this occupation (your score: CV${cv}, required: CV${std.cv} max)`);
     }
     if (h !== null && h > std.h) {
-      failingFr.push(`H: ${h} > max ${std.h}`);
-      failingEn.push(`H: ${h} > max ${std.h}`);
+      failingFr.push(`Votre audition (H) ne rencontre pas la norme minimale du métier (votre cote : H${h}, norme requise : H${std.h} max)`);
+      failingEn.push(`Your hearing (H) does not meet the minimum standard for this occupation (your score: H${h}, required: H${std.h} max)`);
     }
 
     const applicantLimitations = this.melService.applicantLimitations();
@@ -7047,8 +7047,10 @@ o Médecine d’urgence`,
         const isAcceptable = melMatrix[melId]?.[jobId] ?? true;
         if (!isAcceptable) {
           const limitation = MEL_LIMITATIONS.find(l => l.id === melId);
-          failingFr.push(`Limitation incompatible : ${limitation?.text}`);
-          failingEn.push(`Incompatible limitation: ${limitation?.text}`);
+          const limFr = limitation?.textFr || limitation?.text || melId;
+          const limEn = limitation?.text || melId;
+          failingFr.push(`Limitation médicale incompatible : ${limFr}`);
+          failingEn.push(`Incompatible medical limitation: ${limEn}`);
         }
       }
     }
@@ -7056,8 +7058,8 @@ o Médecine d’urgence`,
     if (failingFr.length > 0) {
       return {
         eligible: false,
-        reasonFr: `Votre cote médicale ou vos limitations ne satisfont pas aux exigences de ce métier (${failingFr.join(" | ")}).`,
-        reasonEn: `Your medical profile or limitations do not meet the requirements for this occupation (${failingEn.join(" | ")}).`,
+        reasonFr: failingFr.join(" | "),
+        reasonEn: failingEn.join(" | "),
       };
     }
 

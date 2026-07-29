@@ -1804,7 +1804,7 @@ export class AppComponent implements OnInit {
     
     html += `<p><strong>1-Vous informer :</strong></p>`;
     html += `<ul style="margin-top: 0; margin-bottom: 15px; list-style-type: disc; padding-left: 20px;">`;
-    html += `  <li style="margin-bottom: 5px;">Regarder et comprendre le contenu de la présentation suivante : <a href="https://simontheriault8-cyber.github.io/Documents/Pr%C3%A9sentation%20Forces%20101.pdf" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Présentation Forces 101</a></li>`;
+    html += `  <li style="margin-bottom: 5px;">Regarder et comprendre le contenu de la présentation suivante : <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=lERbMocV1UC7MYtmC38QOOZFGayJpy5JvxG9Z6Os6zRUQ0owN0pPSzhMRjJVUVFQSkg2OERWNVdQNS4u&route=shorturl" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Présentation Forces 101</a></li>`;
     html += `  <li style="margin-bottom: 5px;">Regarder la vidéo et description du ou des métier/s pour lesquels vous êtes inscrits <a href="https://forces.ca/fr/carrieres/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Carrières | Forces armées canadiennes</a></li>`;
     html += `  <li style="margin-bottom: 5px;">Explorer et bien comprendre la section <a href="https://forces.ca/fr/instruction-de-base/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Instruction de base</a> du site Forces.ca</li>`;
     html += `</ul>`;
@@ -1827,7 +1827,7 @@ export class AppComponent implements OnInit {
 
     html += `<p><strong>1- Inform yourself :</strong></p>`;
     html += `<ul style="margin-top: 0; margin-bottom: 15px; list-style-type: disc; padding-left: 20px;">`;
-    html += `  <li style="margin-bottom: 5px;">Watch and understand the content of the following presentation: <a href="https://simontheriault8-cyber.github.io/Documents/Forces%20101%20Presentation.pdf" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Forces 101 Presentation</a></li>`;
+    html += `  <li style="margin-bottom: 5px;">Watch and understand the content of the following presentation: <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=lERbMocV1UC7MYtmC38QOOZFGayJpy5JvxG9Z6Os6zRUMDhDMkJFSUJGMVdQSTBYNkNaV1k4R1Q2Qi4u&route=shorturl" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Forces 101 Presentation</a></li>`;
     html += `  <li style="margin-bottom: 5px;">Watch the video and review the description of the trade(s) you are registered for. <a href="https://forces.ca/en/careers/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Careers | Canadian Armed Forces</a></li>`;
     html += `  <li style="margin-bottom: 5px;">Explore and fully understand the <a href="https://forces.ca/en/basic-training/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Basic Training</a> section of the Forces.ca website.</li>`;
     html += `</ul>`;
@@ -1854,7 +1854,7 @@ export class AppComponent implements OnInit {
     plain += `Merci beaucoup d’avoir fourni vos documents et fait votre choix de profession.\n\n`;
     plain += `Afin de pouvoir continuer votre processus, vous devrez OBLIGATOIREMENT :\n\n`;
     plain += `1-Vous informer :\n`;
-    plain += `•\tRegarder et comprendre le contenu de la présentation suivante : Présentation Forces 101 (https://simontheriault8-cyber.github.io/Documents/Pr%C3%A9sentation%20Forces%20101.pdf)\n`;
+    plain += `•\tRegarder et comprendre le contenu de la présentation suivante : Présentation Forces 101 (https://forms.cloud.microsoft/pages/responsepage.aspx?id=lERbMocV1UC7MYtmC38QOOZFGayJpy5JvxG9Z6Os6zRUQ0owN0pPSzhMRjJVUVFQSkg2OERWNVdQNS4u&route=shorturl)\n`;
     plain += `•\tRegarder la vidéo et description du ou des métier/s pour lesquels vous êtes inscrits Carrières | Forces armées canadiennes (https://forces.ca/fr/carrieres/)\n`;
     plain += `•\tExplorer et bien comprendre la section Instruction de base du site Forces.ca (https://forces.ca/fr/instruction-de-base/)\n\n`;
     plain += `2-Après avoir regardé la vidéo, Prendre rendez-vous pour une consultation via le calendrier de votre portail. Lien vers le Portail d'enrôlement des Forces armées canadiennes (https://www.cafoap-pclfac.forces.gc.ca/) De nouvelles plages horaires ouvriront d’ici 14 jours sur votre portail.\n\n`;
@@ -1870,7 +1870,7 @@ export class AppComponent implements OnInit {
     plain += `Thank you very much for providing your documents and selecting your preferred occupation.\n\n`;
     plain += `In order to continue your application process, You will be REQUIRED to:\n\n`;
     plain += `1- Inform yourself :\n`;
-    plain += `•\tWatch and understand the content of the following presentation: Forces 101 Presentation (https://simontheriault8-cyber.github.io/Documents/Forces%20101%20Presentation.pdf)\n`;
+    plain += `•\tWatch and understand the content of the following presentation: Forces 101 Presentation (https://forms.cloud.microsoft/pages/responsepage.aspx?id=lERbMocV1UC7MYtmC38QOOZFGayJpy5JvxG9Z6Os6zRUMDhDMkJFSUJGMVdQSTBYNkNaV1k4R1Q2Qi4u&route=shorturl)\n`;
     plain += `•\tWatch the video and review the description of the trade(s) you are registered for. Careers | Canadian Armed Forces (https://forces.ca/en/careers/)\n`;
     plain += `•\tExplore and fully understand the Basic Training section of the Forces.ca website (https://forces.ca/en/basic-training/)\n\n`;
     plain += `2-After viewing the video, Schedule an appointment for a consultation through your portal calendar. Canadian Armed Forces enrolment Portal link (https://www.cafoap-pclfac.forces.gc.ca/) New time slots will open on your portal within 14 days.\n\n`;

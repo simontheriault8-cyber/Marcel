@@ -8433,6 +8433,8 @@ o Médecine d’urgence`,
       }
     }
 
+    const isPilotEligible = jobIds.includes("00183");
+
     const renderHtmlList = (jobs: string[], isOfficer: boolean, isFrench: boolean) => {
       let out = "";
       const openJobs = jobs.filter(j => !this.jobService.isJobClosed(j));
@@ -8699,6 +8701,13 @@ o Médecine d’urgence`,
       h +=
         '<p class="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">MÉTIERS ADMISSIBLES :</p>\n';
 
+      if (isPilotEligible) {
+        h +=
+          '<div class="mt-2 mb-3 p-3 bg-amber-50 border border-amber-300 rounded text-amber-900 text-xs" style="margin-top: 8px; margin-bottom: 12px; padding: 10px; background-color: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; font-size: 13px; color: #78350f;">\n' +
+          '  <strong>Attention – Choix du métier de Pilote (00183) :</strong> Le métier de Pilote étant fortement contingenté (nombre de places très limité), si vous choisissez ce métier, vous devez obligatoirement sélectionner un deuxième métier parmi la liste des métiers admissibles.\n' +
+          '</div>\n';
+      }
+
       h += renderHtmlList(listNCM, false, true);
       h += renderHtmlList(listOFF, true, true);
       h += "</div>\n";
@@ -8852,6 +8861,13 @@ o Médecine d’urgence`,
       h +=
         '<p class="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">ELIGIBLE OCCUPATIONS:</p>\n';
 
+      if (isPilotEligible) {
+        h +=
+          '<div class="mt-2 mb-3 p-3 bg-amber-50 border border-amber-300 rounded text-amber-900 text-xs" style="margin-top: 8px; margin-bottom: 12px; padding: 10px; background-color: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; font-size: 13px; color: #78350f;">\n' +
+          '  <strong>Important – Selection of the Pilot Occupation (00183):</strong> As the Pilot occupation is highly competitive (very limited number of positions available), if you choose Pilot, you must also select a second occupation from the list of eligible occupations.\n' +
+          '</div>\n';
+      }
+
       h += renderHtmlList(listNCM, false, false);
       h += renderHtmlList(listOFF, true, false);
       h += "</div>\n";
@@ -8969,6 +8985,11 @@ o Médecine d’urgence`,
       p += "MÉTIERS ADMISSIBLES :\n";
       p += "--------------------------------------------------\n";
 
+      if (isPilotEligible) {
+        p += "\nAttention – Choix du métier de Pilote (00183) :\n";
+        p += "Le métier de Pilote étant fortement contingenté (nombre de places très limité), si vous choisissez ce métier, vous devez obligatoirement sélectionner un deuxième métier parmi la liste des métiers admissibles.\n\n";
+      }
+
       p += renderPlainList(listNCM, false, true);
       p += renderPlainList(listOFF, true, true);
 
@@ -9084,6 +9105,11 @@ o Médecine d’urgence`,
       p += "--------------------------------------------------\n";
       p += "ELIGIBLE OCCUPATIONS:\n";
       p += "--------------------------------------------------\n";
+
+      if (isPilotEligible) {
+        p += "\nImportant – Selection of the Pilot Occupation (00183):\n";
+        p += "As the Pilot occupation is highly competitive (very limited number of positions available), if you choose Pilot, you must also select a second occupation from the list of eligible occupations.\n\n";
+      }
 
       p += renderPlainList(listNCM, false, false);
       p += renderPlainList(listOFF, true, false);

@@ -726,6 +726,16 @@ export class RecruitmentDataService {
               logNoteFr: "Diplômes et certificats flous",
             },
             {
+              id: "dipl_photocopie",
+              labelFr: "Photocopie",
+              labelEn: "Photocopy",
+              instructionFr:
+                "La photocopie de vos diplômes ou certificats n'est pas acceptée (un document original est exigé). Vous devez prendre une photo de votre document original et téléverser cette photo sur votre portail en ligne. Assurez-vous que l'image est nette et sans reflet.",
+              instructionEn:
+                "The photocopy of your diplomas or certificates is not accepted (an original document is required). You must take a photo of your original document and upload this photo to your online portal. Ensure the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Diplômes et certificats est une photocopie",
+            },
+            {
               id: "dipl_inexist",
               labelFr: "Inexistant au dossier",
               labelEn: "Missing from file",

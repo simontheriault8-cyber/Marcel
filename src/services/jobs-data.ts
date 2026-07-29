@@ -15,7 +15,18 @@ export interface JobDetails {
   notes: string[];
 }
 
+export interface MedicalStandard {
+  v: number;
+  cv: number;
+  h: number;
+  g: number;
+  o: number;
+  a: number;
+  u: number;
+}
+
 export interface JobEntry {
+  medicalStandard?: MedicalStandard;
   id: string;
   title: string;
   titleEn?: string;
@@ -41,6 +52,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00005",
+    medicalStandard: { v: 3, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "MILITAIRE DU RANG BLINDÉS",
     abbreviation: "MR BLINDÉS",
     requirements:
@@ -156,6 +168,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00010",
+    medicalStandard: { v: 3, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "FANTASSIN",
     abbreviation: "FANT",
     requirements:
@@ -292,6 +305,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00019",
+    medicalStandard: { v: 3, cv: 2, h: 2, g: 2, o: 2, a: 2, u: 5 },
     title: "OPÉRATEUR DE DÉTECTEURS ÉLECTRONIQUES AÉROPORTÉS",
     abbreviation: "OP DÉA",
     requirements:
@@ -328,6 +342,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00099",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "SPÉCIALISTE DU RENSEIGNEMENT",
     abbreviation: "S RENS",
     requirements:
@@ -495,6 +510,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00100",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN MÉTÉOROLOGIE",
     abbreviation: "TECH MÉT",
     requirements:
@@ -565,6 +581,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00105",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "MANŒUVRIER",
     abbreviation: "MAN",
     requirements:
@@ -619,6 +636,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00109",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title:
       "TECHNICIEN DES SYSTÈMES D’INFORMATION STRATÉGIQUES ET DE TÉLÉCOMMUNICATIONS AÉROSPATIALES",
     abbreviation: "TECH SITA",
@@ -713,6 +731,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00114",
+    medicalStandard: { v: 4, cv: 2, h: 2, g: 2, o: 2, a: 5, u: 5 },
     title: "OPÉRATEUR D’ÉQUIPMENT D’INFORMATION DE COMBAT (MARINE)",
     abbreviation: "OP ÉICM",
     requirements:
@@ -852,6 +871,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00115",
+    medicalStandard: { v: 4, cv: 2, h: 2, g: 2, o: 2, a: 5, u: 5 },
     title: "OPÉRATEURS DE DÉTECTEURS ÉLECTRONIQUE MARITIMES",
     abbreviation: "OP DEM",
     requirements: "FORCE RÉGULIÈRE: 10e année / Secondaire IV.",
@@ -911,6 +931,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00120",
+    medicalStandard: { v: 4, cv: 3, h: 2, g: 3, o: 3, a: 5, u: 5 },
     title: "SPÉCIALISTE DU RENSEIGNEMENT D’ORIGINE ÉLECTROMAGNÉTIQUE",
     abbreviation: "SPÉC ROEM",
     requirements:
@@ -994,6 +1015,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00129",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DES VÉHICULES",
     abbreviation: "TECH V",
     requirements:
@@ -1132,6 +1154,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00130",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN D’ARMEMENT (TERRE)",
     abbreviation: "TECH A (T)",
     requirements:
@@ -1200,6 +1223,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00134",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DES MATÉRIAUX",
     abbreviation: "TECH MAT",
     requirements:
@@ -1269,38 +1293,58 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00135",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN SYSTÈMES AÉRONAUTIQUES",
     abbreviation: "TECH AÉRO",
     requirements:
-      "FORCE RÉGULIÈRE & RÉSERVE: 10e année / Secondaire IV, comportant mathématiques générales du 10e année / Sec IV.",
+      "FORCE RÉGULIÈRE & RÉSERVE: Certificat d’école secondaire ou l’équivalent comportant Anglais 12e an/Sec V ou Physique Sec V et cours de mathématiques spécifiés (SN/TS/536/526/CEGEP 201).",
     details: [
       {
         force: "FORCE RÉGULIÈRE",
         candidateGroups: [
           {
-            candidates: ["Candidat civil1", "RECL 1", "MÉ 1"],
+            candidates: ["Candidat civil 1", "RECL 1", "MÉ 1"],
             requirements: [
               {
                 level: "Idéal",
                 education: [
-                  "Diplôme d’études secondaires ou l’équivalent, comportant :",
-                  "o Mathématiques appliquées 11e année / Sec V",
-                  "o un cours de physique peu importe le niveau",
+                  "Un diplôme d’un programme TEA‑M (technicien d’entretien d’aéronefs - maintenance) accrédité par Transports Canada 4",
                 ],
                 experience: ["Aucune expérience requise"],
               },
               {
-                level: "Acceptable",
+                level: "Acceptable 5 (Option de formation en anglais)",
                 education: [
-                  "10e année / Secondaire IV, comportant :",
-                  "o mathématiques générales du 10e année / Sec IV",
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Anglais de 12e an / Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. 12e annee / CEGEP 201 Appliquée ou Théoriques",
+                  "  b. Séquence sciences naturelles (SN) Sec V",
+                  "  c. Séquence technico-sciences (TS) Sec V",
+                  "  d. Mathématiques 536",
+                  "  e. Mathématiques 526",
+                ],
+                experience: ["Aucune expérience requise"],
+              },
+              {
+                level: "Acceptable 5 (Option de formation en français)",
+                education: [
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Physique Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. Séquence sciences naturelles (SN) Sec V",
+                  "  b. Séquence technico-sciences (TS) Sec V",
+                  "  c. Mathématiques 536",
+                  "  d. Mathématiques 526",
                 ],
                 experience: ["Aucune expérience requise"],
               },
             ],
           },
           {
-            candidates: ["PIESMR 1", "Candidat civil", "RECL", "MÉ"],
+            candidates: ["PIES-MR 1", "Candidat civil", "RECL", "MÉ"],
             requirements: [
               {
                 level: "Acceptable",
@@ -1328,6 +1372,8 @@ export const JOBS_DATA: JobEntry[] = [
           "1. Le cas échéant, les candidats doivent rencontrer la norme minimale applicable du Test d’aptitude des Forces canadiennes (TAFC) pour le programme concerné.",
           "2. La liste des établissements offrant des programmes d’études postsecondaires acceptables auprès des FAC pour les candidats PIES-MR se trouve à l’adresse suivante : Forces armées canadiennes Accréditations, Certifications et Équivalences (FAC ACE). Les candidats qui ont déjà terminé des études postsecondaires collégiales ou universitaires peuvent être admissibles au statut «semi-spécialisé», en contournant une partie de la formation professionnelle requise. Les recruteurs sont encouragés à discuter de cette option avec leurs candidats.",
           "3. Le Niveau professionnel de compétence (NPC) est décrit dans chaque description de GPM, au lien suivant: Directeur – Besoins en production du personnel (DBPP)",
+          "4. Les programmes accrédités par Transports Canada se trouvent à : Formation de base – Cours de formation approuvés/acceptables (actuellement actifs)",
+          "5. Les exigences académiques en mathématiques, sciences et langues sont établies conformément aux normes de formation professionnelle définies par les établissements partenaires offrant le programme de formation tech aéro (PFTA). Cette norme d'admission fera l'objet d'un examen périodique au fur et à mesure de l'évolution du programme.",
         ],
       },
       {
@@ -1339,17 +1385,36 @@ export const JOBS_DATA: JobEntry[] = [
               {
                 level: "Idéal",
                 education: [
-                  "Diplôme d’études secondaires ou l’équivalent, comportant :",
-                  "o Mathématiques appliquées 11e année ou l’équivalent",
-                  "o un cours de physique peu importe le niveau",
+                  "Un diplôme d’un programme TEA‑M (technicien d’entretien d’aéronefs - maintenance) accrédité par Transports Canada 3",
                 ],
                 experience: ["Aucune expérience requise"],
               },
               {
-                level: "Acceptable",
+                level: "Acceptable 4 (Option de formation en anglais)",
                 education: [
-                  "10e année / Secondaire IV:",
-                  "o mathématiques générales du 10e année / Sec IV",
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Anglais de 12e an / Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. 12e an / CEGEP 201 Appliquée ou Théoriques",
+                  "  b. Séquence sciences naturelles (SN) Sec V",
+                  "  c. Séquence technico-sciences (TS) Sec V",
+                  "  d. Mathématiques 536",
+                  "  e. Mathématiques 526",
+                ],
+                experience: ["Aucune expérience requise"],
+              },
+              {
+                level: "Acceptable 4 (Option de formation en français)",
+                education: [
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Physique Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. Séquence sciences naturelles (SN) Sec V",
+                  "  b. Séquence technico-sciences (TS) Sec V",
+                  "  c. Mathématiques 536",
+                  "  d. Mathématiques 526",
                 ],
                 experience: ["Aucune expérience requise"],
               },
@@ -1362,7 +1427,7 @@ export const JOBS_DATA: JobEntry[] = [
                 level: "Acceptable",
                 education: ["10e année / Secondaire IV"],
                 experience: [
-                  "Atteinte du Niveau professionnel de compétence (NPC)2 du GPM TECH AÉRO 00135",
+                  "Atteinte du Niveau professionnel de compétence (NPC) 2 du GPM TECH AÉRO 00135",
                 ],
               },
             ],
@@ -1371,6 +1436,8 @@ export const JOBS_DATA: JobEntry[] = [
         notes: [
           "1. Le cas échéant, les candidats doivent rencontrer la norme minimale applicable du Test d’aptitude des Forces canadiennes (TAFC) pour le programme concerné.",
           "2. Le Niveau professionnel de compétence (NPC) est décrit dans chaque description de GPM, au lien suivant: Directeur – Besoins en production du personnel (DBPP)",
+          "3. Les programmes accrédités par Transports Canada se trouvent à : Formation de base – Cours de formation approuvés/acceptables (actuellement actifs)",
+          "4. Les exigences académiques en mathématiques, sciences et langues sont établies conformément aux normes de formation professionnelle définies par les établissements partenaires offrant le programme de formation tech aéro (PFTA). Cette norme d'admission fera l'objet d'un examen périodique au fur et à mesure de l'évolution du programme.",
         ],
       },
     ],
@@ -1380,17 +1447,18 @@ export const JOBS_DATA: JobEntry[] = [
         duration: "5 ans",
       },
       {
-        program: "PFS-MR",
+        program: "PIES-MR",
         duration: "7 ans",
       },
     ],
   },
   {
     id: "00136",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN SYSTÈMES AVIONIQUES",
     abbreviation: "TECH AVIO",
     requirements:
-      "FORCE RÉGULIÈRE & RÉSERVE: 10e année / Secondaire IV, comportant mathématiques appliquées de 10e année / Sec IV.",
+      "FORCE RÉGULIÈRE & RÉSERVE: Certificat d’école secondaire ou l’équivalent comportant Anglais 12e an/Sec V ou Physique Sec V et cours de mathématiques spécifiés (SN/TS/536/526/CEGEP 201).",
     details: [
       {
         force: "FORCE RÉGULIÈRE",
@@ -1401,29 +1469,48 @@ export const JOBS_DATA: JobEntry[] = [
               {
                 level: "Idéal",
                 education: [
-                  "Diplôme d’études secondaires ou l’équivalent comportant :",
-                  "o mathématiques appliquées de 11e année / Sec V",
-                  "o un cours de physique peu importe le niveau",
+                  "Un diplôme d’un programme TEA‑E (technicien d’entretien d’aéronefs - avionique) accrédité par Transports Canada 4",
                 ],
                 experience: ["Aucune expérience requise"],
               },
               {
-                level: "Acceptable",
+                level: "Acceptable 5 (Option de formation en anglais)",
                 education: [
-                  "10e année du secondaire / Secondaire IV, comportant :",
-                  "o mathématiques appliquées de 10e année / Sec IV",
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Anglais de 12e an / Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. 12e an / CEGEP 201 Appliquée ou Théoriques",
+                  "  b. Séquence sciences naturelles (SN) Sec V",
+                  "  c. Séquence technico-sciences (TS) Sec V",
+                  "  d. Mathématiques 536",
+                  "  e. Mathématiques 526",
+                ],
+                experience: ["Aucune expérience requise"],
+              },
+              {
+                level: "Acceptable 5 (Option de formation en français)",
+                education: [
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Physique Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. Séquence sciences naturelles (SN) Sec V",
+                  "  b. Séquence technico-sciences (TS) Sec V",
+                  "  c. Mathématiques 536",
+                  "  d. Mathématiques 526",
                 ],
                 experience: ["Aucune expérience requise"],
               },
             ],
           },
           {
-            candidates: ["PIESMR 1", "Candidat civil", "RECL", "MÉ"],
+            candidates: ["PIES-MR 1", "Candidat civil", "RECL", "MÉ"],
             requirements: [
               {
                 level: "Acceptable",
                 education: [
-                  "Être accepté sans conditions et être présentement inscrit comme étudiant à temps plein dans un programme d’études à un établissement d’enseignement postsecondaire sélectionné par les FAC 2",
+                  "Être accepté sans conditions ou être présentement inscrit comme étudiant à temps plein dans un programme d’études à un établissement d’enseignement postsecondaire sélectionné par les FAC 2",
                 ],
                 experience: ["Aucune expérience requise"],
               },
@@ -1436,7 +1523,7 @@ export const JOBS_DATA: JobEntry[] = [
                 level: "Acceptable",
                 education: ["10e année / Secondaire IV"],
                 experience: [
-                  "Atteinte du Niveau professionnel de compétence (NPC)3 du GPM Tech Avio 00136",
+                  "Atteinte du Niveau professionnel de compétence (NPC)3 du GPM TECH AVIO 00136",
                 ],
               },
             ],
@@ -1446,6 +1533,8 @@ export const JOBS_DATA: JobEntry[] = [
           "1. Le cas échéant, les candidats doivent rencontrer la norme minimale applicable du Test d’aptitude des Forces canadiennes (TAFC) pour le programme concerné.",
           "2. La liste des établissements offrant des programmes d’études postsecondaires acceptables auprès des FAC pour les candidats PIES-MR se trouve à l’adresse suivante : Forces armées canadiennes Accréditations, Certifications et Équivalences (FAC ACE). Les candidats qui ont déjà terminé des études postsecondaires collégiales ou universitaires peuvent être admissibles au statut «semi-spécialisé», en contournant une partie de la formation professionnelle requise. Les recruteurs sont encouragés à discuter de cette option avec leurs candidats.",
           "3. Le Niveau professionnel de compétence (NPC) est décrit dans chaque description de GPM, au lien suivant: Directeur – Besoins en production du personnel (DBPP)",
+          "4. Les programmes accrédités par Transports Canada se trouvent à : Formation de base – Cours de formation approuvés/acceptables (actuellement actifs)",
+          "5. Les exigences académiques en mathématiques, sciences et langues sont établies conformément aux normes de formation professionnelle définies par les établissements partenaires offrant le programme de formation tech aéro (PFTA). Cette norme d'admission fera l'objet d'un examen périodique au fur et à mesure de l'évolution du programme.",
         ],
       },
       {
@@ -1457,17 +1546,36 @@ export const JOBS_DATA: JobEntry[] = [
               {
                 level: "Idéal",
                 education: [
-                  "Diplôme d’études secondaires ou l’équivalent comportant:",
-                  "o mathématiques appliquées 11e année / Sec V",
-                  "o un cours de physique peu importe le niveau",
+                  "Un diplôme d’un programme TEA‑E (technicien d’entretien d’aéronefs - avionique) accrédité par Transports Canada 4",
                 ],
                 experience: ["Aucune expérience requise"],
               },
               {
-                level: "Acceptable",
+                level: "Acceptable 4 (Option de formation en anglais)",
                 education: [
-                  "10e année du secondaire / Secondaire IV, comportant :",
-                  "o mathématiques appliquées de 10e année / Sec IV",
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Anglais de 12e an / Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. 12e an / CEGEP 201 Appliquée ou Théoriques",
+                  "  b. Séquence sciences naturelles (SN) Sec V",
+                  "  c. Séquence technico-sciences (TS) Sec V",
+                  "  d. Mathématiques 536",
+                  "  e. Mathématiques 526",
+                ],
+                experience: ["Aucune expérience requise"],
+              },
+              {
+                level: "Acceptable 4 (Option de formation en français)",
+                education: [
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Physique Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. Séquence sciences naturelles (SN) Sec V",
+                  "  b. Séquence technico-sciences (TS) Sec V",
+                  "  c. Mathématiques 536",
+                  "  d. Mathématiques 526",
                 ],
                 experience: ["Aucune expérience requise"],
               },
@@ -1480,7 +1588,7 @@ export const JOBS_DATA: JobEntry[] = [
                 level: "Acceptable",
                 education: ["10e année / Secondaire IV"],
                 experience: [
-                  "Atteinte du Niveau professionnel de compétence (NPC)3 du GPM Tech Avio 00136",
+                  "Atteinte du Niveau professionnel de compétence (NPC) 2 du GPM TECH AVIO 00136",
                 ],
               },
             ],
@@ -1489,6 +1597,8 @@ export const JOBS_DATA: JobEntry[] = [
         notes: [
           "1. Le cas échéant, les candidats doivent rencontrer la norme minimale applicable du Test d’aptitude des Forces canadiennes (TAFC) pour le programme concerné.",
           "2. Le Niveau professionnel de compétence (NPC) est décrit dans chaque description de GPM, au lien suivant: Directeur – Besoins en production du personnel (DBPP)",
+          "3. Les programmes accrédités par Transports Canada se trouvent à : Formation de base – Cours de formation approuvés/acceptables (actuellement actifs)",
+          "4. Les exigences académiques en mathématiques, sciences et langues sont établies conformément aux normes de formation professionnelle définies par les établissements partenaires offrant le programme de formation tech aéro (PFTA). Cette norme d'admission fera l'objet d'un examen périodique au fur et à mesure de l'évolution du programme.",
         ],
       },
     ],
@@ -1498,13 +1608,14 @@ export const JOBS_DATA: JobEntry[] = [
         duration: "5 ans",
       },
       {
-        program: "PFS-MR",
+        program: "PIES-MR",
         duration: "7 ans",
       },
     ],
   },
   {
     id: "00137",
+    medicalStandard: { v: 4, cv: 1, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN D’IMAGERIE",
     abbreviation: "TECH IMAG",
     requirements:
@@ -1644,10 +1755,11 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00138",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN STRUCTURES D’AÉRONEF",
     abbreviation: "TECH SA",
     requirements:
-      "FORCE RÉGULIÈRE & RÉSERVE: 10e année d’études secondaires / Secondaire IV : Mathématiques générales de 10e année / Sec IV.",
+      "FORCE RÉGULIÈRE & RÉSERVE: Certificat d’école secondaire ou l’équivalent comportant Anglais 12e an/Sec V ou cours de mathématiques spécifiés (SN/TS/536/526/CEGEP 201).",
     details: [
       {
         force: "FORCE RÉGULIÈRE",
@@ -1658,29 +1770,45 @@ export const JOBS_DATA: JobEntry[] = [
               {
                 level: "Idéal",
                 education: [
-                  "Diplôme d’études secondaires ou équivalent:",
-                  "o Mathématiques appliquées de 11e année / Sec V",
-                  "o Cours de sciences physiques tout niveau",
+                  "Un diplôme d’un programme TEA‑S (technicien d’entretien d’aéronefs - structures) accrédité par Transports Canada 4",
                 ],
                 experience: ["Aucune expérience requise"],
               },
               {
-                level: "Acceptable",
+                level: "Acceptable 5 (Option de formation en anglais)",
                 education: [
-                  "10e année d’études secondaires / Secondaire IV :",
-                  "o Mathématiques générales de 10e année / Sec IV",
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Anglais de 12e an / Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. 12e année / CEGEP 201 Appliquée ou Théoriques",
+                  "  b. Séquence sciences naturelles (SN) Sec V",
+                  "  c. Séquence technico-sciences (TS) Sec V",
+                  "  d. Mathématiques 536",
+                  "  e. Mathématiques 526",
+                ],
+                experience: ["Aucune expérience requise"],
+              },
+              {
+                level: "Acceptable 5 (Option de formation en français)",
+                education: [
+                  "Certificat d’école secondaire ou l’équivalent, comportant un des cours de mathématiques suivants :",
+                  "  a. Séquence sciences naturelles (SN) Sec V",
+                  "  b. Séquence technico-sciences (TS) Sec V",
+                  "  c. Mathématiques 536",
+                  "  d. Mathématiques 526",
                 ],
                 experience: ["Aucune expérience requise"],
               },
             ],
           },
           {
-            candidates: ["PFS-MR 1", "Candidat civil", "RECL", "MÉ"],
+            candidates: ["PIES-MR 1", "Candidat civil", "RECL", "MÉ"],
             requirements: [
               {
                 level: "Acceptable",
                 education: [
-                  "Être accepté sans conditions et être présentement inscrit comme étudiant à temps plein dans un programme d’études à un établissement d’enseignement postsecondaire sélectionné par les FAC 2",
+                  "Être accepté sans conditions ou être présentement inscrit comme étudiant à temps plein dans un programme d’études à un établissement d’enseignement postsecondaire sélectionné par les FAC 2",
                 ],
                 experience: ["Aucune expérience requise"],
               },
@@ -1691,18 +1819,20 @@ export const JOBS_DATA: JobEntry[] = [
             requirements: [
               {
                 level: "Acceptable",
-                education: ["10e année d’études secondaires / Secondaire IV"],
+                education: ["10e année / Secondaire IV"],
                 experience: [
-                  "Atteinte du Niveau professionnel de compétence (NPC)3 dans 00138 TECH SA",
+                  "Atteinte du Niveau professionnel de compétence (NPC)3 du GPM TECH SA 00138",
                 ],
               },
             ],
           },
         ],
         notes: [
-          "1. Tous les candidats doivent compléter le Test d’aptitude des Forces canadiennes (TAFC) si ce n’est déjà fait et répondre aux exigences actuelles du programme applicable.",
-          "2. La liste des établissements offrant des programmes d’études postsecondaires acceptables auprès des FAC pour les candidats PIES-MR se trouve à l’adresse suivante : Forces armées canadiennes Accréditations, Certifications et Équivalences (FAC ACE).",
-          "3. Le niveau Le Niveau professionnel de compétence (NPC) est décrit dans chaque description de GPM, au lien suivant: Directeur – Besoins en production du personnel (DBPP)",
+          "1. Le cas échéant, les candidats doivent rencontrer la norme minimale applicable du Test d’aptitude des Forces canadiennes (TAFC) pour le programme concerné.",
+          "2. La liste des établissements offrant des programmes d’études postsecondaires acceptables auprès des FAC pour les candidats PIES-MR se trouve à l’adresse suivante : Forces armées canadiennes Accréditations, Certifications et Équivalences (FAC ACE). Les candidats qui ont déjà terminé des études postsecondaires collégiales ou universitaires peuvent être admissibles au statut «semi-spécialisé», en contournant une partie de la formation professionnelle requise. Les recruteurs sont encouragés à discuter de cette option avec leurs candidats.",
+          "3. Le Niveau professionnel de compétence (NPC) est décrit dans chaque description de GPM, au lien suivant: Directeur – Besoins en production du personnel (DBPP)",
+          "4. Les programmes accrédités par Transports Canada se trouvent à : Formation de base – Cours de formation approuvés/acceptables (actuellement actifs)",
+          "5. Les exigences académiques en mathématiques, sciences et langues sont établies conformément aux normes de formation professionnelle définies par les établissements partenaires offrant le programme de formation tech aéro (PFTA). Cette norme d'admission fera l'objet d'un examen périodique au fur et à mesure de l'évolution du programme.",
         ],
       },
       {
@@ -1714,41 +1844,56 @@ export const JOBS_DATA: JobEntry[] = [
               {
                 level: "Idéal",
                 education: [
-                  "Diplôme d’études secondaires ou comportant :",
-                  "o Mathématiques appliquées de 11e année / Sec V",
-                  "o Cours de sciences physiques tout niveau",
+                  "Un diplôme d’un programme TEA‑S (technicien d’entretien d’aéronefs - structures) accrédité par Transports Canada 3",
                 ],
                 experience: ["Aucune expérience requise"],
               },
               {
-                level: "Acceptable",
+                level: "Acceptable 4 (Option de formation en anglais)",
                 education: [
-                  "10e année d’études secondaires / Secondaire IV :",
-                  "o Mathématiques générales de 10e année / Sec IV",
+                  "Certificat d’école secondaire ou l’équivalent, comportant :",
+                  "o Anglais de 12e an / Sec V",
+                  "ET",
+                  "o Un des cours de mathématiques suivants :",
+                  "  a. 12e an / CEGEP 201 Appliquée ou Théoriques",
+                  "  b. Séquence sciences naturelles (SN) Sec V",
+                  "  c. Séquence technico-sciences (TS) Sec V",
+                  "  d. Mathématiques 536",
+                  "  e. Mathématiques 526",
+                ],
+                experience: ["Aucune expérience requise"],
+              },
+              {
+                level: "Acceptable 4 (Option de formation en français)",
+                education: [
+                  "Certificat d’école secondaire ou l’équivalent, comportant un des cours de mathématiques suivants :",
+                  "  a. Séquence sciences naturelles (SN) Sec V",
+                  "  b. Séquence technico-sciences (TS) Sec V",
+                  "  c. Mathématiques 536",
+                  "  d. Mathématiques 526",
                 ],
                 experience: ["Aucune expérience requise"],
               },
             ],
           },
           {
-            candidates: ["Candidat civil 1", "RECL 1", "MÉ", "(qualifié)"],
+            candidates: ["Candidat civil 1", "RECL 1", "MÉ 1", "(qualifié)"],
             requirements: [
               {
                 level: "Acceptable",
-                education: [
-                  "10e année d’études secondaires / Secondaire IV :",
-                  "o Mathématiques générales de 10e année / Sec IV",
-                ],
+                education: ["10e année / Secondaire IV"],
                 experience: [
-                  "Atteinte du Niveau professionnel de compétence (NPC)2 dans 00138 TECH SA",
+                  "Atteinte du Niveau professionnel de compétence (NPC) 2 du GPM TECH SA 00138",
                 ],
               },
             ],
           },
         ],
         notes: [
-          "1. Tous les candidats doivent compléter le Test d’aptitude des Forces canadiennes (TAFC) si ce n’est déjà fait et répondre aux exigences actuelles du programme applicable.",
-          "2. Le niveau Le Niveau professionnel de compétence (NPC) est décrit dans chaque description de GPM, au lien suivant: Directeur – Besoins en production du personnel (DBPP)",
+          "1. Le cas échéant, les candidats doivent rencontrer la norme minimale applicable du Test d’aptitude des Forces canadiennes (TAFC) pour le programme concerné.",
+          "2. Le Niveau professionnel de compétence (NPC) est décrit dans chaque description de GPM, au lien suivant: Directeur – Besoins en production du personnel (DBPP)",
+          "3. Les programmes accrédités par Transports Canada se trouvent à : Formation de base – Cours de formation approuvés/acceptables (actuellement actifs)",
+          "4. Les exigences académiques en mathématiques, sciences et langues sont établies conformément aux normes de formation professionnelle définies par les établissements partenaires offrant le programme de formation tech aéro (PFTA). Cette norme d'admission fera l'objet d'un examen périodique au fur et à mesure de l'évolution du programme.",
         ],
       },
     ],
@@ -1758,13 +1903,14 @@ export const JOBS_DATA: JobEntry[] = [
         duration: "5 ans",
       },
       {
-        program: "PFS-MR",
+        program: "PIES-MR",
         duration: "7 ans",
       },
     ],
   },
   {
     id: "00149",
+    medicalStandard: { v: 3, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "POMPIER",
     abbreviation: "POMPIER",
     requirements:
@@ -1918,6 +2064,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00152",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNOLOGUE DE LABORATOIRE MÉDICAL",
     abbreviation: "TECH LAB M",
     requirements:
@@ -2044,6 +2191,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00153",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNOLOGUE EN RADIATION MÉDICALE",
     abbreviation: "TECH RAD M",
     requirements:
@@ -2208,6 +2356,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00155",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNOLOGUE EN ÉLECTRONIQUE BIOMÉDICAL",
     abbreviation: "TEC ÉB",
     requirements:
@@ -2318,6 +2467,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00161",
+    medicalStandard: { v: 3, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "POLICE MILITAIRE",
     abbreviation: "PM",
     requirements:
@@ -2540,6 +2690,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00164",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "CUISINIER",
     abbreviation: "CUIS",
     requirements:
@@ -2695,6 +2846,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00166",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "MUSICIEN",
     abbreviation: "MUS",
     requirements:
@@ -2817,6 +2969,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00167",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "COMMIS DES POSTES",
     abbreviation: "COMMIS P",
     requirements:
@@ -2944,6 +3097,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00168",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN GESTION DU MATÉRIEL",
     abbreviation: "TECH GEST MAT",
     requirements:
@@ -3070,6 +3224,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00169",
+    medicalStandard: { v: 4, cv: 1, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICHIEN DE MUNITIONS",
     abbreviation: "TECH MUN",
     requirements:
@@ -3152,6 +3307,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00170",
+    medicalStandard: { v: 3, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DES MOUVEMENTS",
     abbreviation: "TECH MOUV",
     requirements:
@@ -3225,6 +3381,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00171",
+    medicalStandard: { v: 3, cv: 2, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "CONDUCTEUR DE MATÉRIEL MOBILE DE SOUTIEN",
     abbreviation: "COND MMS",
     requirements:
@@ -3319,6 +3476,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00178",
+    medicalStandard: { v: 3, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "BLINDÉS",
     abbreviation: "BLINDÉS",
     requirements: "FORCE RÉGULIÈRE & RÉSERVE: Baccalauréat : toute discipline.",
@@ -3474,6 +3632,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00179",
+    medicalStandard: { v: 3, cv: 3, h: 2, g: 2, o: 2, a: 5, u: 5 },
     title: "ARTILLERIE",
     abbreviation: "ARTIL",
     requirements: "FORCE RÉGULIÈRE & RÉSERVE: Baccalauréat : toute discipline.",
@@ -3629,6 +3788,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00180",
+    medicalStandard: { v: 3, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "OFFICIER D’INFANTERIE",
     abbreviation: "O INF",
     requirements:
@@ -3788,6 +3948,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00181",
+    medicalStandard: { v: 3, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "GÉNIE",
     abbreviation: "GÉNIE",
     requirements:
@@ -3961,6 +4122,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00182",
+    medicalStandard: { v: 3, cv: 2, h: 2, g: 2, o: 2, a: 2, u: 5 },
     title: "OFFICIER – SYSTÈMES DE COMBAT",
     abbreviation: "OSCA",
     requirements: "FORCE RÉGULIÈRE & RÉSERVE: Baccalauréat : toute discipline.",
@@ -4129,6 +4291,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00183",
+    medicalStandard: { v: 2, cv: 2, h: 2, g: 2, o: 2, a: 1, u: 5 },
     title: "PILOTE",
     abbreviation: "PIL",
     requirements: "FORCE RÉGULIÈRE & RÉSERVE: Baccalauréat : toute discipline.",
@@ -4278,6 +4441,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00184",
+    medicalStandard: { v: 3, cv: 2, h: 2, g: 3, o: 3, a: 4, u: 5 },
     title: "CONTRÔLE AÉROSPATIAL",
     abbreviation: "C AÉRO",
     requirements: "FORCE RÉGULIÈRE & RÉSERVE: Baccalauréat : toute discipline.",
@@ -4446,6 +4610,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00185",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "GÉNIE AÉROSPATIAL",
     abbreviation: "G AÉRO",
     requirements:
@@ -4592,6 +4757,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00187",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "GÉNIE ÉLECTRIQUE ET MÉCANIQUE",
     abbreviation: "GEM",
     requirements:
@@ -4776,6 +4942,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00189",
+    medicalStandard: { v: 3, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "GÉNIE CONSTRUCTION",
     abbreviation: "GÉNIE CONST",
     requirements:
@@ -4971,6 +5138,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00190",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "PHYSIOTHÉRAPIE",
     abbreviation: "PHYSIO",
     requirements:
@@ -5096,6 +5264,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00191",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "DENTISTE MILITAIRE",
     abbreviation: "DENT M",
     requirements:
@@ -5216,6 +5385,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00194",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "PHARMACIE",
     abbreviation: "PHARM",
     requirements:
@@ -5341,6 +5511,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00195",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "SOINS INFIRMIERS",
     abbreviation: "S INFIRM",
     requirements:
@@ -5574,6 +5745,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00197",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 4, u: 5 },
     title: "OFFICIER DES SCIENCES BIOLOGIQUES",
     abbreviation: "BIO",
     requirements:
@@ -5712,6 +5884,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00198",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TRAVAIL SOCIAL",
     abbreviation: "T SOC",
     requirements:
@@ -5871,6 +6044,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00203",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "OFFICIER DES AFFAIRES PUBLIQUES",
     abbreviation: "OAP",
     requirements:
@@ -6065,6 +6239,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00204",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "AVOCAT MILITAIRE",
     abbreviation: "AVOCAT MIL",
     requirements:
@@ -6159,6 +6334,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00207",
+    medicalStandard: { v: 4, cv: 2, h: 2, g: 2, o: 2, a: 5, u: 5 },
     title: "OFFICIER DE GUERRE NAVALE",
     abbreviation: "OGN",
     requirements: "FORCE RÉGULIÈRE & RÉSERVE: Baccalauréat (toute discipline).",
@@ -6296,6 +6472,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00208",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "SÉLECTION DU PERSONNEL",
     abbreviation: "S PERS",
     requirements:
@@ -6400,6 +6577,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00211",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "DÉVELOPPEMENT DE L’INSTRUCTION",
     abbreviation: "DÉV INSTR",
     requirements:
@@ -6482,6 +6660,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00213",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "RENSEIGNEMENT",
     abbreviation: "RENS",
     requirements: "FORCE RÉGULIÈRE & RÉSERVE: Baccalauréat (toute discipline).",
@@ -6624,6 +6803,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00214",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "OFFICIER DE LA POLICE MILITAIRE",
     abbreviation: "OPM",
     requirements: "FORCE RÉGULIÈRE & RÉSERVE: Baccalauréat (toute discipline).",
@@ -6778,6 +6958,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00238",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN GÉOMATIQUE",
     abbreviation: "TECH GÉO",
     requirements:
@@ -6868,6 +7049,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00261",
+    medicalStandard: { v: 4, cv: 1, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN SYSTÈMES D’ARMEMENT (AIR)",
     abbreviation: "TECH SAA",
     requirements:
@@ -6951,6 +7133,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00299",
+    medicalStandard: { v: 4, cv: 2, h: 2, g: 2, o: 2, a: 5, u: 5 },
     title: "SPÉCIALISTE EN COMMUNICATIONS NAVALES",
     abbreviation: "COMM N",
     requirements:
@@ -7042,6 +7225,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00301",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN RÉFRIGÉRATION ET MÉCANIQUE",
     abbreviation: "TECH RÉFR MÉC",
     requirements:
@@ -7123,6 +7307,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00302",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN / DISTRIBUTION ÉLECTRIQUE",
     abbreviation: "TECH DÉ",
     requirements:
@@ -7202,6 +7387,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00303",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN / GROUPES ÉLECTROGÈNES",
     abbreviation: "TECH GE",
     requirements:
@@ -7277,6 +7463,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00304",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN / PLOMBERIE ET CHAUFFAGE",
     abbreviation: "TECH PC",
     requirements:
@@ -7356,6 +7543,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00305",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN / EAU, PRODUITS PÉTROLIERS ET ENVIRONNEMENT",
     titleEn: "WATER, FUELS AND ENVIRONMENT TECHNICIAN",
     abbreviation: "TECH EPPE",
@@ -7436,6 +7624,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00306",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN CONSTRUCTION",
     titleEn: "CONSTRUCTION TECHNICIAN",
     abbreviation: "TECH CONST",
@@ -7599,6 +7788,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00324",
+    medicalStandard: { v: 4, cv: 2, h: 2, g: 2, o: 2, a: 5, u: 5 },
     title: "OPÉRATEUR SONAR",
     titleEn: "SONAR OPERATOR",
     abbreviation: "OP SONAR",
@@ -7673,6 +7863,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00327",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN ÉLECTRONIQUE ET OPTRONIQUE (TERRE)",
     titleEn: "ELECTRONIC AND OPTRONIC TECHNICIAN (LAND)",
     abbreviation: "TECH ÉLEC – OPTO [T]",
@@ -7810,6 +8001,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00328",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "LOGISTIQUE",
     titleEn: "LOGISTICS",
     abbreviation: "LOG",
@@ -7992,6 +8184,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00335",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DENTAIRE",
     titleEn: "DENTAL TECHNICIAN",
     abbreviation: "TECH DENT",
@@ -8080,6 +8273,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00337",
+    medicalStandard: { v: 3, cv: 2, h: 2, g: 3, o: 3, a: 4, u: 5 },
     title: "OPÉRATEUR – CONTRÔLE AÉROSPATIAL",
     titleEn: "AEROSPACE CONTROL OPERATOR",
     abbreviation: "OP CA",
@@ -8149,6 +8343,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00339",
+    medicalStandard: { v: 3, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "SAPEUR DE COMBAT",
     titleEn: "COMBAT ENGINEER",
     abbreviation: "SPR CBT",
@@ -8224,6 +8419,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00340",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "GÉNIE ÉLECTRONIQUE ET DES COMMUNICATIONS",
     titleEn: "ELECTRONICS AND COMMUNICATIONS ENGINEERING",
     abbreviation: "GE COMM",
@@ -8404,6 +8600,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00341",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "TRANSMISSIONS",
     titleEn: "SIGNALS",
     abbreviation: "TRANS",
@@ -8574,6 +8771,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00344",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "GÉNIE DES SYSTÈMES DE COMBAT NAVAL",
     titleEn: "NAVAL COMBAT SYSTEMS ENGINEERING",
     abbreviation: "GSCN",
@@ -8705,6 +8903,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00345",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "OFFICIER DU GÉNIE DES SYSTÈMES DE MARINE",
     titleEn: "MARINE SYSTEMS ENGINEERING OFFICER",
     abbreviation: "OGSM",
@@ -8836,6 +9035,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00349",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "AUMÔNIER",
     titleEn: "CHAPLAIN",
     abbreviation: "AUM",
@@ -8952,6 +9152,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00366",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN GENIE DES ARMES",
     titleEn: "WEAPONS ENGINEERING TECHNICIAN",
     abbreviation: "TECH GA",
@@ -9015,6 +9216,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00368",
+    medicalStandard: { v: 3, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "ARTILLEUR",
     titleEn: "ARTILLERYMAN",
     abbreviation: "ARTIL",
@@ -9117,6 +9319,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00370",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN DESSIN ET EN ARPENTAGE",
     titleEn: "DRAFTING AND SURVEYING TECHNICIAN",
     abbreviation: "TECH DA",
@@ -9200,6 +9403,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00372",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DE BLOC OPÉRATOIRE",
     titleEn: "OPERATING ROOM TECHNICIAN",
     abbreviation: "TECH BO",
@@ -9344,6 +9548,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00374",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "ADJOINT AU MÉDECIN",
     titleEn: "PHYSICIAN ASSISTANT",
     abbreviation: "AM",
@@ -9492,6 +9697,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00375",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "ADMINISTRATEUR – RESSOURCES HUMAINES",
     titleEn: "HUMAN RESOURCES ADMINISTRATOR",
     abbreviation: "ADM RH",
@@ -9565,6 +9771,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00376",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "ADMINISTRATEUR – SERVICES FINANCIERS",
     titleEn: "FINANCIAL SERVICES ADMINISTRATOR",
     abbreviation: "ADM SERV FIN",
@@ -9638,6 +9845,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00378",
+    medicalStandard: { v: 4, cv: 3, h: 2, g: 3, o: 3, a: 5, u: 5 },
     title: "CYBEROPÉRATEUR",
     titleEn: "CYBER OPERATOR",
     abbreviation: "CYBEROPÉRATEUR",
@@ -9756,6 +9964,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00383",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "OPÉRATEUR DES TRANSMISSIONS",
     titleEn: "SIGNAL OPERATOR",
     abbreviation: "OP TRANS",
@@ -9818,6 +10027,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00384",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "POSEUR DE LIGNE",
     titleEn: "LINE TECHNICIAN",
     abbreviation: "PL",
@@ -9882,6 +10092,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00385",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DES TRANSMISSIONS",
     titleEn: "SIGNALS TECHNICIAN",
     abbreviation: "TECH TRANS",
@@ -9947,6 +10158,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00386",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DE SOUTIEN AUX OPÉRATIONS AÉRIENNES",
     titleEn: "AIR OPERATIONS SUPPORT TECHNICIAN",
     abbreviation: "TECH SOA",
@@ -10040,6 +10252,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00387",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DES SYSTÈMES DE LARGAGE AÉRIEN",
     titleEn: "AIR DROP SYSTEMS TECHNICIAN",
     abbreviation: "TECH SLA",
@@ -10157,6 +10370,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00389",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 3, a: 5, u: 5 },
     title: "OFFICIER DES OPÉRATIONS AÉRIENNES",
     titleEn: "AIR OPERATIONS OFFICER",
     abbreviation: "O OPS AIR",
@@ -10344,6 +10558,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00390",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "MÉDECIN SPÉCIALISTE",
     titleEn: "MEDICAL SPECIALIST",
     abbreviation: "MÉD SPÉC",
@@ -10453,6 +10668,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00393",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "MÉDECIN MILITAIRE",
     titleEn: "MEDICAL OFFICER",
     abbreviation: "MÉD",
@@ -10575,6 +10791,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00394",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN DES SYSTÈMES D’INFORMATION",
     titleEn: "INFORMATION SYSTEMS TECHNICIAN",
     abbreviation: "TECH SI",
@@ -10636,6 +10853,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00398",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "GESTION DES SERVICES DE SANTÉ",
     abbreviation: "GSS",
     requirements:
@@ -10756,6 +10974,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00404",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN ÉLECTRICITÉ DES SYSTEMS DE MARINE",
     abbreviation: "TESM",
     requirements:
@@ -10869,6 +11088,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00405",
+    medicalStandard: { v: 4, cv: 2, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "TECHNICIEN EN MÉCANIQUE DES SYSTÈMES DE MARINE",
     abbreviation: "TMSM",
     requirements:
@@ -10982,6 +11202,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00406",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 3, o: 2, a: 5, u: 5 },
     title: "PROFESSIONNEL PARAMÉDICAL",
     abbreviation: "PPMD",
     requirements:
@@ -11089,6 +11310,7 @@ export const JOBS_DATA: JobEntry[] = [
   },
   {
     id: "00407",
+    medicalStandard: { v: 4, cv: 3, h: 3, g: 2, o: 2, a: 5, u: 5 },
     title: "PERSONNEL MÉDICAL AU COMBAT",
     abbreviation: "PMDC",
     requirements:

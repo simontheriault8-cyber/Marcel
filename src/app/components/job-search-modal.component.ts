@@ -12,13 +12,14 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { JobDatabaseService } from "../../services/job-database.service";
 import { JobEntry } from "../../services/jobs-data";
 import { ReorientationComponent } from "./reorientation.component";
+import { MelComponent } from "./mel.component";
 
-type ModalTab = "catalogue" | "reorientation";
+type ModalTab = "catalogue" | "reorientation" | "mel";
 
 @Component({
   selector: "app-job-search-modal",
   standalone: true,
-  imports: [CommonModule, ReorientationComponent],
+  imports: [CommonModule, ReorientationComponent, MelComponent],
   template: `
     <div
       #modalContainer
@@ -325,6 +326,45 @@ type ModalTab = "catalogue" | "reorientation";
                   }
                 </div>
               </div>
+
+              <!-- MEDICAL PROFILE SECTION -->
+              @if (job.medicalStandard) {
+                <div class="mb-6">
+                  <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Profil médical minimal requis
+                  </h3>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex flex-col items-center bg-slate-50 border border-slate-200 rounded-md px-3 py-1 shadow-sm">
+                      <span class="text-xs text-slate-500 font-bold">V</span>
+                      <span class="text-base font-bold text-slate-800">{{ job.medicalStandard.v }}</span>
+                    </span>
+                    <span class="inline-flex flex-col items-center bg-slate-50 border border-slate-200 rounded-md px-3 py-1 shadow-sm">
+                      <span class="text-xs text-slate-500 font-bold">CV</span>
+                      <span class="text-base font-bold text-slate-800">{{ job.medicalStandard.cv }}</span>
+                    </span>
+                    <span class="inline-flex flex-col items-center bg-slate-50 border border-slate-200 rounded-md px-3 py-1 shadow-sm">
+                      <span class="text-xs text-slate-500 font-bold">H</span>
+                      <span class="text-base font-bold text-slate-800">{{ job.medicalStandard.h }}</span>
+                    </span>
+                    <span class="inline-flex flex-col items-center bg-slate-50 border border-slate-200 rounded-md px-3 py-1 shadow-sm">
+                      <span class="text-xs text-slate-500 font-bold">G</span>
+                      <span class="text-base font-bold text-slate-800">{{ job.medicalStandard.g }}</span>
+                    </span>
+                    <span class="inline-flex flex-col items-center bg-slate-50 border border-slate-200 rounded-md px-3 py-1 shadow-sm">
+                      <span class="text-xs text-slate-500 font-bold">O</span>
+                      <span class="text-base font-bold text-slate-800">{{ job.medicalStandard.o }}</span>
+                    </span>
+                    <span class="inline-flex flex-col items-center bg-slate-50 border border-slate-200 rounded-md px-3 py-1 shadow-sm">
+                      <span class="text-xs text-slate-500 font-bold">A</span>
+                      <span class="text-base font-bold text-slate-800">{{ job.medicalStandard.a }}</span>
+                    </span>
+                    <span class="inline-flex flex-col items-center bg-slate-50 border border-slate-200 rounded-md px-3 py-1 shadow-sm">
+                      <span class="text-xs text-slate-500 font-bold">U</span>
+                      <span class="text-base font-bold text-slate-800">{{ job.medicalStandard.u }}</span>
+                    </span>
+                  </div>
+                </div>
+              }
 
               <div class="prose prose-slate max-w-none">
                 @if (job.details) {
@@ -667,6 +707,14 @@ type ModalTab = "catalogue" | "reorientation";
                             </span>
                           }
                         }
+                        @if (job.medicalStandard) {
+                          <span
+                            class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 font-mono tracking-tighter text-[11px]"
+                            title="Norme médicale minimale requise"
+                          >
+                            V{{job.medicalStandard.v}} CV{{job.medicalStandard.cv}} H{{job.medicalStandard.h}} G{{job.medicalStandard.g}} O{{job.medicalStandard.o}} A{{job.medicalStandard.a}}
+                          </span>
+                        }
                       </div>
                     </div>
                     <svg
@@ -704,6 +752,12 @@ type ModalTab = "catalogue" | "reorientation";
           [class.hidden]="activeTab() !== 'reorientation'"
           class="flex-1 flex flex-col min-h-0"
         ></app-reorientation>
+
+        <!-- TAB 3: MEL -->
+        <app-mel
+          [class.hidden]="activeTab() !== 'mel'"
+          class="flex-1 flex flex-col min-h-0"
+        ></app-mel>
 
         <!-- Resize Handle (Bottom Right) -->
         <div

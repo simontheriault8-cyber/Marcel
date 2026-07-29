@@ -16,7 +16,7 @@
     "@angular/compiler": "^21.1.0",
     "@angular/compiler-cli": "^21.1.0",
     "@angular/core": "^21.1.0",
-    "@angular/forms": "^21.2.13",
+    "@angular/forms": "^21.1.0",
     "@angular/platform-browser": "^21.1.0",
     "rxjs": "^7.8.2",
     "tailwindcss": "latest",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "typescript": "~5.9.0",
+    "typescript": "^5.7.3",
     "vite": "^6.2.0"
   }
 }

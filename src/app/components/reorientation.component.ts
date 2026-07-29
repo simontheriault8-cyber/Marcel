@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { JobDatabaseService } from "../../services/job-database.service";
 import { SharedStateService } from "../../services/shared-state.service";
+import { MelService, MEL_LIMITATIONS } from "../../services/mel.service";
 
 interface ManualCriterion {
   id: string;
@@ -140,6 +141,31 @@ interface JobRule {
               Ignorer le SIP
             </span>
           </label>
+          <label
+            class="flex items-center gap-2 text-sm font-semibold text-slate-700 cursor-pointer select-none"
+          >
+            <input
+              type="checkbox"
+              class="peer h-4 w-4 appearance-none rounded border border-slate-300 bg-white checked:bg-indigo-600 checked:border-indigo-600 focus:outline-none transition-all"
+              [checked]="hasMedicalLimitation()"
+              (change)="toggleMedicalLimitation()"
+            />
+            <span class="relative">
+              <svg
+                class="absolute -left-[1.15rem] top-1/2 -translate-y-1/2 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Limitation médicale
+            </span>
+          </label>
         </div>
       </div>
 
@@ -187,6 +213,103 @@ interface JobRule {
               </select>
             </div>
           </div>
+
+          <!-- Panneau Cote médicale (affiché seulement si limitation médicale est coché) -->
+          @if (hasMedicalLimitation()) {
+            <div
+              class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm shrink-0 flex flex-col transition-all duration-200"
+            >
+              <div class="mb-2 text-sm font-bold text-slate-800">
+                Cote Médicale
+              </div>
+              <!-- 3 petits champs pour la cote médicale (V, CV, H) -->
+              <div class="flex items-center justify-center overflow-x-auto pb-1 sm:pb-0 w-full">
+                <div
+                  class="inline-flex border border-slate-300 rounded-lg overflow-hidden bg-slate-50 divide-x divide-slate-300 shadow-sm"
+                >
+                  <div class="flex flex-col items-center">
+                    <div
+                      class="px-3 py-1 bg-slate-100 text-xs font-bold text-slate-700 border-b border-slate-300 w-full text-center"
+                    >
+                      V
+                    </div>
+                    <input
+                      type="text"
+                      [(ngModel)]="medicalV"
+                      class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm font-semibold text-slate-800 bg-white outline-none focus:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:z-10 transition-colors"
+                    />
+                  </div>
+                  <div class="flex flex-col items-center">
+                    <div
+                      class="px-3 py-1 bg-slate-100 text-xs font-bold text-slate-700 border-b border-slate-300 w-full text-center"
+                    >
+                      CV
+                    </div>
+                    <input
+                      type="text"
+                      [(ngModel)]="medicalCV"
+                      class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm font-semibold text-slate-800 bg-white outline-none focus:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:z-10 transition-colors"
+                    />
+                  </div>
+                  <div class="flex flex-col items-center">
+                    <div
+                      class="px-3 py-1 bg-slate-100 text-xs font-bold text-slate-700 border-b border-slate-300 w-full text-center"
+                    >
+                      H
+                    </div>
+                    <input
+                      type="text"
+                      [(ngModel)]="medicalH"
+                      class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm font-semibold text-slate-800 bg-white outline-none focus:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:z-10 transition-colors"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Medical Employment Limitations Table -->
+              <div class="mt-6 border border-slate-300 rounded-lg overflow-hidden w-full text-sm">
+                <div class="bg-blue-100 font-bold text-center py-2 border-b border-slate-300 text-slate-800">
+                  Medical Employment Limitations
+                </div>
+                
+                <!-- Geographic Section -->
+                <div class="flex flex-col md:flex-row border-b border-slate-300 bg-white">
+                  <div class="w-full md:w-32 bg-slate-200 flex items-center justify-center font-bold text-slate-700 border-b md:border-b-0 md:border-r border-slate-300 py-2 md:py-0">
+                    <span class="tracking-wider">Geographic</span>
+                  </div>
+                  <div class="flex-1 flex flex-col">
+                    @for (mel of geographicLimitations; track mel.id) {
+                      <label class="flex items-start gap-3 p-2.5 hover:bg-slate-50 border-b border-slate-200 cursor-pointer transition-colors last:border-b-0">
+                        <input type="checkbox" 
+                               [checked]="hasMel(mel.id)" 
+                               (change)="toggleMel(mel.id)"
+                               class="mt-0.5 w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 bg-white cursor-pointer" />
+                        <span class="text-slate-700 leading-snug">{{ mel.text }}</span>
+                      </label>
+                    }
+                  </div>
+                </div>
+
+                <!-- Occupational Section -->
+                <div class="flex flex-col md:flex-row bg-white">
+                  <div class="w-full md:w-32 bg-slate-200 flex items-center justify-center font-bold text-slate-700 border-b md:border-b-0 md:border-r border-slate-300 py-2 md:py-0">
+                    <span class="tracking-wider">Occupational</span>
+                  </div>
+                  <div class="flex-1 flex flex-col">
+                    @for (mel of occupationalLimitations; track mel.id) {
+                      <label class="flex items-start gap-3 p-2.5 hover:bg-slate-50 border-b border-slate-200 cursor-pointer transition-colors last:border-b-0">
+                        <input type="checkbox" 
+                               [checked]="hasMel(mel.id)" 
+                               (change)="toggleMel(mel.id)"
+                               class="mt-0.5 w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 bg-white cursor-pointer" />
+                        <span class="text-slate-700 leading-snug">{{ mel.text }}</span>
+                      </label>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
 
           <!-- Message d'admissibilité pour RP < 3 ans -->
           <div
@@ -511,6 +634,32 @@ interface JobRule {
                               </span>
                             </div>
                           </div>
+
+                          <!-- Medical detail -->
+                          @if (hasMedicalLimitation()) {
+                            <div class="flex items-start gap-1">
+                              <span
+                                class="font-bold"
+                                [class.text-emerald-600]="s1.isMedicalAdmissible"
+                                [class.text-rose-600]="!s1.isMedicalAdmissible"
+                              >
+                                {{ s1.isMedicalAdmissible ? "✓" : "✗" }}
+                              </span>
+                              <div>
+                                <span class="font-semibold">Cote médicale : </span>
+                                <span
+                                  [class.text-rose-700]="!s1.isMedicalAdmissible"
+                                  [class.text-emerald-700]="s1.isMedicalAdmissible"
+                                >
+                                  {{
+                                    s1.isMedicalAdmissible
+                                      ? "Conforme aux exigences (OK)."
+                                      : s1.medicalReason
+                                  }}
+                                </span>
+                              </div>
+                            </div>
+                          }
                         </div>
 
                         <!-- SIP Status Warning -->
@@ -761,6 +910,32 @@ interface JobRule {
                               </span>
                             </div>
                           </div>
+
+                          <!-- Medical detail -->
+                          @if (hasMedicalLimitation()) {
+                            <div class="flex items-start gap-1">
+                              <span
+                                class="font-bold"
+                                [class.text-emerald-600]="s2.isMedicalAdmissible"
+                                [class.text-rose-600]="!s2.isMedicalAdmissible"
+                              >
+                                {{ s2.isMedicalAdmissible ? "✓" : "✗" }}
+                              </span>
+                              <div>
+                                <span class="font-semibold">Cote médicale : </span>
+                                <span
+                                  [class.text-rose-700]="!s2.isMedicalAdmissible"
+                                  [class.text-emerald-700]="s2.isMedicalAdmissible"
+                                >
+                                  {{
+                                    s2.isMedicalAdmissible
+                                      ? "Conforme aux exigences (OK)."
+                                      : s2.medicalReason
+                                  }}
+                                </span>
+                              </div>
+                            </div>
+                          }
                         </div>
 
                         <!-- SIP Status Warning -->
@@ -1011,6 +1186,32 @@ interface JobRule {
                               </span>
                             </div>
                           </div>
+
+                          <!-- Medical detail -->
+                          @if (hasMedicalLimitation()) {
+                            <div class="flex items-start gap-1">
+                              <span
+                                class="font-bold"
+                                [class.text-emerald-600]="s3.isMedicalAdmissible"
+                                [class.text-rose-600]="!s3.isMedicalAdmissible"
+                              >
+                                {{ s3.isMedicalAdmissible ? "✓" : "✗" }}
+                              </span>
+                              <div>
+                                <span class="font-semibold">Cote médicale : </span>
+                                <span
+                                  [class.text-rose-700]="!s3.isMedicalAdmissible"
+                                  [class.text-emerald-700]="s3.isMedicalAdmissible"
+                                >
+                                  {{
+                                    s3.isMedicalAdmissible
+                                      ? "Conforme aux exigences (OK)."
+                                      : s3.medicalReason
+                                  }}
+                                </span>
+                              </div>
+                            </div>
+                          }
                         </div>
 
                         <!-- SIP Status Warning -->
@@ -1041,9 +1242,22 @@ interface JobRule {
             >
               <div class="bg-slate-50 border-b border-slate-200 shrink-0">
                 <div class="p-4 pb-0">
-                  <h3 class="text-lg font-bold text-slate-800 mb-3">
-                    Scolarité
-                  </h3>
+                  <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-800">
+                      Scolarité
+                    </h3>
+                    <div class="flex items-center gap-4 text-sm font-medium text-slate-700">
+                      <label class="inline-flex items-center gap-2 cursor-pointer select-none hover:text-slate-900">
+                        <input
+                          type="checkbox"
+                          [checked]="selectedCriteriaIds().has('etude_anglais')"
+                          (change)="toggleManualCriterion('etude_anglais')"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span>Étude en anglais</span>
+                      </label>
+                    </div>
+                  </div>
                   <div class="flex gap-1 overflow-x-auto scolarite-tabs">
                     <button
                       (click)="activeScolariteTab.set('secondaire')"
@@ -1966,6 +2180,18 @@ interface JobRule {
 export class ReorientationComponent {
   jobService = inject(JobDatabaseService);
   sharedState = inject(SharedStateService);
+  melService = inject(MelService);
+
+  geographicLimitations = MEL_LIMITATIONS.filter(l => l.category === 'Geographic');
+  occupationalLimitations = MEL_LIMITATIONS.filter(l => l.category === 'Occupational');
+
+  hasMel(melId: string): boolean {
+    return this.melService.applicantLimitations()[melId] || false;
+  }
+
+  toggleMel(melId: string) {
+    this.melService.toggleApplicantLimitation(melId);
+  }
 
   constructor() {
     effect(() => {
@@ -1989,6 +2215,20 @@ export class ReorientationComponent {
   toggleIgnoreSip() {
     this.ignoreSip.update((v) => !v);
   }
+
+  hasMedicalLimitation = signal<boolean>(false);
+
+  toggleMedicalLimitation() {
+    this.hasMedicalLimitation.update((v) => !v);
+  }
+
+  medicalV = signal<string>("");
+  medicalCV = signal<string>("");
+  medicalH = signal<string>("");
+  medicalG = signal<string>("");
+  medicalO = signal<string>("");
+  medicalA = signal<string>("");
+  medicalU = signal<string>("");
 
   age = signal<number | null>(null);
   citizenship = signal<string>("Canadian Citizen");
@@ -2041,6 +2281,12 @@ export class ReorientationComponent {
         id: "qc_11_adv",
         label: "Math SN V / 536 (11e Avancée/Théorique)",
         grade: 11,
+        diff: 3,
+      },
+      {
+        id: "qc_12_cegep201",
+        label: "CEGEP 201 Appliquée ou Théoriques / 12e année",
+        grade: 12,
         diff: 3,
       },
     ],
@@ -2224,6 +2470,16 @@ export class ReorientationComponent {
       category: "Langue",
     },
     {
+      id: "anglais_sec5_12e",
+      label: "Anglais de sec 5 / 12 e année",
+      category: "Langue",
+    },
+    {
+      id: "etude_anglais",
+      label: "Étude en anglais",
+      category: "Langue",
+    },
+    {
       id: "sci_tech4_sci10",
       label: "Science et technologie 4e/Science de 10e année",
       category: "Science",
@@ -2346,6 +2602,24 @@ export class ReorientationComponent {
       id: "cs_cert_soins_param",
       label:
         "Certificat ou diplôme dans un programme de formation en soins paramédicaux agréé ou équivalent",
+      category: "Cours spécialisés",
+    },
+    {
+      id: "cs_tea_m",
+      label:
+        "Un diplôme d’un programme TEA‑M (technicien d’entretien d’aéronefs - maintenance) accrédité par Transports Canada",
+      category: "Cours spécialisés",
+    },
+    {
+      id: "cs_tea_e",
+      label:
+        "Un diplôme d’un programme TEA‑E (technicien d’entretien d’aéronefs - avionique) accrédité par Transports Canada",
+      category: "Cours spécialisés",
+    },
+    {
+      id: "cs_tea_s",
+      label:
+        "Un diplôme d’un programme TEA‑S (technicien d’entretien d’aéronefs - structures) accrédité par Transports Canada",
       category: "Cours spécialisés",
     },
     // Génie
@@ -4056,14 +4330,70 @@ o Médecine d’urgence`,
       allowPR: true, // RP
     },
     {
-      requiredCriteriaIds: ["sec4_24_credits", "base_math_10_gen"],
       jobs: ["00135"],
       allowPR: true, // RP
+      customCheck: (selected) => {
+        const isEnglish = selected.has("etude_anglais");
+        if (isEnglish) {
+          const hasDes = selected.has("des_12e_annee");
+          const hasEnglishSec5 = selected.has("anglais_sec5_12e");
+          const hasCegep201 = selected.has("qc_12_cegep201") || selected.has("base_math_12_adv");
+          const hasMath11AppOrAdv = selected.has("base_math_11_app") || selected.has("base_math_11_adv");
+          const passedAcademic = hasDes && hasEnglishSec5 && (hasCegep201 || hasMath11AppOrAdv);
+          const passed = passedAcademic || selected.has("cs_tea_m");
+          if (passed) return { passed: true };
+          return {
+            passed: false,
+            missingFr: "Exige : (DES/12e années complété + Anglais de sec 5 / 12 e année + (CEGEP 201 Appliquée ou Théoriques / 12e année ou Mathématiques de sec 5/11e (appliquées) ou Mathématiques de sec 5/11e (avancées))) ou (Un diplôme d’un programme TEA‑M (technicien d’entretien d’aéronefs - maintenance) accrédité par Transports Canada)",
+            missingEn: "Requires: (High School Diploma + Grade 12 / Sec 5 English + (CEGEP 201 Appliquée ou Théoriques / 12e année or Grade 11 Math (Applied) or Grade 11 Math (Advanced))) or (An accredited Transport Canada AME-M (aircraft maintenance engineer - maintenance) program diploma)",
+          };
+        } else {
+          const hasDes = selected.has("des_12e_annee");
+          const hasPhysicsSec5 = selected.has("physique_sec5_11e");
+          const hasMath11AppOrAdv = selected.has("base_math_11_app") || selected.has("base_math_11_adv");
+          const passedAcademic = hasDes && hasPhysicsSec5 && hasMath11AppOrAdv;
+          const passed = passedAcademic || selected.has("cs_tea_m");
+          if (passed) return { passed: true };
+          return {
+            passed: false,
+            missingFr: "Exige : (DES/12e années complété + Physique de sec 5/11e année + (Mathématiques de sec 5/11e (appliquées) ou Mathématiques de sec 5/11e (avancées))) ou (Un diplôme d’un programme TEA‑M (technicien d’entretien d’aéronefs - maintenance) accrédité par Transports Canada)",
+            missingEn: "Requires: (High School Diploma + Grade 11 Physics + (Grade 11 Math (Applied) or Grade 11 Math (Advanced))) or (An accredited Transport Canada AME-M (aircraft maintenance engineer - maintenance) program diploma)",
+          };
+        }
+      },
     },
     {
-      requiredCriteriaIds: ["sec4_24_credits", "base_math_10_app"],
       jobs: ["00136"],
       allowPR: true, // RP
+      customCheck: (selected) => {
+        const isEnglish = selected.has("etude_anglais");
+        if (isEnglish) {
+          const hasDes = selected.has("des_12e_annee");
+          const hasEnglishSec5 = selected.has("anglais_sec5_12e");
+          const hasCegep201 = selected.has("qc_12_cegep201") || selected.has("base_math_12_adv");
+          const hasMath11AppOrAdv = selected.has("base_math_11_app") || selected.has("base_math_11_adv");
+          const passedAcademic = hasDes && hasEnglishSec5 && (hasCegep201 || hasMath11AppOrAdv);
+          const passed = passedAcademic || selected.has("cs_tea_e");
+          if (passed) return { passed: true };
+          return {
+            passed: false,
+            missingFr: "Exige : (DES/12e années complété + Anglais de sec 5 / 12 e année + (CEGEP 201 Appliquée ou Théoriques / 12e année ou Mathématiques de sec 5/11e (appliquées) ou Mathématiques de sec 5/11e (avancées))) ou (Un diplôme d’un programme TEA‑E (technicien d’entretien d’aéronefs - avionique) accrédité par Transports Canada)",
+            missingEn: "Requires: (High School Diploma + Grade 12 / Sec 5 English + (CEGEP 201 Appliquée ou Théoriques / 12e année or Grade 11 Math (Applied) or Grade 11 Math (Advanced))) or (An accredited Transport Canada AME-E (aircraft maintenance engineer - avionics) program diploma)",
+          };
+        } else {
+          const hasDes = selected.has("des_12e_annee");
+          const hasPhysicsSec5 = selected.has("physique_sec5_11e");
+          const hasMath11AppOrAdv = selected.has("base_math_11_app") || selected.has("base_math_11_adv");
+          const passedAcademic = hasDes && hasPhysicsSec5 && hasMath11AppOrAdv;
+          const passed = passedAcademic || selected.has("cs_tea_e");
+          if (passed) return { passed: true };
+          return {
+            passed: false,
+            missingFr: "Exige : (DES/12e années complété + Physique de sec 5/11e année + (Mathématiques de sec 5/11e (appliquées) ou Mathématiques de sec 5/11e (avancées))) ou (Un diplôme d’un programme TEA‑E (technicien d’entretien d’aéronefs - avionique) accrédité par Transports Canada)",
+            missingEn: "Requires: (High School Diploma + Grade 11 Physics + (Grade 11 Math (Applied) or Grade 11 Math (Advanced))) or (An accredited Transport Canada AME-E (aircraft maintenance engineer - avionics) program diploma)",
+          };
+        }
+      },
     },
     {
       jobs: ["00137"],
@@ -4084,9 +4414,36 @@ o Médecine d’urgence`,
       },
     },
     {
-      requiredCriteriaIds: ["sec4_24_credits", "base_math_10_gen"],
       jobs: ["00138"],
       allowPR: true, // RP
+      customCheck: (selected) => {
+        const isEnglish = selected.has("etude_anglais");
+        if (isEnglish) {
+          const hasDes = selected.has("des_12e_annee");
+          const hasEnglishSec5 = selected.has("anglais_sec5_12e");
+          const hasCegep201 = selected.has("qc_12_cegep201") || selected.has("base_math_12_adv");
+          const hasMath11AppOrAdv = selected.has("base_math_11_app") || selected.has("base_math_11_adv");
+          const passedAcademic = hasDes && hasEnglishSec5 && (hasCegep201 || hasMath11AppOrAdv);
+          const passed = passedAcademic || selected.has("cs_tea_s");
+          if (passed) return { passed: true };
+          return {
+            passed: false,
+            missingFr: "Exige : (DES/12e années complété + Anglais de sec 5 / 12 e année + (CEGEP 201 Appliquée ou Théoriques / 12e année ou Mathématiques de sec 5/11e (appliquées) ou Mathématiques de sec 5/11e (avancées))) ou (Un diplôme d’un programme TEA‑S (technicien d’entretien d’aéronefs - structures) accrédité par Transports Canada)",
+            missingEn: "Requires: (High School Diploma + Grade 12 / Sec 5 English + (CEGEP 201 Appliquée ou Théoriques / 12e année or Grade 11 Math (Applied) or Grade 11 Math (Advanced))) or (An accredited Transport Canada AME-S (aircraft maintenance engineer - structures) program diploma)",
+          };
+        } else {
+          const hasDes = selected.has("des_12e_annee");
+          const hasMath11AppOrAdv = selected.has("base_math_11_app") || selected.has("base_math_11_adv");
+          const passedAcademic = hasDes && hasMath11AppOrAdv;
+          const passed = passedAcademic || selected.has("cs_tea_s");
+          if (passed) return { passed: true };
+          return {
+            passed: false,
+            missingFr: "Exige : (DES/12e années complété + (Mathématiques de sec 5/11e (appliquées) ou Mathématiques de sec 5/11e (avancées))) ou (Un diplôme d’un programme TEA‑S (technicien d’entretien d’aéronefs - structures) accrédité par Transports Canada)",
+            missingEn: "Requires: (High School Diploma + (Grade 11 Math (Applied) or Grade 11 Math (Advanced))) or (An accredited Transport Canada AME-S (aircraft maintenance engineer - structures) program diploma)",
+          };
+        }
+      },
     },
     {
       jobs: ["00149"],
@@ -5155,7 +5512,7 @@ o Médecine d’urgence`,
     this.manualCriteria.filter((c) => c.category === "Année scolaire"),
   );
   criteriaLangue = computed(() =>
-    this.manualCriteria.filter((c) => c.category === "Langue"),
+    this.manualCriteria.filter((c) => c.category === "Langue" && c.id !== "etude_anglais"),
   );
   criteriaScience = computed(() =>
     this.manualCriteria.filter((c) => c.category === "Science"),
@@ -5791,6 +6148,14 @@ o Médecine d’urgence`,
     this.age.set(null);
     this.citizenship.set("Canadian Citizen");
     this.selectedProvince.set("QC");
+    this.hasMedicalLimitation.set(false);
+    this.medicalV.set("");
+    this.medicalCV.set("");
+    this.medicalH.set("");
+    this.medicalG.set("");
+    this.medicalO.set("");
+    this.medicalA.set("");
+    this.medicalU.set("");
     this.selectedCriteriaIds.set(new Set<string>());
     this.activeScolariteTab.set("secondaire");
     this.expandedDomaines.set(new Set<string>());
@@ -5826,7 +6191,10 @@ o Médecine d’urgence`,
         const crit = this.manualCriteria.find((c) => c.id === id);
         if (
           crit &&
-          (crit.label.includes("DEP") || crit.label.includes("DEC"))
+          (crit.label.includes("DEP") ||
+            crit.label.includes("DEC") ||
+            crit.label.includes("diplôme") ||
+            crit.label.includes("Diplôme"))
         ) {
           current.add("sec4_24_credits");
         }
@@ -5862,13 +6230,18 @@ o Médecine d’urgence`,
         current.add("qc_10_gen");
       }
 
-      if (id === "qc_11_app" || id === "qc_11_adv") {
+      if (id === "qc_11_app" || id === "qc_11_adv" || id === "qc_12_cegep201") {
         current.add("qc_10_gen");
         current.add("qc_10_app");
         current.add("qc_10_adv");
         current.add("qc_11_gen");
         current.add("qc_11_app");
         current.add("qc_11_adv");
+      }
+
+      if (id === "anglais_sec5_12e") {
+        current.add("francais_sec5_11e");
+        current.add("francais_sec4_10e");
       }
 
       if (id === "francais_sec5_11e") {
@@ -6207,6 +6580,11 @@ o Médecine d’urgence`,
 
       if (meetsRule) {
         for (const jId of rule.jobs) {
+          // Check medical limitation
+          if (!this.isJobMedicalAdmissible(jId)) {
+            continue;
+          }
+
           // Under PR > 3 years, only RP-eligible jobs are permitted.
           if (citizenship === "PR > 3 years" && !this.jobService.isJobRp(jId)) {
             continue;
@@ -6554,6 +6932,7 @@ o Médecine d’urgence`,
             if (id === "sec4_24_credits") return isFr ? "Sec 4 (24 crédits) ou 10e année" : "Grade 10 (24 credits)";
             if (id === "francais_sec4_10e") return isFr ? "Français/Anglais de sec 4 ou 10e année" : "Grade 10 English/French";
             if (id === "francais_sec5_11e") return isFr ? "Français/Anglais de sec 5 ou 11e année" : "Grade 11 English/French";
+            if (id === "anglais_sec5_12e") return isFr ? "Anglais de sec 5 / 12e année" : "Grade 12 / Sec 5 English";
             if (id === "sci_tech4_sci10") return isFr ? "Science et technologie de sec 4 ou 10e année" : "Grade 10 Science";
             if (id === "chimie_sec5_11e") return isFr ? "Chimie de sec 5 ou 11e année" : "Grade 11 Chemistry";
             if (id === "physique_sec5_11e") return isFr ? "Physique de sec 5 ou 11e année" : "Grade 11 Physics";
@@ -6618,6 +6997,77 @@ o Médecine d’urgence`,
     };
   }
 
+  checkJobMedicalEligibility(jobId: string): {
+    eligible: boolean;
+    reasonFr: string;
+    reasonEn: string;
+  } {
+    if (!this.hasMedicalLimitation()) {
+      return { eligible: true, reasonFr: "", reasonEn: "" };
+    }
+    const job = this.jobService.getAllJobs().find((j) => j.id === jobId);
+    if (!job || !job.medicalStandard) {
+      // Si un métier n'est pas dans le PDF, ne fait rien avec ce métier.
+      return { eligible: true, reasonFr: "", reasonEn: "" };
+    }
+
+    const parseVal = (valStr: string) => {
+      const trimmed = (valStr || "").trim();
+      if (!trimmed) return null;
+      const num = parseInt(trimmed, 10);
+      return isNaN(num) ? null : num;
+    };
+
+    const v = parseVal(this.medicalV());
+    const cv = parseVal(this.medicalCV());
+    const h = parseVal(this.medicalH());
+
+    const std = job.medicalStandard;
+    const failingFr: string[] = [];
+    const failingEn: string[] = [];
+
+    if (v !== null && v > std.v) {
+      failingFr.push(`V: ${v} > max ${std.v}`);
+      failingEn.push(`V: ${v} > max ${std.v}`);
+    }
+    if (cv !== null && cv > std.cv) {
+      failingFr.push(`CV: ${cv} > max ${std.cv}`);
+      failingEn.push(`CV: ${cv} > max ${std.cv}`);
+    }
+    if (h !== null && h > std.h) {
+      failingFr.push(`H: ${h} > max ${std.h}`);
+      failingEn.push(`H: ${h} > max ${std.h}`);
+    }
+
+    const applicantLimitations = this.melService.applicantLimitations();
+    const melMatrix = this.melService.acceptabilityMatrix();
+
+    for (const [melId, hasLim] of Object.entries(applicantLimitations)) {
+      if (hasLim) {
+        const isAcceptable = melMatrix[melId]?.[jobId] ?? true;
+        if (!isAcceptable) {
+          const limitation = MEL_LIMITATIONS.find(l => l.id === melId);
+          failingFr.push(`Limitation incompatible : ${limitation?.text}`);
+          failingEn.push(`Incompatible limitation: ${limitation?.text}`);
+        }
+      }
+    }
+
+    if (failingFr.length > 0) {
+      return {
+        eligible: false,
+        reasonFr: `Votre cote médicale ou vos limitations ne satisfont pas aux exigences de ce métier (${failingFr.join(" | ")}).`,
+        reasonEn: `Your medical profile or limitations do not meet the requirements for this occupation (${failingEn.join(" | ")}).`,
+      };
+    }
+
+    return { eligible: true, reasonFr: "", reasonEn: "" };
+  }
+
+  isJobMedicalAdmissible(jobId: string): boolean {
+    return this.checkJobMedicalEligibility(jobId).eligible;
+  }
+
   isAdmissibleOtherThanEducation(jobId: string): boolean {
     if (!jobId) return false;
     if (jobId === "00003") return false;
@@ -6625,6 +7075,10 @@ o Médecine d’urgence`,
     if (!job) return false;
 
     if (this.jobService.isJobClosed(jobId)) {
+      return false;
+    }
+
+    if (!this.isJobMedicalAdmissible(jobId)) {
       return false;
     }
 
@@ -6672,6 +7126,9 @@ o Médecine d’urgence`,
         isEducationAdmissible: false,
         educationReason: "",
         educationReasonEn: "",
+        isMedicalAdmissible: false,
+        medicalReason: "",
+        medicalReasonEn: "",
         durationYears: 3,
         isJobClosed: false,
       };
@@ -6740,8 +7197,23 @@ o Médecine d’urgence`,
       }
     }
 
+    let isMedicalAdmissible = true;
+    let medicalReason = "";
+    let medicalReasonEn = "";
+    if (this.hasMedicalLimitation()) {
+      const medCheck = this.checkJobMedicalEligibility(jobId);
+      if (!medCheck.eligible) {
+        isMedicalAdmissible = false;
+        medicalReason = medCheck.reasonFr;
+        medicalReasonEn = medCheck.reasonEn;
+      }
+    }
+
     const isEligible =
-      isAgeAdmissible && isCitizenshipAdmissible && isEducationAdmissible;
+      isAgeAdmissible &&
+      isCitizenshipAdmissible &&
+      isEducationAdmissible &&
+      isMedicalAdmissible;
     const isJobClosed = this.jobService.isJobClosed(jobId);
 
     return {
@@ -6754,6 +7226,9 @@ o Médecine d’urgence`,
       isEducationAdmissible,
       educationReason,
       educationReasonEn,
+      isMedicalAdmissible,
+      medicalReason,
+      medicalReasonEn,
       durationYears,
       isJobClosed,
     };
@@ -6762,6 +7237,14 @@ o Médecine d’urgence`,
   reset() {
     this.age.set(null);
     this.citizenship.set("Canadian Citizen");
+    this.hasMedicalLimitation.set(false);
+    this.medicalV.set("");
+    this.medicalCV.set("");
+    this.medicalH.set("");
+    this.medicalG.set("");
+    this.medicalO.set("");
+    this.medicalA.set("");
+    this.medicalU.set("");
     this.selectedCriteriaIds.set(new Set<string>());
     this.selectedDossierJobId1.set("");
     this.selectedDossierJobId2.set("");
@@ -8056,7 +8539,8 @@ o Médecine d’urgence`,
           s.isJobClosed &&
           s.isAgeAdmissible &&
           s.isCitizenshipAdmissible &&
-          s.isEducationAdmissible
+          s.isEducationAdmissible &&
+          s.isMedicalAdmissible
         ) {
           closedButAdmissibleJobs.push(id);
         }
@@ -8161,6 +8645,9 @@ o Médecine d’urgence`,
             }
             if (!s.isEducationAdmissible) {
               reasonsFrList.push(s.educationReason);
+            }
+            if (!s.isMedicalAdmissible) {
+              reasonsFrList.push(s.medicalReason);
             }
 
             if (reasonsFrList.length > 0) {
@@ -8312,6 +8799,9 @@ o Médecine d’urgence`,
             if (!s.isEducationAdmissible) {
               reasonsEnList.push(s.educationReasonEn);
             }
+            if (!s.isMedicalAdmissible) {
+              reasonsEnList.push(s.medicalReasonEn);
+            }
 
             if (reasonsEnList.length > 0) {
               reasonEn = `\n    <ul class="list-disc pl-5 mt-1 text-sm text-slate-600">\n      <li>${reasonsEnList.join("</li>\n      <li>")}</li>\n    </ul>`;
@@ -8431,6 +8921,9 @@ o Médecine d’urgence`,
             if (!s.isEducationAdmissible) {
               reasonsFrList.push(s.educationReason);
             }
+            if (!s.isMedicalAdmissible) {
+              reasonsFrList.push(s.medicalReason);
+            }
 
             if (reasonsFrList.length > 0) {
               reasonFr = `\n    - ${reasonsFrList.join("\n    - ")}`;
@@ -8543,6 +9036,9 @@ o Médecine d’urgence`,
             }
             if (!s.isEducationAdmissible) {
               reasonsEnList.push(s.educationReasonEn);
+            }
+            if (!s.isMedicalAdmissible) {
+              reasonsEnList.push(s.medicalReasonEn);
             }
 
             if (reasonsEnList.length > 0) {

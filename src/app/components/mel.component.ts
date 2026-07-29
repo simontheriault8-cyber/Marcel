@@ -1,0 +1,286 @@
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MelService, MEL_LIMITATIONS, ARMY_OCCUPATIONS, RCN_OCCUPATIONS, RCAF_OCCUPATIONS, CMP_OCCUPATIONS, MelOccupation } from '../../services/mel.service';
+
+@Component({
+  selector: 'app-mel',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <div class="h-full flex flex-col p-6 overflow-y-auto min-h-0 bg-slate-50 gap-8">
+      <!-- Header -->
+      <div class="border-b border-slate-200 pb-4 shrink-0">
+        <h2 class="text-2xl font-bold text-slate-800 font-sans tracking-tight">MEL Acceptability Configuration</h2>
+        <p class="text-slate-500 mt-1">Configure Acceptability of Medical Employment Limitations per Occupation for Canadian Army, Royal Canadian Navy (RCN), and Royal Canadian Air Force (RCAF).</p>
+      </div>
+      
+      <!-- TABLE 1: Army -->
+      <div class="flex flex-col gap-3 shrink-0">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          <span class="inline-block w-3 h-3 rounded-full bg-emerald-600"></span>
+          MEL acceptability for Canadian Army-managed occupations
+        </h3>
+        <div class="overflow-x-auto border border-slate-300 rounded-lg shadow-sm bg-white">
+          <table class="w-full text-left text-sm border-collapse">
+            <thead>
+              <tr>
+                <th rowspan="2" class="border-b border-r border-slate-300 bg-slate-200 p-2 text-center font-bold sticky top-0 left-0 z-20 w-64 min-w-[300px]">
+                  Medical Employment Limitations
+                </th>
+                <th [colSpan]="armyOfficers.length" class="border-b border-slate-300 bg-blue-100 p-1 text-center font-bold sticky top-0 z-10">Officers</th>
+                <th [colSpan]="armyNcms.length" class="border-b border-slate-300 bg-blue-50 p-1 text-center font-bold sticky top-0 z-10">NCMs</th>
+              </tr>
+              <tr>
+                @for (occ of armyOccupations; track occ.id) {
+                  <th class="border-b border-r border-slate-300 bg-slate-100 p-1 text-center font-bold sticky top-[32px] z-10 whitespace-nowrap min-w-[60px]"
+                      [class.bg-yellow-100]="occ.type === 'Officers'"
+                      [class.bg-cyan-100]="occ.type === 'NCMs' && !occ.isHighlighted"
+                      [class.bg-amber-300]="occ.isHighlighted"
+                  >
+                    <div class="flex flex-col items-center">
+                      <span class="text-[10px]">{{ occ.displayId || occ.id }}</span>
+                      <span>{{ occ.abbreviation }}</span>
+                    </div>
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (mel of limitations; track mel.id) {
+                <tr class="hover:bg-slate-50">
+                  <td class="border-b border-r border-slate-300 p-2 text-slate-700 font-medium sticky left-0 bg-white z-10 group-hover:bg-slate-50 text-[11px] leading-tight">
+                    <span [class.text-emerald-700]="mel.category === 'Geographic'" [class.text-teal-700]="mel.category === 'Occupational'">
+                      {{ mel.text }}
+                    </span>
+                  </td>
+                  @for (occ of armyOccupations; track occ.id) {
+                    <td class="border-b border-r border-slate-300 p-0 text-center relative cursor-pointer"
+                        [class.bg-emerald-500]="isAcceptable(mel.id, occ.id)"
+                        [class.bg-red-500]="!isAcceptable(mel.id, occ.id)"
+                        [class.text-white]="true"
+                        (click)="toggleAcceptability(mel.id, occ.id)"
+                        [title]="mel.text + ' - ' + occ.abbreviation"
+                    >
+                      <div class="flex items-center justify-center w-full h-full min-h-[40px] font-bold">
+                        {{ isAcceptable(mel.id, occ.id) ? 'Yes' : 'No' }}
+                      </div>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABLE 2: RCN -->
+      <div class="flex flex-col gap-3 shrink-0">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          <span class="inline-block w-3 h-3 rounded-full bg-blue-600"></span>
+          MEL acceptability for RCN-managed occupations
+        </h3>
+        <div class="overflow-x-auto border border-slate-300 rounded-lg shadow-sm bg-white">
+          <table class="w-full text-left text-sm border-collapse">
+            <thead>
+              <tr>
+                <th rowspan="2" class="border-b border-r border-slate-300 bg-slate-200 p-2 text-center font-bold sticky top-0 left-0 z-20 w-64 min-w-[300px]">
+                  Medical Employment Limitations
+                </th>
+                <th [colSpan]="rcnOfficers.length" class="border-b border-slate-300 bg-blue-100 p-1 text-center font-bold sticky top-0 z-10">Officers</th>
+                <th [colSpan]="rcnNcms.length" class="border-b border-slate-300 bg-blue-50 p-1 text-center font-bold sticky top-0 z-10">NCMs</th>
+              </tr>
+              <tr>
+                @for (occ of rcnOccupations; track occ.id) {
+                  <th class="border-b border-r border-slate-300 p-1 text-center font-bold sticky top-[32px] z-10 whitespace-nowrap min-w-[60px]"
+                      [class.bg-yellow-100]="occ.type === 'Officers'"
+                      [class.bg-cyan-100]="occ.type === 'NCMs' && !occ.isHighlighted"
+                      [class.bg-amber-300]="occ.isHighlighted"
+                  >
+                    <div class="flex flex-col items-center">
+                      <span class="text-[10px]">{{ occ.displayId || occ.id }}</span>
+                      <span>{{ occ.abbreviation }}</span>
+                    </div>
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (mel of limitations; track mel.id) {
+                <tr class="hover:bg-slate-50">
+                  <td class="border-b border-r border-slate-300 p-2 text-slate-700 font-medium sticky left-0 bg-white z-10 group-hover:bg-slate-50 text-[11px] leading-tight">
+                    <span [class.text-emerald-700]="mel.category === 'Geographic'" [class.text-teal-700]="mel.category === 'Occupational'">
+                      {{ mel.text }}
+                    </span>
+                  </td>
+                  @for (occ of rcnOccupations; track occ.id) {
+                    <td class="border-b border-r border-slate-300 p-0 text-center relative cursor-pointer"
+                        [class.bg-emerald-500]="isAcceptable(mel.id, occ.id)"
+                        [class.bg-red-500]="!isAcceptable(mel.id, occ.id)"
+                        [class.text-white]="true"
+                        (click)="toggleAcceptability(mel.id, occ.id)"
+                        [title]="mel.text + ' - ' + occ.abbreviation"
+                    >
+                      <div class="flex items-center justify-center w-full h-full min-h-[40px] font-bold">
+                        {{ isAcceptable(mel.id, occ.id) ? 'Yes' : 'No' }}
+                      </div>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABLE 3: RCAF -->
+      <div class="flex flex-col gap-3 shrink-0">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          <span class="inline-block w-3 h-3 rounded-full bg-sky-600"></span>
+          MEL acceptability for RCAF-managed occupations
+        </h3>
+        <div class="overflow-x-auto border border-slate-300 rounded-lg shadow-sm bg-white">
+          <table class="w-full text-left text-sm border-collapse">
+            <thead>
+              <tr>
+                <th rowspan="2" class="border-b border-r border-slate-300 bg-slate-200 p-2 text-center font-bold sticky top-0 left-0 z-20 w-64 min-w-[300px]">
+                  Medical Employment Limitations
+                </th>
+                <th [colSpan]="rcafOfficers.length" class="border-b border-slate-300 bg-blue-100 p-1 text-center font-bold sticky top-0 z-10">Officers</th>
+                <th [colSpan]="rcafNcms.length" class="border-b border-slate-300 bg-blue-50 p-1 text-center font-bold sticky top-0 z-10">NCMs</th>
+              </tr>
+              <tr>
+                @for (occ of rcafOccupations; track occ.id) {
+                  <th class="border-b border-r border-slate-300 p-1 text-center font-bold sticky top-[32px] z-10 whitespace-nowrap min-w-[60px]"
+                      [class.bg-yellow-100]="occ.type === 'Officers'"
+                      [class.bg-cyan-100]="occ.type === 'NCMs' && !occ.isHighlighted"
+                      [class.bg-amber-300]="occ.isHighlighted"
+                  >
+                    <div class="flex flex-col items-center">
+                      <span class="text-[10px]">{{ occ.displayId || occ.id }}</span>
+                      <span>{{ occ.abbreviation }}</span>
+                    </div>
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (mel of limitations; track mel.id) {
+                <tr class="hover:bg-slate-50">
+                  <td class="border-b border-r border-slate-300 p-2 text-slate-700 font-medium sticky left-0 bg-white z-10 group-hover:bg-slate-50 text-[11px] leading-tight">
+                    <span [class.text-emerald-700]="mel.category === 'Geographic'" [class.text-teal-700]="mel.category === 'Occupational'">
+                      {{ mel.text }}
+                    </span>
+                  </td>
+                  @for (occ of rcafOccupations; track occ.id) {
+                    <td class="border-b border-r border-slate-300 p-0 text-center relative cursor-pointer"
+                        [class.bg-emerald-500]="isAcceptable(mel.id, occ.id)"
+                        [class.bg-red-500]="!isAcceptable(mel.id, occ.id)"
+                        [class.text-white]="true"
+                        (click)="toggleAcceptability(mel.id, occ.id)"
+                        [title]="mel.text + ' - ' + occ.abbreviation"
+                    >
+                      <div class="flex items-center justify-center w-full h-full min-h-[40px] font-bold">
+                        {{ isAcceptable(mel.id, occ.id) ? 'Yes' : 'No' }}
+                      </div>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABLE 4: CMP -->
+      <div class="flex flex-col gap-3 shrink-0 pb-6">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          <span class="inline-block w-3 h-3 rounded-full bg-purple-600"></span>
+          MEL acceptability for CMP-managed occupations
+        </h3>
+        <div class="overflow-x-auto border border-slate-300 rounded-lg shadow-sm bg-white">
+          <table class="w-full text-left text-sm border-collapse">
+            <thead>
+              <tr>
+                <th rowspan="2" class="border-b border-r border-slate-300 bg-slate-200 p-2 text-center font-bold sticky top-0 left-0 z-20 w-64 min-w-[300px]">
+                  Medical Employment Limitations
+                </th>
+                <th [colSpan]="cmpOfficers.length" class="border-b border-slate-300 bg-blue-100 p-1 text-center font-bold sticky top-0 z-10">Officers</th>
+                <th [colSpan]="cmpNcms.length" class="border-b border-slate-300 bg-blue-50 p-1 text-center font-bold sticky top-0 z-10">NCMs</th>
+              </tr>
+              <tr>
+                @for (occ of cmpOccupations; track occ.id) {
+                  <th class="border-b border-r border-slate-300 p-1 text-center font-bold sticky top-[32px] z-10 whitespace-nowrap min-w-[60px]"
+                      [class.bg-yellow-100]="occ.type === 'Officers'"
+                      [class.bg-cyan-100]="occ.type === 'NCMs' && !occ.isHighlighted"
+                      [class.bg-amber-300]="occ.isHighlighted"
+                  >
+                    <div class="flex flex-col items-center">
+                      <span class="text-[10px]">{{ occ.displayId || occ.id }}</span>
+                      <span>{{ occ.abbreviation }}</span>
+                    </div>
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (mel of limitations; track mel.id) {
+                <tr class="hover:bg-slate-50">
+                  <td class="border-b border-r border-slate-300 p-2 text-slate-700 font-medium sticky left-0 bg-white z-10 group-hover:bg-slate-50 text-[11px] leading-tight">
+                    <span [class.text-emerald-700]="mel.category === 'Geographic'" [class.text-teal-700]="mel.category === 'Occupational'">
+                      {{ mel.text }}
+                    </span>
+                  </td>
+                  @for (occ of cmpOccupations; track occ.id) {
+                    <td class="border-b border-r border-slate-300 p-0 text-center relative cursor-pointer"
+                        [class.bg-emerald-500]="isAcceptable(mel.id, occ.id)"
+                        [class.bg-red-500]="!isAcceptable(mel.id, occ.id)"
+                        [class.text-white]="true"
+                        (click)="toggleAcceptability(mel.id, occ.id)"
+                        [title]="mel.text + ' - ' + occ.abbreviation"
+                    >
+                      <div class="flex items-center justify-center w-full h-full min-h-[40px] font-bold">
+                        {{ isAcceptable(mel.id, occ.id) ? 'Yes' : 'No' }}
+                      </div>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `
+})
+export class MelComponent {
+  private melService = inject(MelService);
+
+  limitations = MEL_LIMITATIONS;
+  
+  armyOccupations = ARMY_OCCUPATIONS;
+  armyOfficers = ARMY_OCCUPATIONS.filter(o => o.type === 'Officers');
+  armyNcms = ARMY_OCCUPATIONS.filter(o => o.type === 'NCMs');
+
+  rcnOccupations = RCN_OCCUPATIONS;
+  rcnOfficers = RCN_OCCUPATIONS.filter(o => o.type === 'Officers');
+  rcnNcms = RCN_OCCUPATIONS.filter(o => o.type === 'NCMs');
+
+  rcafOccupations = RCAF_OCCUPATIONS;
+  rcafOfficers = RCAF_OCCUPATIONS.filter(o => o.type === 'Officers');
+  rcafNcms = RCAF_OCCUPATIONS.filter(o => o.type === 'NCMs');
+
+  cmpOccupations = CMP_OCCUPATIONS;
+  cmpOfficers = CMP_OCCUPATIONS.filter(o => o.type === 'Officers');
+  cmpNcms = CMP_OCCUPATIONS.filter(o => o.type === 'NCMs');
+
+  matrix = this.melService.acceptabilityMatrix;
+
+  isAcceptable(melId: string, occId: string): boolean {
+    return this.matrix()[melId]?.[occId] ?? true;
+  }
+
+  toggleAcceptability(melId: string, occId: string) {
+    const current = this.isAcceptable(melId, occId);
+    this.melService.setAcceptability(melId, occId, !current);
+  }
+}

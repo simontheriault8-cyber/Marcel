@@ -41,6 +41,14 @@ export class SharedStateService {
 
   hasReassignedTasks = signal<boolean>(false);
 
+  // Selected Jobs in Candidate Dossier (Shared between App main header panel and Reorientation tab)
+  selectedDossierJobId1 = signal<string>("");
+  selectedDossierJobId2 = signal<string>("");
+  selectedDossierJobId3 = signal<string>("");
+  searchDossierQuery1 = signal<string>("");
+  searchDossierQuery2 = signal<string>("");
+  searchDossierQuery3 = signal<string>("");
+
   // Custom Signatures Signals
   customSignatureFr = signal<string>(
     localStorage.getItem("custom_signature_fr") || DEFAULT_SIG_FR

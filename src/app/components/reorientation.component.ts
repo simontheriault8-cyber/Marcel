@@ -4200,6 +4200,11 @@ o Médecine d’urgence`,
         "Un minimum de deux années d’expérience cumulative en gestion à temps plein au cours des cinq dernières années dans un milieu de soins de santé",
       category: "Expérience",
     },
+    {
+      id: "exp_cv_recent",
+      label: "Curriculum vitae (CV) récent à jour",
+      category: "Expérience",
+    },
   ];
 
   jobRules: JobRule[] = [
@@ -6114,6 +6119,33 @@ o Médecine d’urgence`,
       if (critGSS) criteria.push(critGSS);
     }
 
+    // Check CV requirement for specific jobs (00152, 00155, 00335, 00372, 00378, 00406, 00190, 00194, 00195, 00198, 00204, 00374, 00153, 00191, 00349, 00390, 00398)
+    const cvJobsEduEligible =
+      (selected.has("cs_tech_lab_med") && this.isAdmissibleOtherThanEducation("00152")) ||
+      (selected.has("cs_tech_radio_med") && this.isAdmissibleOtherThanEducation("00153")) ||
+      (selected.has("cs_tech_ing_biomed") && this.isAdmissibleOtherThanEducation("00155")) ||
+      ((selected.has("bacc_sante_physiotherapie") || selected.has("maitrise_sante_physiotherapie")) && this.isAdmissibleOtherThanEducation("00190")) ||
+      (selected.has("bacc_sante_medecine_dentaire") && this.isAdmissibleOtherThanEducation("00191")) ||
+      ((selected.has("bacc_sante_pharmacie") || selected.has("doctorat_sante_pharmacie")) && this.isAdmissibleOtherThanEducation("00194")) ||
+      ((selected.has("bacc_sante_sciences_soins_infirmiers") || selected.has("bacc_sante_sciences_infirmieres")) && this.isAdmissibleOtherThanEducation("00195")) ||
+      (selected.has("maitrise_sante_service_social") && this.isAdmissibleOtherThanEducation("00198")) ||
+      (selected.has("bacc_arts_droit") && this.isAdmissibleOtherThanEducation("00204")) ||
+      (selected.has("cs_cert_assist_dentaire") && this.isAdmissibleOtherThanEducation("00335")) ||
+      ((selected.has("bacc_arts_theologie") || selected.has("maitrise_theologie")) && this.isAdmissibleOtherThanEducation("00349")) ||
+      (selected.has("cs_dep_sante_infirmiers") && this.isAdmissibleOtherThanEducation("00372")) ||
+      ((selected.has("bacc_sante_adjoint_medecin") || selected.has("maitrise_adjoint_medecin") || selected.has("doctorat_adjoint_medecin")) && this.isAdmissibleOtherThanEducation("00374")) ||
+      (((selected.has("des_12e_annee") && selected.has("base_math_11_adv")) || (selected.has("des_12e_annee") && selected.has("info_sec5_12e")) || selected.has("cs_dip_cyber")) && this.isAdmissibleOtherThanEducation("00378")) ||
+      (selected.has("doctorat_medecine") && this.isAdmissibleOtherThanEducation("00390")) ||
+      ((baccSanteSaufPlusHaut || dEsSanteSaufPlusHaut) && this.isAdmissibleOtherThanEducation("00398")) ||
+      (selected.has("cs_cert_soins_param") && this.isAdmissibleOtherThanEducation("00406"));
+
+    if (cvJobsEduEligible) {
+      const critCv = this.manualCriteria.find((c) => c.id === "exp_cv_recent");
+      if (critCv && !criteria.some((c) => c.id === "exp_cv_recent")) {
+        criteria.push(critCv);
+      }
+    }
+
     return criteria;
   });
   criteriaExperienceSecondaire = computed(() =>
@@ -6718,12 +6750,12 @@ o Médecine d’urgence`,
     return excluded.sort((a, b) => a.id.localeCompare(b.id));
   });
 
-  searchDossierQuery1 = signal<string>("");
-  searchDossierQuery2 = signal<string>("");
-  searchDossierQuery3 = signal<string>("");
-  selectedDossierJobId1 = signal<string>("");
-  selectedDossierJobId2 = signal<string>("");
-  selectedDossierJobId3 = signal<string>("");
+  searchDossierQuery1 = this.sharedState.searchDossierQuery1;
+  searchDossierQuery2 = this.sharedState.searchDossierQuery2;
+  searchDossierQuery3 = this.sharedState.searchDossierQuery3;
+  selectedDossierJobId1 = this.sharedState.selectedDossierJobId1;
+  selectedDossierJobId2 = this.sharedState.selectedDossierJobId2;
+  selectedDossierJobId3 = this.sharedState.selectedDossierJobId3;
   dropdownOpen1 = signal<boolean>(false);
   dropdownOpen2 = signal<boolean>(false);
   dropdownOpen3 = signal<boolean>(false);
@@ -7262,6 +7294,18 @@ o Médecine d’urgence`,
   getMissingProofs(jobId: string): { fr: string[]; en: string[] } {
     const proofs = { fr: [] as string[], en: [] as string[] };
     const selected = this.selectedCriteriaIds();
+
+    const cvJobs = [
+      "00152", "00155", "00335", "00372", "00378", "00406", "00190", "00194",
+      "00195", "00198", "00204", "00374", "00153", "00191", "00349", "00390", "00398"
+    ];
+    if (cvJobs.includes(jobId)) {
+      const hasCv = selected.has("exp_cv_recent") || (jobId === "00191" && selected.has("exp_cv_dentiste_5ans"));
+      if (!hasCv) {
+        proofs.fr.push("Curriculum vitae (CV) récent à jour.");
+        proofs.en.push("Recent up-to-date Curriculum Vitae (CV).");
+      }
+    }
 
     if (jobId === "00137") {
       if (!selected.has("exp_photo_design")) {
@@ -8590,11 +8634,21 @@ o Médecine d’urgence`,
 
         // Extract tasks list body from standard task email html
         let taskPartHtml = "";
-        const frParts = rawHtml.split("<p>Bonjour,</p>");
-        if (frParts.length > 1) {
-          const frBodyPart = frParts[1].split("<p>En raison du volume");
-          if (frBodyPart.length > 0 && frBodyPart[0].trim().length > 0) {
-            taskPartHtml = frBodyPart[0].trim();
+        if (rawHtml.includes("<!-- START_TASK_BODY_FR -->")) {
+          const frParts = rawHtml.split("<!-- START_TASK_BODY_FR -->");
+          if (frParts.length > 1) {
+            const frBodyPart = frParts[1].split("<!-- END_TASK_BODY_FR -->");
+            if (frBodyPart.length > 0) {
+              taskPartHtml = frBodyPart[0].trim();
+            }
+          }
+        } else {
+          const frParts = rawHtml.split("<p>Bonjour,</p>");
+          if (frParts.length > 1) {
+            const frBodyPart = frParts[1].split("<p>En raison du volume");
+            if (frBodyPart.length > 0 && frBodyPart[0].trim().length > 0) {
+              taskPartHtml = frBodyPart[0].trim();
+            }
           }
         }
 
@@ -8750,11 +8804,21 @@ o Médecine d’urgence`,
           '<p class="mt-4">Following the analysis of your application file, we have determined that actions are required on your part to proceed with processing your application. Specifically, you must <strong>correct the reassigned tasks</strong> on your portal and undergo a <strong>reorientation of your occupational choices</strong>.</p>\n';
 
         let taskPartHtmlEn = "";
-        const enParts = rawHtml.split("<p>Hello,</p>");
-        if (enParts.length > 1) {
-          const enBodyPart = enParts[1].split("<p>Due to the high volume");
-          if (enBodyPart.length > 0 && enBodyPart[0].trim().length > 0) {
-            taskPartHtmlEn = enBodyPart[0].trim();
+        if (rawHtml.includes("<!-- START_TASK_BODY_EN -->")) {
+          const enParts = rawHtml.split("<!-- START_TASK_BODY_EN -->");
+          if (enParts.length > 1) {
+            const enBodyPart = enParts[1].split("<!-- END_TASK_BODY_EN -->");
+            if (enBodyPart.length > 0) {
+              taskPartHtmlEn = enBodyPart[0].trim();
+            }
+          }
+        } else {
+          const enParts = rawHtml.split("<p>Hello,</p>");
+          if (enParts.length > 1) {
+            const enBodyPart = enParts[1].split("<p>Due to the high volume");
+            if (enBodyPart.length > 0 && enBodyPart[0].trim().length > 0) {
+              taskPartHtmlEn = enBodyPart[0].trim();
+            }
           }
         }
 
@@ -8894,7 +8958,12 @@ o Médecine d’urgence`,
         const tasksTxt = this.sharedState.taskEmailFr();
         const frParts = tasksTxt.split("Bonjour,");
         if (frParts.length > 1) {
-          const frBodyPart = frParts[1].split("\n\nEn raison du volume");
+          let frBodyPart: string[] = [];
+          if (frParts[1].includes("Si vous ne prenez aucune action, votre dossier sera désactivé")) {
+            frBodyPart = frParts[1].split("Si vous ne prenez aucune action, votre dossier sera désactivé");
+          } else {
+            frBodyPart = frParts[1].split("\n\nEn raison du volume");
+          }
           if (frBodyPart.length > 0 && frBodyPart[0].trim().length > 0) {
             p += frBodyPart[0].trim() + "\n\n";
           }
@@ -9015,7 +9084,12 @@ o Médecine d’urgence`,
         const tasksTxt = this.sharedState.taskEmailFr();
         const enParts = tasksTxt.split("Hello,");
         if (enParts.length > 1) {
-          const enBodyPart = enParts[1].split("\n\nDue to the high volume");
+          let enBodyPart: string[] = [];
+          if (enParts[1].includes("If you take no action, your file will be automatically deactivated")) {
+            enBodyPart = enParts[1].split("If you take no action, your file will be automatically deactivated");
+          } else {
+            enBodyPart = enParts[1].split("\n\nDue to the high volume");
+          }
           if (enBodyPart.length > 0 && enBodyPart[0].trim().length > 0) {
             p += enBodyPart[0].trim() + "\n\n";
           }

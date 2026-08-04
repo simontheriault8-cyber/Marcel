@@ -80,6 +80,16 @@ export class RecruitmentDataService {
                 "The provided document is invalid because it is in black and white. Please provide a color photo of the same document.",
               logNoteFr: "Pièce d'identité en noir et blanc",
             },
+            {
+              id: "pc_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "Le document est incomplet sur la photo, le document n’est pas totalement visible. Veuillez téléverser une photo du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is incomplete in the photo, or it is not fully visible. Please upload a photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Permis de conduire incomplet",
+            },
           ],
         },
         {
@@ -137,6 +147,16 @@ export class RecruitmentDataService {
                 "The provided document is invalid because it is in black and white. Please provide a color photo of the same document.",
               logNoteFr: "Pièce d'identité en noir et blanc",
             },
+            {
+              id: "ramq_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "Le document est incomplet sur la photo, le document n’est pas totalement visible. Veuillez téléverser une photo du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is incomplete in the photo, or it is not fully visible. Please upload a photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Carte d'assurance maladie incomplète",
+            },
           ],
         },
         {
@@ -172,6 +192,16 @@ export class RecruitmentDataService {
               instructionEn:
                 "The provided document is invalid because it is in black and white. Please provide a color photo of the same document.",
               logNoteFr: "Pièce d'identité en noir et blanc",
+            },
+            {
+              id: "pass_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "Le document est incomplet sur la photo, le document n’est pas totalement visible. Veuillez téléverser une photo du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is incomplete in the photo, or it is not fully visible. Please upload a photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Passeport incomplet",
             },
           ],
         },
@@ -230,6 +260,16 @@ export class RecruitmentDataService {
                 "The provided document is invalid because it is in black and white. Please provide a color photo of the same document.",
               logNoteFr: "Pièce d'identité en noir et blanc",
             },
+            {
+              id: "autre_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "Le document est incomplet sur la photo, le document n’est pas totalement visible. Veuillez téléverser une photo du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is incomplete in the photo, or it is not fully visible. Please upload a photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Pièce d'identité incomplète",
+            },
           ],
         },
         {
@@ -273,6 +313,19 @@ export class RecruitmentDataService {
               linkEn: "Here is a link to an acceptable example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">selfie</a>.",
               logNoteFr:
                 "Aucun égoportrait (selfie) avec pièce d'identité au dossier",
+            },
+            {
+              id: "selfie_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "La photo est incomplète, votre visage ou votre pièce d’identité n'est pas totalement visible sur la photo. Veuillez téléverser une nouvelle photo en vous assurant que votre visage et votre pièce d’identité sont clairement visibles.",
+              linkFr: "Voici le lien vers un exemple d'<a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">égoportrait</a> acceptable.",
+              instructionEn:
+                "The photo is incomplete, your face or ID is not fully visible in the photo. Please upload a new photo ensuring both your face and ID are clearly visible.",
+              linkEn: "Here is a link to an acceptable example of a <a href=\"https://simontheriault8-cyber.github.io/Documents/%C3%89goportrait.png\">selfie</a>.",
+              logNoteFr:
+                "Égoportrait (Selfie) avec pièce d’identité incomplet",
             },
           ],
         },
@@ -338,12 +391,12 @@ export class RecruitmentDataService {
             },
             {
               id: "naiss_incomplet",
-              labelFr: "Incomplet",
-              labelEn: "Incomplete",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
               instructionFr:
-                "Le document est incomplet, le document n’est pas totalement visible. Veuillez téléverser une photo du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+                "Le document est incomplet sur la photo, le document n’est pas totalement visible. Veuillez téléverser une photo du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
               instructionEn:
-                "The document is incomplete, or it is not fully visible. Please upload a photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+                "The document is incomplete in the photo, or it is not fully visible. Please upload a photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
               logNoteFr: "Certificat de naissance incomplet",
             },
             {
@@ -398,6 +451,16 @@ export class RecruitmentDataService {
               logNoteFr:
                 "Il manque la deuxième page du certificat de citoyenneté",
             },
+            {
+              id: "cit_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "Le document est incomplet sur la photo, il manque des pages ou le document n’est pas totalement visible. Veuillez téléverser une photo complète du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is incomplete in the photo, pages are missing, or it is not fully visible. Please upload a full photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Certificat de citoyenneté incomplet",
+            },
           ],
         },
         {
@@ -423,6 +486,16 @@ export class RecruitmentDataService {
               instructionEn:
                 "The back of the document is missing; please upload a photo of the back of your citizenship card.",
               logNoteFr: "Verso manquant de la carte de citoyenneté",
+            },
+            {
+              id: "cc_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "Le document est incomplet sur la photo, le document n’est pas totalement visible. Veuillez téléverser une photo du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is incomplete in the photo, or it is not fully visible. Please upload a photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Carte de citoyenneté incomplète",
             },
           ],
         },
@@ -459,6 +532,16 @@ export class RecruitmentDataService {
               instructionEn:
                 "The back side of the card is missing. You must upload a copy of both sides of the document.",
               logNoteFr: "Verso manquant de la carte de résident permanent",
+            },
+            {
+              id: "pr_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "Le document est incomplet sur la photo, le document n’est pas totalement visible. Veuillez téléverser une photo du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is incomplete in the photo, or it is not fully visible. Please upload a photo of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Carte de résident permanent incomplète",
             },
           ],
         },
@@ -691,12 +774,12 @@ export class RecruitmentDataService {
             },
             {
               id: "relev_incomp",
-              labelFr: "Incomplet",
-              labelEn: "Incomplete",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
               instructionFr:
-                "Le document est incomplet, il manque des pages ou le document n’est pas totalement visible. Veuillez téléverser une ou plusieurs photos du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+                "Le document est incomplet sur la photo, il manque des pages ou le document n’est pas totalement visible. Veuillez téléverser une ou plusieurs photos du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
               instructionEn:
-                "The document is incomplete, pages are missing, or it is not fully visible. Please upload one or more photos of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+                "The document is incomplete in the photo, pages are missing, or it is not fully visible. Please upload one or more photos of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
               logNoteFr: "Relevé d’apprentissage incomplet",
             },
             {
@@ -745,6 +828,16 @@ export class RecruitmentDataService {
                 "The document is not in your file. Please take a photo and upload it. Ensure the image is sharp, without glare, and all information is clearly visible.",
               logNoteFr: "Aucun diplômes ou certificats au dossier",
             },
+            {
+              id: "dipl_incomplet",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
+              instructionFr:
+                "Le document est incomplet sur la photo, il manque des pages ou le document n’est pas totalement visible. Veuillez téléverser une ou plusieurs photos du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles.",
+              instructionEn:
+                "The document is incomplete in the photo, pages are missing, or it is not fully visible. Please upload one or more photos of the document, ensuring the image is sharp, without glare, and all information is clearly visible.",
+              logNoteFr: "Diplômes et certificats incomplets",
+            },
           ],
         },
         {
@@ -763,12 +856,12 @@ export class RecruitmentDataService {
             },
             {
               id: "eval_incomp",
-              labelFr: "Incomplet",
-              labelEn: "Incomplete",
+              labelFr: "Document incomplet sur la photo",
+              labelEn: "Incomplete document in the photo",
               instructionFr:
-                "Le document est incomplet, il manque des pages ou le document n’est pas totalement visible. Veuillez téléverser une ou plusieurs photos du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles. Pour vous aider à trouver des ressources pour cette étape, veuillez consulter le site suivant : https://canalliance.org/fr/",
+                "Le document est incomplet sur la photo, il manque des pages ou le document n’est pas totalement visible. Veuillez téléverser une ou plusieurs photos du document en vous assurant que l’image est nette, sans reflet et que toutes les informations sont clairement visibles. Pour vous aider à trouver des ressources pour cette étape, veuillez consulter le site suivant : https://canalliance.org/fr/",
               instructionEn:
-                "The document is incomplete, pages are missing, or it is not fully visible. Please upload one or more photos of the document, ensuring the image is sharp, without glare, and all information is clearly visible. To help you find resources for this step, please visit the following site: https://canalliance.org/en/",
+                "The document is incomplete in the photo, pages are missing, or it is not fully visible. Please upload one or more photos of the document, ensuring the image is sharp, without glare, and all information is clearly visible. To help you find resources for this step, please visit the following site: https://canalliance.org/en/",
               logNoteFr: "Évaluation comparative incomplète",
             },
             {
@@ -812,18 +905,6 @@ export class RecruitmentDataService {
               instructionEn:
                 "Please provide an official copy of your comparative evaluation. To help you find resources for this step, please visit the following site: https://canalliance.org/en/",
               logNoteFr: "Évaluation comparative non officielle",
-            },
-            {
-              id: "eval_releves_etrangers",
-              labelFr: "Relevés de notes à l'étranger (en cas de dispense)",
-              labelEn: "Foreign transcripts (in case of exemption)",
-              instructionFr:
-                "Merci de nous avoir fourni votre évaluation comparative de vos études. Par contre, pour confirmer votre admissibilité académique aux métiers que vous avez choisis, nous aurons besoin de vos relevés de notes étrangers originaux s'ils sont écrits en français ou en anglais. Sinon, veuillez les faire traduire avant de les téléverser sur votre portail.",
-              instructionEn:
-                "Thank you for providing your comparative evaluation of your studies. However, to confirm your academic eligibility for the occupations you have chosen, we will need your original foreign transcripts if they are written in French or English. Otherwise, please have them translated before uploading them to your portal.",
-              logNoteFr:
-                "Demande de relevés de notes étrangers (en cas de dispense d'évaluation comparative)",
-              isAdditionalDoc: true,
             },
           ],
         },
@@ -999,30 +1080,6 @@ export class RecruitmentDataService {
                 "You must sign Parts I and J and check the box in Part J. Please complete the form again in your portal.",
               linkEn: "Here is an image of the parts you must complete: <a href=\"https://simontheriault8-cyber.github.io/Documents/DND%202170%20Partie%20I%20et%20J.png\">Canadian Armed Forces Employment Application Form</a>.",
               logNoteFr: "N'a pas coché la case à la partie J du DND 2170",
-            },
-            {
-              id: "emp_part_d",
-              labelFr: "Partie D - Service antérieur (FAC)",
-              labelEn: "Part D - Prior service (CAF)",
-              instructionFr:
-                "Avez-vous du service antérieur dans les Forces armées canadiennes, que ce soit comme membre de la Régulière ou de la Réserve. Veuillez nous transmettre votre réponse directement en réponse à ce courriel.",
-              instructionEn:
-                "Do you have prior service in the Canadian Armed Forces, either as a member of the Regular Force or the Reserve? Please send us your answer by replying directly to this email.",
-              logNoteFr:
-                "Partie D cochée (Service antérieur FAC). Demande de confirmation envoyée, aucune tâche réattribuée.",
-              isConfirmation: true,
-            },
-            {
-              id: "emp_part_e",
-              labelFr: "Partie E - Service militaire étranger",
-              labelEn: "Part E - Foreign military service",
-              instructionFr:
-                "La partie E est cochée. Vous devez fournir une preuve de libération ou de fin de service de l'armée étrangère. Veuillez envoyer cette preuve en répondant à ce courriel.",
-              instructionEn:
-                "Part E is checked. You must provide proof of release or end of service from the foreign military. Please send this proof by replying to this email.",
-              logNoteFr:
-                "Partie E cochée (Service étranger). Demande de preuve envoyée, aucune tâche réattribuée.",
-              isConfirmation: true,
             },
           ],
         },
@@ -1348,6 +1405,166 @@ export class RecruitmentDataService {
               instructionEn:
                 "The submitted file is not in an accepted format. The only accepted file format for the medical questionnaire is PDF. Please convert or save your document as a PDF and upload it again to your portal.",
               logNoteFr: "Mauvais format de fichier pour le questionnaire médical (doit être PDF)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      nameFr: "Documents Supplémentaires",
+      nameEn: "Additional Documents",
+      documents: [
+        {
+          nameFr: "Curriculum vitae (CV)",
+          nameEn: "Curriculum Vitae (CV)",
+          reasons: [
+            {
+              id: "doc_supp_cv",
+              labelFr: "Curriculum vitae (CV) récent à jour",
+              labelEn: "Recent up-to-date Curriculum Vitae (CV)",
+              instructionFr:
+                "Veuillez nous fournir un Curriculum Vitae (CV) récent à jour en répondant à ce courriel.",
+              instructionEn:
+                "Please provide a recent up-to-date Curriculum Vitae (CV) by replying to this email.",
+              logNoteFr: "CV récent à jour demandé",
+              isAdditionalDoc: true,
+            },
+          ],
+        },
+        {
+          nameFr: "Permis d'exercice / Licence professionnelle",
+          nameEn: "Practice Permit / Professional License",
+          reasons: [
+            {
+              id: "doc_supp_permis",
+              labelFr: "Permis d'exercice ou licence professionnelle sans restriction",
+              labelEn: "Unrestricted practice permit or professional license",
+              instructionFr:
+                "Veuillez nous fournir une copie de votre permis d'exercice ou licence professionnelle active et sans restriction en répondant à ce courriel.",
+              instructionEn:
+                "Please provide a copy of your active and unrestricted practice permit or professional license by replying to this email.",
+              logNoteFr: "Permis d'exercice / licence professionnelle demandé",
+              isAdditionalDoc: true,
+            },
+          ],
+        },
+        {
+          nameFr: "Lettre de membre en règle",
+          nameEn: "Good Standing Letter",
+          reasons: [
+            {
+              id: "doc_supp_membre_regle",
+              labelFr: "Lettre de l'autorité réglementaire attestant l'état « en règle »",
+              labelEn: "Letter from regulatory body confirming 'good standing'",
+              instructionFr:
+                "Veuillez nous fournir une lettre officielle de votre ordre ou autorité réglementaire professionnelle attestant que vous êtes membre en règle en répondant à ce courriel.",
+              instructionEn:
+                "Please provide an official letter from your professional regulatory body confirming that you are a member in good standing by replying to this email.",
+              logNoteFr: "Lettre de membre en règle demandée",
+              isAdditionalDoc: true,
+            },
+          ],
+        },
+        {
+          nameFr: "Certificat / Attestation de spécialité",
+          nameEn: "Specialty Certificate / Attestation",
+          reasons: [
+            {
+              id: "doc_supp_certificat_specialite",
+              labelFr: "Certificat ou attestation officielle de spécialité (BNED, CCAMC, Collège Royal, etc.)",
+              labelEn: "Official specialty certificate or attestation (NDEB, CACMS, Royal College, etc.)",
+              instructionFr:
+                "Veuillez nous fournir une attestation ou certificat officiel de votre spécialité médicale ou professionnelle en répondant à ce courriel.",
+              instructionEn:
+                "Please provide an official attestation or certificate of your medical or professional specialty by replying to this email.",
+              logNoteFr: "Certificat de spécialité demandé",
+              isAdditionalDoc: true,
+            },
+          ],
+        },
+        {
+          nameFr: "Preuve d'expérience spécifique",
+          nameEn: "Proof of Specific Experience",
+          reasons: [
+            {
+              id: "doc_supp_preuve_experience",
+              labelFr: "Preuve d'expérience spécifique (gestion, portfolio, accréditation)",
+              labelEn: "Proof of specific experience (management, portfolio, accreditation)",
+              instructionFr:
+                "Veuillez nous fournir un document justificatif d'expérience ou d'accréditation spécifique requise pour votre profession en répondant à ce courriel.",
+              instructionEn:
+                "Please provide documentary proof of specific experience or accreditation required for your profession by replying to this email.",
+              logNoteFr: "Preuve d'expérience spécifique demandée",
+              isAdditionalDoc: true,
+            },
+          ],
+        },
+        {
+          nameFr: "Relevés de notes à l'étranger (en cas de dispense)",
+          nameEn: "Foreign transcripts (in case of exemption)",
+          reasons: [
+            {
+              id: "doc_supp_releves_etrangers",
+              labelFr: "Relevé de notes officiel de l'établissement d'enseignement à l'étranger (en cas de dispense de l'Évaluation comparative)",
+              labelEn: "Official foreign transcript (in case of Comparative Evaluation exemption)",
+              instructionFr:
+                "Merci de nous avoir fourni votre évaluation comparative de vos études. Par contre, pour confirmer votre admissibilité académique aux métiers que vous avez choisis, nous aurons besoin de vos relevés de notes étrangers originaux s'ils sont écrits en français ou en anglais. Sinon, veuillez les faire traduire avant de nous les envoyer en répondant à ce courriel.",
+              instructionEn:
+                "Thank you for providing your comparative evaluation of your studies. However, to confirm your academic eligibility for the occupations you have chosen, we will need your original foreign transcripts if they are written in French or English. Otherwise, please have them translated before sending them to us by replying to this email.",
+              logNoteFr:
+                "Demande de relevés de notes étrangers (en cas de dispense d'évaluation comparative)",
+              isAdditionalDoc: true,
+            },
+          ],
+        },
+        {
+          nameFr: "Preuve de libération d'une armée étrangère",
+          nameEn: "Proof of release from a foreign military",
+          reasons: [
+            {
+              id: "doc_supp_liberation_armee_etrangere",
+              labelFr: "Preuve de libération ou de fin de service d'une armée étrangère",
+              labelEn: "Proof of release or end of service from a foreign military",
+              instructionFr:
+                "Vous devez fournir une preuve de libération ou de fin de service de l'armée étrangère. Veuillez envoyer cette preuve en répondant à ce courriel.",
+              instructionEn:
+                "You must provide proof of release or end of service from the foreign military. Please send this proof by replying to this email.",
+              logNoteFr: "Preuve de libération d'une armée étrangère demandée",
+              isAdditionalDoc: true,
+            },
+          ],
+        },
+        {
+          nameFr: "Demande de service antérieur dans les Forces armées canadiennes",
+          nameEn: "Prior service request in the Canadian Armed Forces",
+          reasons: [
+            {
+              id: "doc_supp_service_anterieur_fac",
+              labelFr: "Demande de vérification de service antérieur dans les Forces armées canadiennes",
+              labelEn: "Request for verification of prior service in the Canadian Armed Forces",
+              instructionFr:
+                "Avez-vous du service antérieur dans les Forces armées canadiennes, que ce soit comme membre de la Régulière ou de la Réserve. Veuillez nous transmettre votre réponse directement en réponse à ce courriel.",
+              instructionEn:
+                "Do you have prior service in the Canadian Armed Forces, either as a member of the Regular Force or the Reserve? Please send us your answer by replying directly to this email.",
+              logNoteFr: "Demande de vérification de service antérieur dans les FAC demandée",
+              isAdditionalDoc: true,
+            },
+          ],
+        },
+        {
+          nameFr: "Lettre d'admission dans un établissement scolaire",
+          nameEn: "Letter of admission from an educational institution",
+          reasons: [
+            {
+              id: "doc_subv_admission",
+              labelFr: "Lettre d'admission officielle dans un établissement scolaire agréé",
+              labelEn: "Official letter of admission from an accredited educational institution",
+              instructionFr:
+                "Veuillez nous fournir votre lettre d'admission officielle confirmant votre inscription dans un établissement scolaire agréé pour votre programme d'études subventionnées en répondant à ce courriel.",
+              instructionEn:
+                "Please provide your official letter of admission confirming your enrollment in an accredited educational institution for your subsidized study program by replying to this email.",
+              logNoteFr: "Lettre d'admission dans un établissement scolaire demandée",
+              isAdditionalDoc: true,
             },
           ],
         },

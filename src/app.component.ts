@@ -21,6 +21,8 @@ import {
 } from "./services/email-scenarios.service";
 import { JobSearchModalComponent } from "./app/components/job-search-modal.component";
 import { SharedStateService, DEFAULT_SIG_FR, DEFAULT_SIG_EN } from "./services/shared-state.service";
+import { JobDatabaseService } from "./services/job-database.service";
+import { JobEntry } from "./services/jobs-data";
 import { FormsModule } from "@angular/forms";
 
 type AppStage = "intro" | "minor-check" | "main";
@@ -257,133 +259,394 @@ type AppStage = "intro" | "minor-check" | "main";
         class="min-h-screen w-full bg-slate-200 text-slate-800 p-4 flex flex-col gap-4 font-sans relative"
       >
         <!-- TOP HEADER ROW -->
-        <div class="flex items-center w-full shrink-0 gap-4">
-          <!-- LEFT: Action Buttons & Banner -->
-          <div class="flex items-center gap-4 flex-1">
-            <!-- Restart App Button -->
-            <button
-              (click)="restartApp()"
-              class="bg-white p-2 rounded-full shadow-md hover:bg-slate-50 transition-all text-slate-600 shrink-0 border border-slate-200"
-              title="Relancer l'application"
+        <div class="flex items-start w-full shrink-0 gap-4">
+          <!-- BIG ACE Panel (Top-Left 2x2 Round Buttons) -->
+          <div
+            class="bg-white p-3 rounded-2xl shadow-md border border-slate-200 flex flex-col items-center gap-2 shrink-0"
+          >
+            <h1
+              class="text-xs font-black tracking-widest text-slate-800 uppercase text-center border-b border-slate-100 pb-1.5 w-full px-1"
             >
-              <svg
-                class="h-5 w-5"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                <path d="M3 3v5h5" />
-              </svg>
-            </button>
+              BIG ACE
+            </h1>
 
-            <!-- Minor Check Banner (if active) -->
-            @if (stage() === "minor-check") {
-              <div
-                class="bg-indigo-900 text-white p-3 rounded-xl shadow-md flex justify-between items-center flex-1"
+            <div class="grid grid-cols-2 gap-2">
+              <!-- Top-Left: Reset -->
+              <button
+                (click)="restartApp()"
+                class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 shadow-sm transition-all flex items-center justify-center border border-slate-200 active:scale-95 cursor-pointer"
+                title="Relancer l'application (Reset)"
               >
-                <div class="flex items-center gap-3">
-                  <span
-                    class="bg-indigo-700 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider"
-                    >Mode Mineur</span
-                  >
-                  <span class="text-sm font-medium opacity-90"
-                    >Veuillez valider les 4 documents requis (Certificat
-                    naissance, Demande Partie H, ID Parent, Selfie
-                    Parent).</span
-                  >
+                <svg
+                  class="h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+              </button>
+
+              <!-- Top-Right: Réo -->
+              <button
+                (click)="toggleJobSearch()"
+                class="w-9 h-9 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-800 border border-indigo-200 shadow-sm transition-all flex items-center justify-center text-xs font-black active:scale-95 cursor-pointer"
+                title="Panneau de Réorientation et Métiers (RÉO)"
+              >
+                RÉO
+              </button>
+
+              <!-- Bottom-Left: Signature -->
+              <button
+                (click)="toggleSignatureSettings()"
+                class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 shadow-sm transition-all flex items-center justify-center border border-slate-200 active:scale-95 cursor-pointer"
+                title="Gestion de la signature"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </button>
+
+              <!-- Bottom-Right: Rappel Général -->
+              <button
+                (click)="toggleGeneralReminder()"
+                class="w-9 h-9 rounded-full border shadow-sm transition-all flex items-center justify-center active:scale-95 cursor-pointer"
+                [class.bg-indigo-600]="forceGeneralReminder()"
+                [class.text-white]="forceGeneralReminder()"
+                [class.border-indigo-700]="forceGeneralReminder()"
+                [class.hover:bg-indigo-700]="forceGeneralReminder()"
+                [class.bg-slate-100]="!forceGeneralReminder()"
+                [class.text-slate-700]="!forceGeneralReminder()"
+                [class.border-slate-200]="!forceGeneralReminder()"
+                [class.hover:bg-slate-200]="!forceGeneralReminder()"
+                title="Courriel de rappel général"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Panel: Métiers au dossier du postulant -->
+          <div
+            class="bg-white p-3 rounded-2xl shadow-md border border-slate-200 flex flex-col gap-2 flex-1 min-w-[320px]"
+          >
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5 px-1">
+              <h2 class="text-xs font-black tracking-wider text-slate-800 uppercase flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 text-indigo-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+                Métiers au dossier du postulant
+              </h2>
+            </div>
+
+            <!-- 3 Columns for 3 Jobs -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+              <!-- Slot 1 -->
+              <div class="relative flex flex-col gap-1 p-2 bg-slate-50/80 border border-slate-200 rounded-xl">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="uppercase tracking-wider text-slate-500">Choix #1</span>
+                  @if (getDossierJob(1)) {
+                    @let job1 = getDossierJob(1)!;
+                    @if (isJobClosed(job1.id)) {
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Fermé
+                      </span>
+                    } @else {
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Ouvert
+                      </span>
+                    }
+                  }
                 </div>
 
-                <button
-                  (click)="startMainProgram()"
-                  class="px-4 py-2 bg-white text-indigo-900 rounded-lg text-sm font-bold shadow-sm transition-all hover:bg-indigo-50 active:scale-95 flex items-center gap-2 whitespace-nowrap ml-4 shrink-0 cursor-pointer"
-                >
-                  <span>Procéder à l'évaluation principale</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                <div class="relative">
+                  <div
+                    class="flex items-center border border-slate-300 rounded-lg bg-white shadow-xs focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 text-xs min-h-[34px]"
+                    [class.opacity-50]="isDossierFieldDisabled(1)"
+                    [class.bg-slate-100]="isDossierFieldDisabled(1)"
+                    [class.cursor-not-allowed]="isDossierFieldDisabled(1)"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    <input
+                      type="text"
+                      [ngModel]="sharedState.searchDossierQuery1()"
+                      (ngModelChange)="onDossierQueryChange(1, $event)"
+                      (focus)="openDossierDropdown(1)"
+                      (blur)="closeDossierDropdownDelayed(1)"
+                      [disabled]="isDossierFieldDisabled(1)"
+                      class="w-full px-2.5 py-1.5 text-xs outline-none bg-transparent font-medium text-slate-800"
+                      [class.cursor-not-allowed]="isDossierFieldDisabled(1)"
+                      placeholder="Rechercher métier #1..."
                     />
-                  </svg>
-                </button>
+                    @if (sharedState.selectedDossierJobId1() && !isDossierFieldDisabled(1)) {
+                      <button
+                        (click)="clearDossierJob(1, $event)"
+                        class="p-1 px-2 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                        title="Effacer le choix #1"
+                      >
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    }
+                  </div>
+
+                  <!-- Dropdown List -->
+                  @if (dossierDropdownOpen1() && !isDossierFieldDisabled(1)) {
+                    <div class="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-48 overflow-y-auto divide-y divide-slate-100 text-xs">
+                      @let filtered1 = getFilteredJobsForIndex(1);
+                      @if (filtered1.length === 0) {
+                        <div class="p-2 text-slate-400 text-center italic">Aucun métier trouvé</div>
+                      }
+                      @for (job of filtered1; track job.id) {
+                        <button
+                          type="button"
+                          (mousedown)="selectDossierJob(1, job.id)"
+                          class="w-full text-left px-2.5 py-1.5 hover:bg-indigo-50 flex items-center justify-between gap-2 transition cursor-pointer"
+                        >
+                          <span class="font-medium text-slate-800 truncate">{{ job.id }} - {{ job.title }}</span>
+                          @if (isJobClosed(job.id)) {
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-100 text-rose-700 shrink-0">Fermé</span>
+                          } @else {
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 shrink-0">Ouvert</span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
               </div>
-            }
+
+              <!-- Slot 2 -->
+              <div class="relative flex flex-col gap-1 p-2 bg-slate-50/80 border border-slate-200 rounded-xl">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="uppercase tracking-wider text-slate-500">Choix #2</span>
+                  @if (getDossierJob(2)) {
+                    @let job2 = getDossierJob(2)!;
+                    @if (isJobClosed(job2.id)) {
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Fermé
+                      </span>
+                    } @else {
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Ouvert
+                      </span>
+                    }
+                  }
+                </div>
+
+                <div class="relative">
+                  <div
+                    class="flex items-center border border-slate-300 rounded-lg bg-white shadow-xs focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 text-xs min-h-[34px]"
+                    [class.opacity-50]="isDossierFieldDisabled(2)"
+                    [class.bg-slate-100]="isDossierFieldDisabled(2)"
+                    [class.cursor-not-allowed]="isDossierFieldDisabled(2)"
+                  >
+                    <input
+                      type="text"
+                      [ngModel]="sharedState.searchDossierQuery2()"
+                      (ngModelChange)="onDossierQueryChange(2, $event)"
+                      (focus)="openDossierDropdown(2)"
+                      (blur)="closeDossierDropdownDelayed(2)"
+                      [disabled]="isDossierFieldDisabled(2)"
+                      class="w-full px-2.5 py-1.5 text-xs outline-none bg-transparent font-medium text-slate-800"
+                      [class.cursor-not-allowed]="isDossierFieldDisabled(2)"
+                      placeholder="Rechercher métier #2..."
+                    />
+                    @if (sharedState.selectedDossierJobId2() && !isDossierFieldDisabled(2)) {
+                      <button
+                        (click)="clearDossierJob(2, $event)"
+                        class="p-1 px-2 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                        title="Effacer le choix #2"
+                      >
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    }
+                  </div>
+
+                  <!-- Dropdown List -->
+                  @if (dossierDropdownOpen2() && !isDossierFieldDisabled(2)) {
+                    <div class="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-48 overflow-y-auto divide-y divide-slate-100 text-xs">
+                      @let filtered2 = getFilteredJobsForIndex(2);
+                      @if (filtered2.length === 0) {
+                        <div class="p-2 text-slate-400 text-center italic">Aucun métier trouvé</div>
+                      }
+                      @for (job of filtered2; track job.id) {
+                        <button
+                          type="button"
+                          (mousedown)="selectDossierJob(2, job.id)"
+                          class="w-full text-left px-2.5 py-1.5 hover:bg-indigo-50 flex items-center justify-between gap-2 transition cursor-pointer"
+                        >
+                          <span class="font-medium text-slate-800 truncate">{{ job.id }} - {{ job.title }}</span>
+                          @if (isJobClosed(job.id)) {
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-100 text-rose-700 shrink-0">Fermé</span>
+                          } @else {
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 shrink-0">Ouvert</span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Slot 3 -->
+              <div class="relative flex flex-col gap-1 p-2 bg-slate-50/80 border border-slate-200 rounded-xl">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="uppercase tracking-wider text-slate-500">Choix #3</span>
+                  @if (getDossierJob(3)) {
+                    @let job3 = getDossierJob(3)!;
+                    @if (isJobClosed(job3.id)) {
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Fermé
+                      </span>
+                    } @else {
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Ouvert
+                      </span>
+                    }
+                  }
+                </div>
+
+                <div class="relative">
+                  <div
+                    class="flex items-center border border-slate-300 rounded-lg bg-white shadow-xs focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 text-xs min-h-[34px]"
+                    [class.opacity-50]="isDossierFieldDisabled(3)"
+                    [class.bg-slate-100]="isDossierFieldDisabled(3)"
+                    [class.cursor-not-allowed]="isDossierFieldDisabled(3)"
+                  >
+                    <input
+                      type="text"
+                      [ngModel]="sharedState.searchDossierQuery3()"
+                      (ngModelChange)="onDossierQueryChange(3, $event)"
+                      (focus)="openDossierDropdown(3)"
+                      (blur)="closeDossierDropdownDelayed(3)"
+                      [disabled]="isDossierFieldDisabled(3)"
+                      class="w-full px-2.5 py-1.5 text-xs outline-none bg-transparent font-medium text-slate-800"
+                      [class.cursor-not-allowed]="isDossierFieldDisabled(3)"
+                      placeholder="Rechercher métier #3..."
+                    />
+                    @if (sharedState.selectedDossierJobId3() && !isDossierFieldDisabled(3)) {
+                      <button
+                        (click)="clearDossierJob(3, $event)"
+                        class="p-1 px-2 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                        title="Effacer le choix #3"
+                      >
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    }
+                  </div>
+
+                  <!-- Dropdown List -->
+                  @if (dossierDropdownOpen3() && !isDossierFieldDisabled(3)) {
+                    <div class="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-48 overflow-y-auto divide-y divide-slate-100 text-xs">
+                      @let filtered3 = getFilteredJobsForIndex(3);
+                      @if (filtered3.length === 0) {
+                        <div class="p-2 text-slate-400 text-center italic">Aucun métier trouvé</div>
+                      }
+                      @for (job of filtered3; track job.id) {
+                        <button
+                          type="button"
+                          (mousedown)="selectDossierJob(3, job.id)"
+                          class="w-full text-left px-2.5 py-1.5 hover:bg-indigo-50 flex items-center justify-between gap-2 transition cursor-pointer"
+                        >
+                          <span class="font-medium text-slate-800 truncate">{{ job.id }} - {{ job.title }}</span>
+                          @if (isJobClosed(job.id)) {
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-100 text-rose-700 shrink-0">Fermé</span>
+                          } @else {
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 shrink-0">Ouvert</span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
           </div>
 
-          <!-- RIGHT: Action Buttons (Main) -->
-          <div class="flex items-center gap-2 shrink-0">
-            <!-- Rappel Général Button -->
-            <button
-              (click)="toggleGeneralReminder()"
-              class="bg-white p-2 px-3 rounded-full shadow-md transition-all flex items-center gap-2 font-medium text-sm"
-              [class.bg-indigo-50]="forceGeneralReminder()"
-              [class.text-indigo-700]="forceGeneralReminder()"
-              [class.border-indigo-200]="forceGeneralReminder()"
-              [class.border]="forceGeneralReminder()"
-              [class.text-slate-600]="!forceGeneralReminder()"
-              [class.hover:bg-slate-50]="!forceGeneralReminder()"
-              title="Courriel de rappel général"
+          <!-- Minor Check Banner (if active) -->
+          @if (stage() === "minor-check") {
+            <div
+              class="bg-indigo-900 text-white p-3.5 rounded-2xl shadow-md flex justify-between items-center flex-1 self-center"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-              <span class="hidden sm:inline">Rappel Général</span>
-            </button>
+              <div class="flex items-center gap-3">
+                <span
+                  class="bg-indigo-700 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider"
+                  >Mode Mineur</span
+                >
+                <span class="text-sm font-medium opacity-90"
+                  >Veuillez valider les 4 documents requis (Certificat
+                  naissance, Demande Partie H, ID Parent, Selfie
+                  Parent).</span
+                >
+              </div>
 
-            <!-- Job Search Button -->
-            <button
-              (click)="toggleJobSearch()"
-              class="bg-indigo-100 border border-indigo-200 text-indigo-800 hover:bg-indigo-200 h-10 w-10 rounded-full shadow-md transition-all font-sans flex items-center justify-center text-sm font-black"
-              title="Panneau de Réorientation et Métiers"
-            >
-              RÉO
-            </button>
-
-            <!-- Signature Management Button -->
-            <button
-              (click)="toggleSignatureSettings()"
-              class="bg-white p-2 rounded-full shadow-md hover:bg-slate-50 transition-all text-slate-600"
-              title="Gestion de la signature"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              <button
+                (click)="startMainProgram()"
+                class="px-4 py-2 bg-white text-indigo-900 rounded-lg text-sm font-bold shadow-sm transition-all hover:bg-indigo-50 active:scale-95 flex items-center gap-2 whitespace-nowrap ml-4 shrink-0 cursor-pointer"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </button>
-          </div>
+                <span>Procéder à l'évaluation principale</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </button>
+            </div>
+          }
         </div>
 
         <!-- SPLIT COLUMN LAYOUT: Tasks sidebar (left) and Documents Workspace (right) -->
@@ -401,8 +664,17 @@ type AppStage = "intro" | "minor-check" | "main";
               <!-- Tout Conforme Button -->
               <button
                 (click)="setAllCompliant()"
-                class="bg-emerald-50 px-2 py-1.5 rounded-lg shadow-sm transition-all flex items-center gap-1.5 font-bold text-xs text-emerald-700 border border-emerald-100 hover:bg-emerald-100 hover:border-emerald-200 active:scale-95 cursor-pointer"
-                title="Mettre toutes les tâches instantanément conformes"
+                class="px-2 py-1.5 rounded-lg shadow-sm transition-all flex items-center gap-1.5 font-bold text-xs border active:scale-95 cursor-pointer"
+                [class.bg-emerald-600]="areAllDocsCompliant()"
+                [class.text-white]="areAllDocsCompliant()"
+                [class.border-emerald-700]="areAllDocsCompliant()"
+                [class.hover:bg-emerald-700]="areAllDocsCompliant()"
+                [class.bg-emerald-50]="!areAllDocsCompliant()"
+                [class.text-emerald-700]="!areAllDocsCompliant()"
+                [class.border-emerald-100]="!areAllDocsCompliant()"
+                [class.hover:bg-emerald-100]="!areAllDocsCompliant()"
+                [class.hover:border-emerald-200]="!areAllDocsCompliant()"
+                [title]="areAllDocsCompliant() ? 'Désactiver la conformité de toutes les tâches' : 'Mettre toutes les tâches instantanément conformes'"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -421,6 +693,9 @@ type AppStage = "intro" | "minor-check" | "main";
             </div>
             <div class="flex-1 overflow-y-auto p-3 space-y-2">
               @for (task of visibleTasks(); track task.nameFr) {
+                @if (task.nameFr.includes("Documents Supplémentaires")) {
+                  <hr class="my-3 border-t-2 border-slate-300" />
+                }
                 <button
                   (click)="selectTask(task)"
                   class="w-full text-left p-3 rounded-xl transition-all duration-200 border border-transparent group relative overflow-hidden flex justify-between items-center"
@@ -435,19 +710,34 @@ type AppStage = "intro" | "minor-check" | "main";
                   </div>
 
                   <div class="flex items-center gap-2">
-                    @if (isTaskCompliant(task)) {
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-green-500 shrink-0"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                    @if (!task.nameFr.includes("Documents Supplémentaires")) {
+                      @if (isTaskCompliant(task)) {
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-5 w-5 text-green-500 shrink-0"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      } @else if (hasTaskRejections(task)) {
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-5 w-5 text-red-500 shrink-0"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      }
                     }
                     <!-- Indicator for active -->
                     @if (selectedTask() === task) {
@@ -481,20 +771,6 @@ type AppStage = "intro" | "minor-check" | "main";
                       class="text-xl font-bold text-slate-800 mb-1 leading-tight flex items-center gap-2"
                     >
                       {{ task.nameFr }}
-                      @if (isTaskCompliant(task)) {
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-6 w-6 text-green-500"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      }
                     </h3>
                     <p class="text-xs text-slate-500 font-medium">
                       {{ task.nameEn }}
@@ -529,19 +805,21 @@ type AppStage = "intro" | "minor-check" | "main";
                       </label>
                     }
 
-                    <button
-                      (click)="toggleTaskNotCompleted(task)"
-                      class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-sm active:scale-95 whitespace-nowrap"
-                      [class.bg-red-100]="isTaskNotCompleted(task)"
-                      [class.border-red-300]="isTaskNotCompleted(task)"
-                      [class.text-red-800]="isTaskNotCompleted(task)"
-                      [class.bg-white]="!isTaskNotCompleted(task)"
-                      [class.text-slate-500]="!isTaskNotCompleted(task)"
-                      [class.hover:bg-slate-100]="!isTaskNotCompleted(task)"
-                      [class.border-slate-300]="!isTaskNotCompleted(task)"
-                    >
-                      Tâche non complétée
-                    </button>
+                    @if (!task.nameFr.includes("Documents Supplémentaires")) {
+                      <button
+                        (click)="toggleTaskNotCompleted(task)"
+                        class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border shadow-sm active:scale-95 whitespace-nowrap"
+                        [class.bg-red-100]="isTaskNotCompleted(task)"
+                        [class.border-red-300]="isTaskNotCompleted(task)"
+                        [class.text-red-800]="isTaskNotCompleted(task)"
+                        [class.bg-white]="!isTaskNotCompleted(task)"
+                        [class.text-slate-500]="!isTaskNotCompleted(task)"
+                        [class.hover:bg-slate-100]="!isTaskNotCompleted(task)"
+                        [class.border-slate-300]="!isTaskNotCompleted(task)"
+                      >
+                        Tâche non complétée
+                      </button>
+                    }
                   </div>
                 </div>
 
@@ -577,11 +855,216 @@ type AppStage = "intro" | "minor-check" | "main";
                     </div>
                   }
 
-                  @for (
-                    doc of task.documents;
-                    track doc.nameFr;
-                    let isLastDoc = $last
-                  ) {
+                  @if (task.nameFr.includes("Documents Supplémentaires")) {
+                    <!-- Header Banner for Dossier Jobs -->
+                    <div class="mb-4 p-3 bg-blue-50/80 border border-blue-200 rounded-xl flex items-center justify-between text-xs text-blue-900 shadow-sm">
+                      <div class="flex items-center gap-2.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                          <span class="font-bold">Métier(s) au dossier :</span>
+                          <span class="ml-1 font-medium">{{ getDossierJobsSummaryTextFr() }}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- DOCUMENTS SUPPLÉMENTAIRES SELON LES TÂCHES (Toujours visible) -->
+                    @if (hasVisibleTaskBasedDocs(task)) {
+                      <div class="mb-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-300">
+                        <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                          <div class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            <span>Documents supplémentaires selon la situation du postulant</span>
+                          </div>
+                        </div>
+
+                        <div class="p-3 bg-white space-y-1">
+                          @for (doc of task.documents; track doc.nameFr) {
+                            @if (isTaskBasedAdditionalDoc(doc) && shouldShowDoc(task, doc)) {
+                              @for (reason of doc.reasons; track reason.id) {
+                                @if (shouldShowReason(task, doc, reason)) {
+                                  <label
+                                    class="flex items-start gap-3 p-2.5 rounded-lg cursor-pointer transition-all select-none border border-transparent hover:bg-slate-50"
+                                    [class.bg-blue-50]="isReasonSelected(doc, reason)"
+                                    [class.border-blue-100]="isReasonSelected(doc, reason)"
+                                  >
+                                    <div class="relative flex items-center mt-0.5">
+                                      <input
+                                        type="checkbox"
+                                        class="peer h-4 w-4 appearance-none rounded border-2 border-slate-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition-all"
+                                        [checked]="isReasonSelected(doc, reason)"
+                                        (change)="toggleReason(task, doc, reason)"
+                                      />
+                                      <svg
+                                        class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="3"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      >
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                      </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                      <span
+                                        class="text-xs text-slate-700 leading-snug block transition-colors"
+                                        [class.font-semibold]="isReasonSelected(doc, reason)"
+                                        [class.text-blue-900]="isReasonSelected(doc, reason)"
+                                      >
+                                        <strong class="font-bold text-slate-800">{{ doc.nameFr }} :</strong> {{ reason.labelFr }}
+                                      </span>
+                                    </div>
+                                  </label>
+                                }
+                              }
+                            }
+                          }
+                        </div>
+                      </div>
+                    }
+
+                    <!-- ÉTUDES SUBVENTIONNÉES (Toujours visible) -->
+                    @if (hasVisibleSubsidizedDocs(task)) {
+                      <div class="mb-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-300">
+                        <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                          <div class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                            </svg>
+                            <span>Études subventionnées</span>
+                          </div>
+                        </div>
+
+                        <div class="p-3 bg-white space-y-1">
+                          @for (doc of task.documents; track doc.nameFr) {
+                            @if (isSubsidizedDoc(doc) && shouldShowDoc(task, doc)) {
+                              @for (reason of doc.reasons; track reason.id) {
+                                @if (shouldShowReason(task, doc, reason)) {
+                                  <label
+                                    class="flex items-start gap-3 p-2.5 rounded-lg cursor-pointer transition-all select-none border border-transparent hover:bg-slate-50"
+                                    [class.bg-blue-50]="isReasonSelected(doc, reason)"
+                                    [class.border-blue-100]="isReasonSelected(doc, reason)"
+                                  >
+                                    <div class="relative flex items-center mt-0.5">
+                                      <input
+                                        type="checkbox"
+                                        class="peer h-4 w-4 appearance-none rounded border-2 border-slate-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition-all"
+                                        [checked]="isReasonSelected(doc, reason)"
+                                        (change)="toggleReason(task, doc, reason)"
+                                      />
+                                      <svg
+                                        class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="3"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      >
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                      </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                      <span
+                                        class="text-xs text-slate-700 leading-snug block transition-colors"
+                                        [class.font-semibold]="isReasonSelected(doc, reason)"
+                                        [class.text-blue-900]="isReasonSelected(doc, reason)"
+                                      >
+                                        <strong class="font-bold text-slate-800">{{ doc.nameFr }} :</strong> {{ reason.labelFr }}
+                                      </span>
+                                    </div>
+                                  </label>
+                                }
+                              }
+                            }
+                          }
+                        </div>
+                      </div>
+                    }
+
+                    <!-- DOCUMENTS SUPPLÉMENTAIRES SELON LES MÉTIERS -->
+                    @if (hasVisibleAdditionalDocs(task)) {
+                      <div class="mb-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-300">
+                        <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                          <div class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span>Documents supplémentaires selon les métiers</span>
+                          </div>
+                        </div>
+
+                        <div class="p-3 bg-white space-y-3">
+                          @for (job of getDossierJobObjects(); track job.id) {
+                            @if (hasJobAdditionalDocs(task, job)) {
+                              <div class="space-y-1 bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/80">
+                                <div class="text-xs font-bold text-slate-800 pb-1.5 px-0.5 flex items-center gap-2 border-b border-slate-200/80 mb-1.5">
+                                  <span class="inline-block w-2 h-2 rounded-full bg-blue-600"></span>
+                                  <span>Pour {{ job.id }} - {{ job.title }} :</span>
+                                </div>
+                                @for (doc of task.documents; track doc.nameFr) {
+                                  @if (!isSubsidizedDoc(doc) && !isTaskBasedAdditionalDoc(doc) && isAdditionalDocRequiredForJob(doc.nameFr, job.id) && shouldShowDoc(task, doc)) {
+                                    @for (reason of doc.reasons; track reason.id) {
+                                      @if (shouldShowReason(task, doc, reason)) {
+                                        <label
+                                          class="flex items-start gap-3 p-2 rounded-lg cursor-pointer transition-all select-none border border-transparent hover:bg-white bg-white/70 shadow-2xs"
+                                          [class.bg-blue-50]="isJobReasonSelected(job, doc, reason)"
+                                          [class.border-blue-200]="isJobReasonSelected(job, doc, reason)"
+                                        >
+                                          <div class="relative flex items-center mt-0.5">
+                                            <input
+                                              type="checkbox"
+                                              class="peer h-4 w-4 appearance-none rounded border-2 border-slate-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition-all"
+                                              [checked]="isJobReasonSelected(job, doc, reason)"
+                                              (change)="toggleJobReason(task, job, doc, reason)"
+                                            />
+                                            <svg
+                                              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="3"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                            >
+                                              <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                          </div>
+                                          <div class="flex-1 min-w-0">
+                                            <span
+                                              class="text-xs text-slate-700 leading-snug block transition-colors"
+                                              [class.font-semibold]="isJobReasonSelected(job, doc, reason)"
+                                              [class.text-blue-900]="isJobReasonSelected(job, doc, reason)"
+                                            >
+                                              <strong class="font-bold text-slate-800">{{ doc.nameFr }} :</strong> {{ getJobSpecificDocText(job.id, doc.nameFr, true) }}
+                                            </span>
+                                          </div>
+                                        </label>
+                                      }
+                                    }
+                                  }
+                                }
+                              </div>
+                            }
+                          }
+                        </div>
+                      </div>
+                    }
+                  } @else {
+                    @for (
+                      doc of task.documents;
+                      track doc.nameFr;
+                      let isLastDoc = $last
+                    ) {
                     <!-- Check dynamic visibility logic -->
                     @if (shouldShowDoc(task, doc)) {
                       <div
@@ -695,65 +1178,6 @@ type AppStage = "intro" | "minor-check" | "main";
                             }
                           }
 
-                          @if (hasConfirmationReasons(doc)) {
-                            <div
-                              class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-2 ml-1 mt-4"
-                            >
-                              Besoin de confirmation par courriel
-                            </div>
-                            @for (reason of doc.reasons; track reason.id) {
-                              @if (
-                                shouldShowReason(task, doc, reason) &&
-                                reason.isConfirmation
-                              ) {
-                                <label
-                                  class="flex items-start gap-3 p-2 rounded-lg cursor-pointer transition-all select-none border border-transparent hover:bg-slate-50"
-                                  [class.bg-amber-50]="
-                                    isReasonSelected(doc, reason)
-                                  "
-                                  [class.border-amber-100]="
-                                    isReasonSelected(doc, reason)
-                                  "
-                                >
-                                  <div
-                                    class="relative flex items-center mt-0.5"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      class="peer h-4 w-4 appearance-none rounded border-2 border-slate-300 bg-white checked:bg-amber-600 checked:border-amber-600 focus:outline-none transition-all"
-                                      [checked]="isReasonSelected(doc, reason)"
-                                      (change)="toggleReason(task, doc, reason)"
-                                    />
-                                    <svg
-                                      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      stroke-width="3"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                    >
-                                      <polyline
-                                        points="20 6 9 17 4 12"
-                                      ></polyline>
-                                    </svg>
-                                  </div>
-                                  <span
-                                    class="text-xs text-slate-600 leading-snug pt-0.5 transition-colors"
-                                    [class.font-semibold]="
-                                      isReasonSelected(doc, reason)
-                                    "
-                                    [class.text-slate-800]="
-                                      isReasonSelected(doc, reason)
-                                    "
-                                    >{{ reason.labelFr }}</span
-                                  >
-                                </label>
-                              }
-                            }
-                          }
-
                           @if (hasAdditionalDocReasons(doc)) {
                             <div
                               class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2 ml-1 mt-4"
@@ -816,6 +1240,7 @@ type AppStage = "intro" | "minor-check" | "main";
                       </div>
                     }
                   }
+                }
                 </div>
               } @else {
                 <div
@@ -1114,7 +1539,13 @@ export class AppComponent implements OnInit {
   private dataService = inject(RecruitmentDataService);
   private emailScenariosService = inject(EmailScenariosService);
   private sanitizer = inject(DomSanitizer);
-  private sharedState = inject(SharedStateService);
+  public sharedState = inject(SharedStateService);
+  public jobService = inject(JobDatabaseService);
+
+  // Dossier Jobs Panel Dropdown States
+  dossierDropdownOpen1 = signal<boolean>(false);
+  dossierDropdownOpen2 = signal<boolean>(false);
+  dossierDropdownOpen3 = signal<boolean>(false);
 
   // Auth State
   isAuthenticated = signal<boolean>(false);
@@ -1221,6 +1652,161 @@ export class AppComponent implements OnInit {
     this.sharedState.includeLinkedEmail.update((v) => !v);
   }
 
+  // --- DOSSIER JOBS METHODS ---
+
+  getDossierJob(index: number): JobEntry | undefined {
+    const id =
+      index === 1
+        ? this.sharedState.selectedDossierJobId1()
+        : index === 2
+        ? this.sharedState.selectedDossierJobId2()
+        : this.sharedState.selectedDossierJobId3();
+    if (!id) return undefined;
+    return this.jobService.getAllJobs().find((j) => j.id === id);
+  }
+
+  isJobClosed(jobId: string): boolean {
+    return this.jobService.isJobClosed(jobId);
+  }
+
+  getFilteredJobsForIndex(index: number): JobEntry[] {
+    const query =
+      index === 1
+        ? this.sharedState.searchDossierQuery1()
+        : index === 2
+        ? this.sharedState.searchDossierQuery2()
+        : this.sharedState.searchDossierQuery3();
+    if (!query || query.trim() === "") {
+      return this.jobService.getAllJobs();
+    }
+    return this.jobService.searchJobs(query);
+  }
+
+  isDossierFieldDisabled(index: number): boolean {
+    const id1 = this.sharedState.selectedDossierJobId1();
+    const id2 = this.sharedState.selectedDossierJobId2();
+    const id3 = this.sharedState.selectedDossierJobId3();
+    if (index === 1) return id2 === "00003" || id3 === "00003";
+    if (index === 2) return id1 === "00003" || id3 === "00003";
+    if (index === 3) return id1 === "00003" || id2 === "00003";
+    return false;
+  }
+
+  selectDossierJob(index: number, jobId: string) {
+    const qb = this.jobService.getAllJobs().find((j) => j.id === jobId);
+    if (!qb) return;
+
+    if (jobId === "00003") {
+      if (index === 1) {
+        this.sharedState.selectedDossierJobId2.set("");
+        this.sharedState.searchDossierQuery2.set("");
+        this.sharedState.selectedDossierJobId3.set("");
+        this.sharedState.searchDossierQuery3.set("");
+      } else if (index === 2) {
+        this.sharedState.selectedDossierJobId1.set("");
+        this.sharedState.searchDossierQuery1.set("");
+        this.sharedState.selectedDossierJobId3.set("");
+        this.sharedState.searchDossierQuery3.set("");
+      } else if (index === 3) {
+        this.sharedState.selectedDossierJobId1.set("");
+        this.sharedState.searchDossierQuery1.set("");
+        this.sharedState.selectedDossierJobId2.set("");
+        this.sharedState.searchDossierQuery2.set("");
+      }
+    }
+
+    if (index === 1) {
+      this.sharedState.selectedDossierJobId1.set(jobId);
+      this.sharedState.searchDossierQuery1.set(`${qb.id} - ${qb.title}`);
+      this.dossierDropdownOpen1.set(false);
+    } else if (index === 2) {
+      this.sharedState.selectedDossierJobId2.set(jobId);
+      this.sharedState.searchDossierQuery2.set(`${qb.id} - ${qb.title}`);
+      this.dossierDropdownOpen2.set(false);
+    } else if (index === 3) {
+      this.sharedState.selectedDossierJobId3.set(jobId);
+      this.sharedState.searchDossierQuery3.set(`${qb.id} - ${qb.title}`);
+      this.dossierDropdownOpen3.set(false);
+    }
+  }
+
+  clearDossierJob(index: number, event?: MouseEvent) {
+    if (event) event.stopPropagation();
+    if (index === 1) {
+      this.sharedState.selectedDossierJobId1.set("");
+      this.sharedState.searchDossierQuery1.set("");
+      this.dossierDropdownOpen1.set(false);
+    } else if (index === 2) {
+      this.sharedState.selectedDossierJobId2.set("");
+      this.sharedState.searchDossierQuery2.set("");
+      this.dossierDropdownOpen2.set(false);
+    } else if (index === 3) {
+      this.sharedState.selectedDossierJobId3.set("");
+      this.sharedState.searchDossierQuery3.set("");
+      this.dossierDropdownOpen3.set(false);
+    }
+  }
+
+  onDossierQueryChange(index: number, val: string) {
+    if (index === 1) {
+      this.sharedState.searchDossierQuery1.set(val);
+      if (!val) this.sharedState.selectedDossierJobId1.set("");
+    } else if (index === 2) {
+      this.sharedState.searchDossierQuery2.set(val);
+      if (!val) this.sharedState.selectedDossierJobId2.set("");
+    } else if (index === 3) {
+      this.sharedState.searchDossierQuery3.set(val);
+      if (!val) this.sharedState.selectedDossierJobId3.set("");
+    }
+  }
+
+  openDossierDropdown(index: number) {
+    if (this.isDossierFieldDisabled(index)) return;
+    if (index === 1) {
+      this.dossierDropdownOpen1.set(true);
+      this.sharedState.searchDossierQuery1.set("");
+    } else if (index === 2) {
+      this.dossierDropdownOpen2.set(true);
+      this.sharedState.searchDossierQuery2.set("");
+    } else if (index === 3) {
+      this.dossierDropdownOpen3.set(true);
+      this.sharedState.searchDossierQuery3.set("");
+    }
+  }
+
+  closeDossierDropdownDelayed(index: number) {
+    setTimeout(() => {
+      if (index === 1) {
+        this.dossierDropdownOpen1.set(false);
+        const id = this.sharedState.selectedDossierJobId1();
+        if (id) {
+          const qb = this.jobService.getAllJobs().find((j) => j.id === id);
+          if (qb) this.sharedState.searchDossierQuery1.set(`${qb.id} - ${qb.title}`);
+        } else {
+          this.sharedState.searchDossierQuery1.set("");
+        }
+      } else if (index === 2) {
+        this.dossierDropdownOpen2.set(false);
+        const id = this.sharedState.selectedDossierJobId2();
+        if (id) {
+          const qb = this.jobService.getAllJobs().find((j) => j.id === id);
+          if (qb) this.sharedState.searchDossierQuery2.set(`${qb.id} - ${qb.title}`);
+        } else {
+          this.sharedState.searchDossierQuery2.set("");
+        }
+      } else if (index === 3) {
+        this.dossierDropdownOpen3.set(false);
+        const id = this.sharedState.selectedDossierJobId3();
+        if (id) {
+          const qb = this.jobService.getAllJobs().find((j) => j.id === id);
+          if (qb) this.sharedState.searchDossierQuery3.set(`${qb.id} - ${qb.title}`);
+        } else {
+          this.sharedState.searchDossierQuery3.set("");
+        }
+      }
+    }, 200);
+  }
+
   // --- STAGE LOGIC ---
 
   restartApp() {
@@ -1232,19 +1818,446 @@ export class AppComponent implements OnInit {
     this.compliantDocKeys.set(new Set());
     this.forceGeneralReminder.set(false);
     this.sharedState.includeLinkedEmail.set(false);
+    this.clearDossierJob(1);
+    this.clearDossierJob(2);
+    this.clearDossierJob(3);
   }
 
+  areAllDocsCompliant = computed(() => {
+    const tasks = this.visibleTasks().filter((t) => !t.nameFr.includes("Documents Supplémentaires"));
+    if (tasks.length === 0) return false;
+    const currentCompliant = this.compliantDocKeys();
+    for (const task of tasks) {
+      for (const doc of task.documents) {
+        if (!currentCompliant.has(this.getDocKey(task, doc))) {
+          return false;
+        }
+      }
+    }
+    return true;
+  });
+
   setAllCompliant() {
-    const keys = new Set<string>();
-    this.visibleTasks().forEach((task) => {
-      task.documents.forEach((doc) => {
-        keys.add(this.getDocKey(task, doc));
+    if (this.areAllDocsCompliant()) {
+      // Toggle OFF: désactiver la conformité de toutes les tâches visibles
+      const currentKeys = new Set(this.compliantDocKeys());
+      this.visibleTasks().forEach((task) => {
+        if (!task.nameFr.includes("Documents Supplémentaires")) {
+          task.documents.forEach((doc) => {
+            currentKeys.delete(this.getDocKey(task, doc));
+          });
+        }
       });
-    });
-    this.compliantDocKeys.set(keys);
-    this.taskNotCompletedKeys.set(new Set());
-    this.selectedRejectionKeys.set(new Set());
-    this.forceGeneralReminder.set(false);
+      this.compliantDocKeys.set(currentKeys);
+    } else {
+      // Toggle ON: marquer toutes les tâches visibles conformes (sauf Documents Supplémentaires)
+      const currentKeys = new Set(this.compliantDocKeys());
+      this.visibleTasks().forEach((task) => {
+        if (!task.nameFr.includes("Documents Supplémentaires")) {
+          task.documents.forEach((doc) => {
+            currentKeys.add(this.getDocKey(task, doc));
+          });
+        }
+      });
+      this.compliantDocKeys.set(currentKeys);
+      this.taskNotCompletedKeys.set(new Set());
+      this.selectedRejectionKeys.set(new Set());
+      this.forceGeneralReminder.set(false);
+    }
+  }
+
+  // Helper methods for Dossier Jobs and Additional Documents
+  getDossierJobObjects(): JobEntry[] {
+    const ids = [
+      this.sharedState.selectedDossierJobId1(),
+      this.sharedState.selectedDossierJobId2(),
+      this.sharedState.selectedDossierJobId3(),
+    ].filter((id) => !!id);
+
+    const allJobs = this.jobService.getAllJobs();
+    return ids
+      .map((id) => allJobs.find((j) => j.id === id))
+      .filter((j): j is JobEntry => !!j);
+  }
+
+  isSubsidizedEducationJob(job: JobEntry): boolean {
+    if (!job) return false;
+    const title = (job.title || "").toUpperCase();
+    const titleEn = (job.titleEn || "").toUpperCase();
+    const programs = (job.contracts || []).map((c) => (c.program || "").toUpperCase()).join(" ");
+    const subKeywords = [
+      "PFOR", "PFS-MR", "PFOEP", "PFUMR", "PIES-MR", "PMEP", "ESNEM",
+      "PFDM", "PFMD", "UTPNCM", "ROTP", "NOCP", "MMTP", "SUBVENTION"
+    ];
+    if (subKeywords.some((kw) => title.includes(kw) || titleEn.includes(kw) || programs.includes(kw))) return true;
+    return false;
+  }
+
+  isSubsidizedDoc(doc: DocumentItem): boolean {
+    const name = doc.nameFr;
+    return (
+      name.includes("Lettre d'admission") ||
+      name.includes("Plan de cours") ||
+      name.includes("Formulaire d'études subventionnées")
+    );
+  }
+
+  isTaskBasedAdditionalDoc(doc: DocumentItem): boolean {
+    const name = doc.nameFr;
+    return (
+      name.includes("Relevé") ||
+      name.includes("Relevés") ||
+      name.includes("libération") ||
+      name.includes("service antérieur")
+    );
+  }
+
+  shouldShowAdditionalDoc(doc: DocumentItem): boolean {
+    if (this.isSubsidizedDoc(doc)) return true;
+    if (this.isTaskBasedAdditionalDoc(doc)) return true;
+
+    const jobs = this.getDossierJobObjects();
+    if (jobs.length === 0) return false;
+
+    const docName = doc.nameFr;
+
+    const cvJobIds = [
+      "00152", "00155", "00335", "00372", "00378", "00406", "00190", "00194",
+      "00195", "00198", "00204", "00374", "00153", "00191", "00349", "00390", "00398"
+    ];
+    const permitJobIds = [
+      "00149", "00161", "00214", "00152", "00153", "00190", "00191", "00194",
+      "00195", "00198", "00204", "00335", "00372", "00374", "00390", "00393", "00406"
+    ];
+    const goodStandingJobIds = [
+      "00152", "00153", "00190", "00191", "00194", "00198", "00204", "00335",
+      "00372", "00374", "00390", "00393"
+    ];
+    const specialtyJobIds = [
+      "00152", "00191", "00372", "00390", "00393", "00164", "00349"
+    ];
+    const experienceJobIds = [
+      "00137", "00155", "00189", "00203", "00208", "00211", "00166", "00398", "00390"
+    ];
+
+    const hasCvJob = jobs.some((j) => cvJobIds.includes(j.id));
+    const hasPermitJob = jobs.some((j) => permitJobIds.includes(j.id));
+    const hasGoodStandingJob = jobs.some((j) => goodStandingJobIds.includes(j.id));
+    const hasSpecialtyJob = jobs.some((j) => specialtyJobIds.includes(j.id));
+    const hasExpJob = jobs.some((j) => experienceJobIds.includes(j.id));
+
+    if (docName.includes("Curriculum vitae")) return hasCvJob;
+    if (docName.includes("Permis d'exercice")) return hasPermitJob;
+    if (docName.includes("Lettre de membre en règle")) return hasGoodStandingJob;
+    if (docName.includes("Certificat / Attestation de spécialité")) return hasSpecialtyJob;
+    if (docName.includes("Preuve d'expérience spécifique")) return hasExpJob;
+
+    return false;
+  }
+
+  isAdditionalDocRequiredForJob(docNameFr: string, jobId: string): boolean {
+    const cvJobIds = [
+      "00152", "00155", "00335", "00372", "00378", "00406", "00190", "00194",
+      "00195", "00198", "00204", "00374", "00153", "00191", "00349", "00390", "00398"
+    ];
+    const permitJobIds = [
+      "00149", "00161", "00214", "00152", "00153", "00190", "00191", "00194",
+      "00195", "00198", "00204", "00335", "00372", "00374", "00390", "00393", "00406"
+    ];
+    const goodStandingJobIds = [
+      "00152", "00153", "00190", "00191", "00194", "00198", "00204", "00335",
+      "00372", "00374", "00390", "00393"
+    ];
+    const specialtyJobIds = [
+      "00152", "00191", "00372", "00390", "00393", "00164", "00349"
+    ];
+    const experienceJobIds = [
+      "00137", "00155", "00189", "00203", "00208", "00211", "00166", "00398", "00390"
+    ];
+
+    if (docNameFr.includes("Curriculum vitae")) return cvJobIds.includes(jobId);
+    if (docNameFr.includes("Permis d'exercice")) return permitJobIds.includes(jobId);
+    if (docNameFr.includes("Lettre de membre en règle")) return goodStandingJobIds.includes(jobId);
+    if (docNameFr.includes("Certificat / Attestation de spécialité")) return specialtyJobIds.includes(jobId);
+    if (docNameFr.includes("Preuve d'expérience spécifique")) return experienceJobIds.includes(jobId);
+
+    return false;
+  }
+
+  getJobSpecificDocText(jobId: string, docNameFr: string, isFrench: boolean): string {
+    if (docNameFr.includes("Curriculum vitae")) {
+      if (jobId === "00191") {
+        return isFrench
+          ? "Curriculum vitae remontant jusqu’à de cinq ans quant à l’expérience en tant que dentiste."
+          : "Curriculum vitae going back up to five years regarding experience as a dentist.";
+      }
+      return isFrench
+        ? "Curriculum vitae (CV) récent à jour."
+        : "Recent up-to-date Curriculum Vitae (CV).";
+    }
+
+    if (docNameFr.includes("Permis d'exercice")) {
+      if (jobId === "00149" || jobId === "00161" || jobId === "00214") {
+        return isFrench
+          ? "Détenir un permis de conduire provincial/territorial en règle."
+          : "Hold a valid provincial/territorial driver’s license.";
+      }
+      if (jobId === "00152") {
+        return isFrench
+          ? "Fournir un permis ou inscription sans restriction (statut actif) délivré par l’autorité de réglementation provinciale ou territoriale OU une Lettre de conformité (« Good Standing ») émise par l’autorité de réglementation."
+          : "Provide an unrestricted license or registration (active status) issued by the provincial or territorial regulatory authority OR a Letter of Good Standing issued by the regulatory authority.";
+      }
+      if (jobId === "00153") {
+        return isFrench
+          ? "Fournir soit un permis, une certification ou autorisation sans restriction d’exercer comme technologue en radiation médicale (en règle et en vigueur) provenant d’un organisme de réglementation provincial/territorial reconnu OU la certification d’une association professionnelle ayant conclu une entente réciproque avec l’Association canadienne des technologues en radiation médicale (ACTRM)."
+          : "Provide either an unrestricted license, certification, or practice permit to practice as a medical radiation technologist (in good standing and active) from a recognized provincial/territorial regulatory body OR certification from a professional association with a reciprocal agreement with CAMRT.";
+      }
+      if (jobId === "00190") {
+        return isFrench
+          ? "Permis/licence d’exercice en règle (à titre actif) en tant que physiothérapeute émis par un organisme de réglementation provincial ou territorial."
+          : "Valid (active) license/permit to practice as a physiotherapist issued by a provincial or territorial regulatory body.";
+      }
+      if (jobId === "00191") {
+        return isFrench
+          ? "Autorisation en règle et sans restriction d’exercer la Médecine dentaire de la part d’une autorité réglementaire d’une province/d’un territoire du Canada."
+          : "Valid and unrestricted license/permit to practice Dentistry from a provincial/territorial regulatory authority in Canada.";
+      }
+      if (jobId === "00194") {
+        return isFrench
+          ? "Permis d’exercice de la pharmacie sans restriction en règle."
+          : "Valid unrestricted license to practice pharmacy.";
+      }
+      if (jobId === "00195") {
+        return isFrench
+          ? "Permis d’exercice en règle (état actif) en soins infirmiers en tant qu’infirmier autorisé ou infirmier en pratique octroyé par un organisme de réglementation provincial ou territorial du Canada."
+          : "Valid (active state) nursing practice license as a registered nurse or practical nurse issued by a provincial or territorial regulatory body in Canada.";
+      }
+      if (jobId === "00198") {
+        return isFrench
+          ? "Permis en règle et sans restriction (état actif) d’exercer comme travailleur social, délivré par une autorité / association réglementaire provinciale ou territoriale."
+          : "Valid and unrestricted license/permit (active state) to practice as a social worker issued by a provincial or territorial regulatory authority/association.";
+      }
+      if (jobId === "00204") {
+        return isFrench
+          ? "Autorisé à pratiquer le droit dans une province canadienne ou un territoire canadien."
+          : "Authorized to practice law in a Canadian province or territory.";
+      }
+      if (jobId === "00335") {
+        return isFrench
+          ? "Fournir une preuve de permis en règle pour agir en tant qu’assistant dentaire délivré par une autorité de réglementation canadienne provinciale ou territoriale."
+          : "Provide proof of a valid registration/license as a dental assistant issued by a Canadian provincial or territorial regulatory authority.";
+      }
+      if (jobId === "00372") {
+        return isFrench
+          ? "Fournir une preuve de détention d’une autorisation en règle de travailler comme infirmier auxiliaire autorisé/immatriculé émise par un organisme de réglementation provincial ou territorial."
+          : "Provide proof of holding a valid registration/license as a licensed/registered practical nurse issued by a provincial or territorial regulatory authority.";
+      }
+      if (jobId === "00374") {
+        return isFrench
+          ? "Certificat en règle du Conseil de certification des adjoints au médecin du Canada (CCAMC) et permis/licence en règle (en vigueur) d’exercer comme adjoint au médecin délivré(e) par une autorité réglementaire d’une province ou d’un territoire du Canada."
+          : "Valid certification from the Physician Assistant Certification Council of Canada (PACCC) and a valid active license to practice as a physician assistant issued by a provincial or territorial regulatory authority of Canada.";
+      }
+      if (jobId === "00390") {
+        return isFrench
+          ? "Permis d’exercice valide et sans restriction pour pratiquer la médecine à titre de spécialiste (selon la spécialité) dans toute province ou tout territoire du Canada."
+          : "Valid and unrestricted license to practice medicine as a specialist (according to the specialty) in any province or territory of Canada.";
+      }
+      if (jobId === "00393") {
+        return isFrench
+          ? "Détenir une Autorisation en règle et sans restriction d’exercer la Médecine en tant que médecin de famille dans une province ou un territoire du Canada."
+          : "Hold a valid and unrestricted license to practice Family Medicine in a province or territory of Canada.";
+      }
+      if (jobId === "00406") {
+        return isFrench
+          ? "Fournir une preuve d'inscription actuelle ou en cours au permis ou privilèges hospitaliers de base ou certification en vigueur pour exercer à titre de paramédical(e), délivrés par un organisme de réglementation provincial ou territorial canadien."
+          : "Provide proof of current registration/licensure or active base hospital standard privileges or certification to practice as a paramedic, issued by a Canadian provincial or territorial regulatory authority.";
+      }
+      return isFrench
+        ? "Permis d'exercice ou licence professionnelle sans restriction."
+        : "Unrestricted practice permit or professional license.";
+    }
+
+    if (docNameFr.includes("Lettre de membre en règle")) {
+      if (jobId === "00190") {
+        return isFrench
+          ? "Lettre de l’organisme de réglementation du candidat attestant que ce dernier est « En règle »."
+          : "Letter from the candidate's regulatory body confirming they are \"In good standing\".";
+      }
+      if (jobId === "00191") {
+        return isFrench
+          ? "Lettre de l’autorité réglementaire professionnelle attestant que le candidat est en règle."
+          : "Letter from the professional regulatory authority confirming that the candidate is in good standing.";
+      }
+      if (jobId === "00204") {
+        return isFrench
+          ? "Être « membre en règle », en exercice ou non, du Barreau d'une province ou d’un territoire."
+          : "Be a \"member in good standing\", practicing or non-practicing, of the Bar of a province or territory.";
+      }
+      if (jobId === "00374") {
+        return isFrench
+          ? "Lettre de l’autorité professionnelle réglementaire ou de son superviseur en clinique, selon le cas, attestant que le candidat est en règle."
+          : "Letter from the professional regulatory authority or clinical supervisor, as applicable, confirming that the candidate is in good standing.";
+      }
+      if (jobId === "00390") {
+        return isFrench
+          ? "Attestation de bonne conduite professionnelle délivrée par l’organisme de réglementation provincial ou territorial du candidat."
+          : "Certificate of professional good standing issued by the candidate’s provincial or territorial regulatory body.";
+      }
+      if (jobId === "00393") {
+        return isFrench
+          ? "Lettre des autorités de réglementation de la province/territoire du candidat attestant que ce dernier est « en règle »."
+          : "Letter from the regulatory authorities of the candidate’s province/territory confirming that the candidate is in \"good standing\".";
+      }
+      return isFrench
+        ? "Fournir une lettre de l'organisme de réglementation de la profession du candidat attestant que ce dernier est « en règle »."
+        : "Provide a letter from the professional regulatory body confirming that the candidate is in good standing.";
+    }
+
+    if (docNameFr.includes("Certificat / Attestation de spécialité")) {
+      if (jobId === "00152") {
+        return isFrench
+          ? "Fournir soit la certification de la Société canadienne de science de laboratoire médical (SCSLM) OU la certification de l'alliance canadienne des organismes de réglementation des professionnels de laboratoire médical (ACORPLM), incluant la réussite des examens du «TLM généraliste»."
+          : "Provide either the certification from the Canadian Society for Medical Laboratory Science (CSMLS) OR the certification from the Canadian Alliance of Medical Laboratory Professionals Regulators (CAMLPR), including successfully passing the 'General MLT' exams.";
+      }
+      if (jobId === "00191") {
+        return isFrench
+          ? "Certificat du Bureau national d’examen dentaire du Canada (BNED)."
+          : "Certificate from the National Dental Examining Board of Canada (NDEB).";
+      }
+      if (jobId === "00349") {
+        return isFrench
+          ? "Accrédité et reconnu comme un leader au sein d’une tradition de foi par l’autorité de gouvernance de cette même tradition de foi qui exerce une supervision au Canada, et tel que recommandé par le membre désigné du CIAMC. Avoir été endossé comme aumônier par le CIAMC. Avoir réussi une entrevue et jugé apte par un comité présidé par le D Svc Aum."
+          : "Accredited and recognized as a faith group leader by the governing authority of that faith group which exercises supervision in Canada, and as recommended by the ICCDF. Be endorsed as a chaplain by the ICCDF. Successfully pass an interview and be deemed suitable by a committee chaired by the D Chap Svc.";
+      }
+      if (jobId === "00372") {
+        return isFrench
+          ? "Fournir une preuve de certification comme infirmier auxiliaire autorisé/immatriculé en soins peropératoires."
+          : "Provide proof of certification as a licensed/registered practical nurse in perioperative care.";
+      }
+      if (jobId === "00390") {
+        return isFrench
+          ? "Achèvement d’une formation spécialisée dans un programme de résidence agréé par le Collège royal des médecins et chirurgiens du Canada, et Certification et titre de fellow du Collège royal des médecins et chirurgiens du Canada dans l’une des spécialités médicales requises."
+          : "Completion of specialized training in a residency program accredited by the Royal College of Physicians and Surgeons of Canada, and Certification and fellowship designation from the Royal College of Physicians and Surgeons of Canada in one of the required specialties.";
+      }
+      if (jobId === "00393") {
+        return isFrench
+          ? "Certification en médecine familiale du Collège des médecins de famille du Canada."
+          : "Certification in Family Medicine from the College of Family Physicians of Canada.";
+      }
+      return isFrench
+        ? "Certificat ou attestation officielle de spécialité (BNED, CCAMC, Collège Royal, etc.)"
+        : "Official specialty certificate or attestation (NDEB, CACMS, Royal College, etc.)";
+    }
+
+    if (docNameFr.includes("Preuve d'expérience spécifique")) {
+      if (jobId === "00137") {
+        return isFrench
+          ? "Expérience dans un ou plusieurs des domaines suivants : photographie, photojournalisme, conception graphique ou multimédia."
+          : "Experience in one or more of the following fields: photography, photojournalism, graphic design, or multimedia.";
+      }
+      if (jobId === "00155") {
+        return isFrench
+          ? "A travaillé en tant que technologue en électronique biomédicale pendant une période totale d’au moins six (6) mois au cours des deux (2) dernières années."
+          : "Had worked as a biomedical electronics technologist for a total period of at least six (6) months within the last two (2) years.";
+      }
+      if (jobId === "00189") {
+        return isFrench
+          ? "Au moins trois mois d'expérience pertinente dans un ou plusieurs des domaines suivants : industrie de la construction, gestion des installations, services d'incendies, services de l'environnement, géomatique, gestion de projet, service militaire."
+          : "At least three months of relevant experience in one or more of the following fields: construction industry, facility management, fire services, environmental services, geomatics, project management, military service.";
+      }
+      if (jobId === "00203") {
+        return isFrench
+          ? "Fournir une preuve d’au moins une (1) année d’expérience cumulative dans deux ou plusieurs des domaines suivants : communications, journalisme, commercialisation, affaires publiques, relations publiques, recherche sur l'opinion publique, médias numériques ou sociaux."
+          : "Provide proof of at least one (1) year of cumulative experience in two or more of the following fields: communications, journalism, marketing, public affairs, public relations, public opinion research, digital or social media.";
+      }
+      if (jobId === "00208") {
+        return isFrench
+          ? "Au moins une ou plusieurs années de travail à temps plein dans un ou plusieurs des domaines suivants : sélection, recrutement (RH), recherche en sciences sociales, orientation scolaire/professionnelle."
+          : "At least one or more years of full-time work in one or more of the following fields: selection, recruitment (HR), social science research, academic/career counseling.";
+      }
+      if (jobId === "00211") {
+        return isFrench
+          ? "Fournir une preuve d’au moins trois (3) ans cumulatifs d’expérience à temps plein dans l’un ou plusieurs des domaines suivants : élaboration d’un programme d’études, expert-conseil en éducation, conception de l’instruction, formation du personnel, enseignement/instruction, expert-conseil en instruction, développement de l’instruction."
+          : "Provide proof of at least three (3) cumulative years of full-time experience in one or more of the following fields: curriculum development, education consultant, instructional design, staff training, teaching/instruction, instructional consultant, instructional development.";
+      }
+      if (jobId === "00166") {
+        return isFrench
+          ? "Fournir une preuve d’expérience comme musicien professionnel dans une variété d’ensembles et dans divers styles de musique, p. ex. à titre de musicien travaillant à son propre compte, ou à temps plein avec une orchestre, un ensemble ou un groupe de musique local."
+          : "Provide proof of experience as a professional musician in a variety of ensembles and in various styles of music, e.g. as a self-employed musician, or full-time with a local orchestra, ensemble, or music group.";
+      }
+      if (jobId === "00390") {
+        return isFrench
+          ? "Pour toutes les spécialités (à l’exception de la psychiatrie et de la médecine physique et réadaptation) : Être employé à temps plein dans un poste clinique au sein d’un établissement de soins de santé civil."
+          : "For all specialties, except psychiatry and physical medicine and rehabilitation (physiatry): Be employed full-time in a clinical position within a civilian healthcare facility.";
+      }
+      if (jobId === "00398") {
+        return isFrench
+          ? "Un minimum de deux années d’expérience cumulative en gestion à temps plein au cours des cinq dernières années dans un milieu de soins de santé."
+          : "A minimum of two years of cumulative full-time management experience within the last five years in a healthcare setting.";
+      }
+      return isFrench
+        ? "Preuve d'expérience spécifique (gestion, portfolio, accréditation)."
+        : "Proof of specific experience (management, portfolio, accreditation).";
+    }
+
+    return isFrench ? docNameFr : docNameFr;
+  }
+
+  getDisplayLabelForAdditionalDoc(doc: DocumentItem, reason: RejectionReason): string {
+    const dossierJobs = this.getDossierJobObjects();
+    if (dossierJobs.length > 0) {
+      const matchingJobs = dossierJobs.filter((j) =>
+        this.isAdditionalDocRequiredForJob(doc.nameFr, j.id)
+      );
+      if (matchingJobs.length > 0) {
+        const texts = matchingJobs.map((j) =>
+          this.getJobSpecificDocText(j.id, doc.nameFr, true)
+        );
+        const uniqueTexts = Array.from(new Set(texts));
+        return uniqueTexts.join(" — ");
+      }
+    }
+    return reason.labelFr;
+  }
+
+  hasVisibleTaskBasedDocs(task: Task): boolean {
+    if (!task || !task.documents) return false;
+    return task.documents.some((d) => this.isTaskBasedAdditionalDoc(d) && this.shouldShowDoc(task, d));
+  }
+
+  hasVisibleAdditionalDocs(task: Task): boolean {
+    if (!task || !task.documents) return false;
+    const dossierJobs = this.getDossierJobObjects();
+    if (dossierJobs.length === 0) return false;
+    return dossierJobs.some((j) => this.hasJobAdditionalDocs(task, j));
+  }
+
+  hasJobAdditionalDocs(task: Task, job: JobEntry): boolean {
+    if (!task || !task.documents || !job) return false;
+    return task.documents.some(
+      (d) =>
+        !this.isSubsidizedDoc(d) &&
+        !this.isTaskBasedAdditionalDoc(d) &&
+        this.isAdditionalDocRequiredForJob(d.nameFr, job.id) &&
+        this.shouldShowDoc(task, d)
+    );
+  }
+
+  hasVisibleSubsidizedDocs(task: Task): boolean {
+    if (!task || !task.documents) return false;
+    return task.documents.some((d) => this.isSubsidizedDoc(d) && this.shouldShowDoc(task, d));
+  }
+
+  getDossierJobsSummaryTextFr(): string {
+    const jobs = this.getDossierJobObjects();
+    if (jobs.length === 0) return "";
+    return jobs.map((j) => `${j.title} (${j.id})`).join(", ");
+  }
+
+  getDossierJobsSummaryTextEn(): string {
+    const jobs = this.getDossierJobObjects();
+    if (jobs.length === 0) return "";
+    return jobs.map((j) => `${j.titleEn || j.title} (${j.id})`).join(", ");
   }
 
   // Computed Tasks based on Stage
@@ -1267,7 +2280,11 @@ export class AppComponent implements OnInit {
     }
 
     // Main Stage: Exclude Parental Consent
-    return tasks.filter((t) => !t.nameFr.includes("Consentement du parent"));
+    return tasks.filter((t) => {
+      if (t.nameFr.includes("Consentement du parent")) return false;
+
+      return true;
+    });
   });
 
   // Action: User clicks "Oui" (Minor)
@@ -1359,9 +2376,13 @@ export class AppComponent implements OnInit {
       // Clear selected rejection reasons for all documents in this task
       this.selectedRejectionKeys.update((set) => {
         const newSet = new Set(set);
+        const dossierJobs = this.getDossierJobObjects();
         task.documents.forEach((doc) => {
           doc.reasons.forEach((reason) => {
             newSet.delete(this.getReasonKey(doc, reason));
+            dossierJobs.forEach((j) => {
+              newSet.delete(this.getJobReasonKey(j, doc, reason));
+            });
           });
         });
         return newSet;
@@ -1407,6 +2428,33 @@ export class AppComponent implements OnInit {
     });
   }
 
+  toggleJobReason(task: Task, job: JobEntry, doc: DocumentItem, reason: RejectionReason) {
+    const jobKey = this.getJobReasonKey(job, doc, reason);
+    const generalKey = this.getReasonKey(doc, reason);
+
+    this.setCompliantState(task, doc, false);
+
+    this.selectedRejectionKeys.update((set) => {
+      const newSet = new Set(set);
+      if (newSet.has(generalKey)) {
+        newSet.delete(generalKey);
+        const dossierJobs = this.getDossierJobObjects();
+        for (const j of dossierJobs) {
+          if (j.id !== job.id && this.isAdditionalDocRequiredForJob(doc.nameFr, j.id)) {
+            newSet.add(this.getJobReasonKey(j, doc, reason));
+          }
+        }
+      } else {
+        if (newSet.has(jobKey)) {
+          newSet.delete(jobKey);
+        } else {
+          newSet.add(jobKey);
+        }
+      }
+      return newSet;
+    });
+  }
+
   // Toggle "Conforme" state
   toggleCompliant(task: Task, doc: DocumentItem) {
     if (this.isCompliant(task, doc)) {
@@ -1417,8 +2465,12 @@ export class AppComponent implements OnInit {
       // 1. Clear rejections (cannot be both compliant and rejected)
       this.selectedRejectionKeys.update((set) => {
         const newSet = new Set(set);
+        const dossierJobs = this.getDossierJobObjects();
         doc.reasons.forEach((r) => {
           newSet.delete(this.getReasonKey(doc, r));
+          dossierJobs.forEach((j) => {
+            newSet.delete(this.getJobReasonKey(j, doc, r));
+          });
         });
         return newSet;
       });
@@ -1431,6 +2483,10 @@ export class AppComponent implements OnInit {
   // Helpers
   private getReasonKey(doc: DocumentItem, reason: RejectionReason): string {
     return `${doc.nameFr}::${reason.id}`;
+  }
+
+  private getJobReasonKey(job: JobEntry, doc: DocumentItem, reason: RejectionReason): string {
+    return `${doc.nameFr}::${reason.id}::${job.id}`;
   }
 
   private getDocKey(task: Task, doc: DocumentItem): string {
@@ -1455,8 +2511,21 @@ export class AppComponent implements OnInit {
   }
 
   // State Checkers
+  isJobReasonSelected(job: JobEntry, doc: DocumentItem, reason: RejectionReason): boolean {
+    return (
+      this.selectedRejectionKeys().has(this.getJobReasonKey(job, doc, reason)) ||
+      this.selectedRejectionKeys().has(this.getReasonKey(doc, reason))
+    );
+  }
+
   isReasonSelected(doc: DocumentItem, reason: RejectionReason): boolean {
-    return this.selectedRejectionKeys().has(this.getReasonKey(doc, reason));
+    if (this.selectedRejectionKeys().has(this.getReasonKey(doc, reason))) {
+      return true;
+    }
+    const dossierJobs = this.getDossierJobObjects();
+    return dossierJobs.some((j) =>
+      this.selectedRejectionKeys().has(this.getJobReasonKey(j, doc, reason))
+    );
   }
 
   hasRejections(doc: DocumentItem): boolean {
@@ -1480,6 +2549,13 @@ export class AppComponent implements OnInit {
     return this.compliantDocKeys().has(this.getDocKey(task, doc));
   }
 
+  hasTaskRejections(task: Task): boolean {
+    return (
+      this.isTaskNotCompleted(task) ||
+      task.documents.some((doc) => this.hasRejections(doc))
+    );
+  }
+
   isTaskCompliant(task: Task): boolean {
     const isIdentity = task.nameFr.startsWith("Pièce d'identité avec photo");
 
@@ -1492,7 +2568,6 @@ export class AppComponent implements OnInit {
       const hasId = task.documents.some(
         (d) =>
           !d.nameFr.toLowerCase().includes("selfie") &&
-          d !== task.documents[task.documents.length - 1] &&
           this.isCompliant(task, d),
       );
       return hasSelfie && hasId;
@@ -1500,23 +2575,24 @@ export class AppComponent implements OnInit {
 
     const isConsentement = task.nameFr.includes("Consentement du parent");
     if (isConsentement) {
-      return task.documents
-        .filter((d) => d !== task.documents[task.documents.length - 1])
-        .every((d) => this.isCompliant(task, d));
+      return task.documents.every((d) => this.isCompliant(task, d));
     }
 
     // For other tasks, it's compliant if any 1 document is compliant
-    return task.documents.some(
-      (d) =>
-        this.isCompliant(task, d) &&
-        d !== task.documents[task.documents.length - 1],
-    );
+    return task.documents.some((d) => this.isCompliant(task, d));
   }
 
   allTasksCompliant = computed(() => {
+    if (this.areAllDocsCompliant()) {
+      return true;
+    }
+
     const tasks = this.visibleTasks();
     if (tasks.length === 0) return false;
     return tasks.every((task) => {
+      if (task.nameFr.includes("Documents Supplémentaires")) {
+        return true;
+      }
       // Le formulaire MDN 2977 n'est pas obligatoire pour la conformité finale
       if (task.nameFr.includes("MDN 2977")) {
         return true;
@@ -1534,6 +2610,11 @@ export class AppComponent implements OnInit {
   shouldShowDoc(task: Task, doc: DocumentItem): boolean {
     if (this.isTaskNotCompleted(task)) {
       return false;
+    }
+
+    if (task.nameFr.includes("Documents Supplémentaires")) {
+      if (this.isDocActive(task, doc)) return true;
+      return this.shouldShowAdditionalDoc(doc);
     }
 
     // NEW: Minor Check Logic for "Certificat de naissance"
@@ -1629,7 +2710,7 @@ export class AppComponent implements OnInit {
       const isVisible = this.visibleTasks().some(vt => vt.nameFr === task.nameFr);
       
       const hasRejections = task.documents.some(doc => 
-        doc.reasons.some(reason => selectedKeys.has(this.getReasonKey(doc, reason)))
+        doc.reasons.some(reason => this.isReasonSelected(doc, reason))
       );
       const isNotCompleted = taskNotCompletedKeys.has(task.nameFr);
 
@@ -1642,7 +2723,7 @@ export class AppComponent implements OnInit {
       }
       for (const doc of task.documents) {
         for (const reason of doc.reasons) {
-          if (selectedKeys.has(this.getReasonKey(doc, reason))) {
+          if (this.isReasonSelected(doc, reason)) {
             if (!tasksMap.has(task)) {
               tasksMap.set(task, []);
             }
@@ -1656,7 +2737,9 @@ export class AppComponent implements OnInit {
 
   generatedNote = computed(() => {
     if (this.allTasksCompliant()) {
-      return "Étape 1 (En cours) -Big ACE admissible pour les métiers xxx, xxx, xxx. \nQD complété, admissible. Webinaire CAF 101 à faire, tâche planifiez votre consultation attribuée.";
+      const jobsFr = this.getDossierJobsSummaryTextFr();
+      const jobsText = jobsFr ? jobsFr : "xxx, xxx, xxx";
+      return `Étape 1 (En cours) -Big ACE admissible pour les métiers ${jobsText}. \nQD complété, admissible. Webinaire CAF 101 à faire, tâche planifiez votre consultation attribuée.`;
     }
 
     const closureSuffix =
@@ -1682,7 +2765,7 @@ export class AppComponent implements OnInit {
       const isVisible = this.visibleTasks().some(vt => vt.nameFr === task.nameFr);
       const isNotCompleted = taskNotCompletedKeys.has(task.nameFr);
       const hasRejections = task.documents.some(doc => 
-        doc.reasons.some(reason => selectedKeys.has(this.getReasonKey(doc, reason)))
+        doc.reasons.some(reason => this.isReasonSelected(doc, reason))
       );
 
       if (!isVisible && !hasRejections && !isNotCompleted) {
@@ -1695,7 +2778,7 @@ export class AppComponent implements OnInit {
       }
       for (const doc of task.documents) {
         for (const reason of doc.reasons) {
-          if (selectedKeys.has(this.getReasonKey(doc, reason))) {
+          if (this.isReasonSelected(doc, reason)) {
             notes.push(reason.logNoteFr);
             if (reason.id === "emp_nom_parent") {
               hasNameMismatch = true;
@@ -1797,7 +2880,7 @@ export class AppComponent implements OnInit {
     let html = `<div style="font-family: Calibri, sans-serif; font-size: 11pt; color: #000;">`;
 
     // --- FRENCH BLOCK ---
-    html += `<p><span style="background-color: yellow; font-weight: bold; padding: 0 4px;">English message will follow.</span></p>`;
+    html += `<p><strong>English message will follow.</strong></p>`;
     html += `<p>Bonjour,</p>`;
     html += `<p>Merci beaucoup d’avoir fourni vos documents et fait votre choix de profession.</p>`;
     html += `<p>Afin de pouvoir continuer votre processus, vous devrez <span style="background-color: #00FF00; font-weight: bold; padding: 0 4px;">OBLIGATOIREMENT</span> :</p>`;
@@ -1906,10 +2989,15 @@ export class AppComponent implements OnInit {
       Task,
       { doc: DocumentItem; reason: RejectionReason }[]
     >();
+    const additionalDocTasks = new Map<
+      Task,
+      { doc: DocumentItem; reason: RejectionReason }[]
+    >();
 
     for (const [task, items] of structure.entries()) {
-      const normalItems = items.filter((i) => !i.reason.isConfirmation);
-      const confItems = items.filter((i) => i.reason.isConfirmation);
+      const normalItems = items.filter((i) => !i.reason.isConfirmation && !i.reason.isAdditionalDoc);
+      const confItems = items.filter((i) => i.reason.isConfirmation && !i.reason.isAdditionalDoc);
+      const addItems = items.filter((i) => i.reason.isAdditionalDoc);
 
       if (
         normalItems.length > 0 ||
@@ -1919,6 +3007,9 @@ export class AppComponent implements OnInit {
       }
       if (confItems.length > 0) {
         confirmationTasks.set(task, confItems);
+      }
+      if (addItems.length > 0) {
+        additionalDocTasks.set(task, addItems);
       }
     }
 
@@ -1968,6 +3059,7 @@ export class AppComponent implements OnInit {
           
         }
       }
+      emailFr += `\n\nEn raison du volume élevé de candidatures, nous devons prioriser le traitement des dossiers dont toutes les tâches sont complétées.\n\nRendez-vous sur votre portail pour les compléter : https://www.cafoap-pclfac.forces.gc.ca/`;
     }
 
     if (confirmationTasks.size > 0) {
@@ -2014,11 +3106,87 @@ export class AppComponent implements OnInit {
       }
     }
 
+    if (additionalDocTasks.size > 0) {
+      const dossierJobsFr = this.getDossierJobsSummaryTextFr();
+      const generalAddDocs: { doc: any; docItems: any[] }[] = [];
+      const occupSpecificDocs: { doc: any; docItems: any[] }[] = [];
+
+      for (const [task, items] of additionalDocTasks.entries()) {
+        const groupedItems = new Map<any, any[]>();
+        for (const item of items) {
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          if (this.isSubsidizedDoc(doc) || this.isTaskBasedAdditionalDoc(doc)) {
+            generalAddDocs.push({ doc, docItems });
+          } else {
+            occupSpecificDocs.push({ doc, docItems });
+          }
+        }
+      }
+
+      if (normalTasks.size > 0 || confirmationTasks.size > 0) {
+        emailFr += `\n\n--------------------------------------------------`;
+      }
+
+      if (generalAddDocs.length > 0) {
+        emailFr += `\n\nAfin de compléter l'évaluation de votre demande d'emploi, nous aurons besoin de document(s) supplémentaire(s) :`;
+        for (const { doc, docItems } of generalAddDocs) {
+          emailFr += `\n\n• ${doc.nameFr}`;
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionFr)) {
+              uniqueInstructions.add(item.reason.instructionFr);
+              emailFr += `\n  → ${item.reason.instructionFr.replace(/\n/g, "\n    ")}`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
+              uniqueLinks.add(item.reason.linkFr);
+              emailFr += `\n  🔗 ${item.reason.linkFr}`;
+            }
+          }
+        }
+      }
+
+      const jobs = this.getDossierJobObjects();
+      const jobDocsMapFr = new Map<JobEntry, string[]>();
+      for (const job of jobs) {
+        const reqs: string[] = [];
+        for (const { doc, docItems } of occupSpecificDocs) {
+          if (this.isAdditionalDocRequiredForJob(doc.nameFr, job.id)) {
+            const isSelectedForJob = docItems.some((item: any) =>
+              this.isJobReasonSelected(job, doc, item.reason)
+            );
+            if (isSelectedForJob) {
+              const detail = this.getJobSpecificDocText(job.id, doc.nameFr, true);
+              if (detail && !reqs.includes(detail)) {
+                reqs.push(detail);
+              }
+            }
+          }
+        }
+        if (reqs.length > 0) {
+          jobDocsMapFr.set(job, reqs);
+        }
+      }
+
+      if (jobDocsMapFr.size > 0) {
+        const selectedJobsFr = Array.from(jobDocsMapFr.keys()).map(j => `${j.title} (${j.id})`).join(', ');
+        const jobsHeaderTextFr = selectedJobsFr || dossierJobsFr;
+        emailFr += `\n\nAfin d'évaluer votre dossier pour le(s) métier(s) sélectionné(s) (${jobsHeaderTextFr}), vous devez nous fournir le(s) document(s) supplémentaire(s) suivant(s) ou une(des) preuve(s) que vous remplissez la(les) condition(s) suivante(s) en réponse directe à ce courriel :`;
+        for (const [job, reqs] of jobDocsMapFr.entries()) {
+          emailFr += `\n\n• Pour ${job.id} - ${job.title} : ` + reqs.join(", ");
+        }
+      }
+    }
+
     if (this.forceGeneralReminder()) {
       emailFr += `\n\nVeuillez également vous assurer de compléter les autres tâches manquantes sur votre portail.`;
     }
 
-    emailFr += `\n\nEn raison du volume élevé de candidatures, nous devons prioriser le traitement des dossiers dont toutes les tâches sont complétées.\n\nRendez-vous sur votre portail pour les compléter : https://www.cafoap-pclfac.forces.gc.ca/`;
     emailFr += `\n\nSi vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.`;
 
     emailFr += `\n\n` + this.sharedState.customSignatureFr();
@@ -2070,6 +3238,7 @@ export class AppComponent implements OnInit {
           
         }
       }
+      emailEn += `\n\nDue to the high volume of applications, we must prioritize the processing of files where all tasks are complete.\n\nPlease log in to your portal to complete them: https://www.cafoap-pclfac.forces.gc.ca/`;
     }
 
     if (confirmationTasks.size > 0) {
@@ -2116,11 +3285,87 @@ export class AppComponent implements OnInit {
       }
     }
 
+    if (additionalDocTasks.size > 0) {
+      const dossierJobsEn = this.getDossierJobsSummaryTextEn();
+      const generalAddDocs: { doc: any; docItems: any[] }[] = [];
+      const occupSpecificDocs: { doc: any; docItems: any[] }[] = [];
+
+      for (const [task, items] of additionalDocTasks.entries()) {
+        const groupedItems = new Map<any, any[]>();
+        for (const item of items) {
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          if (this.isSubsidizedDoc(doc) || this.isTaskBasedAdditionalDoc(doc)) {
+            generalAddDocs.push({ doc, docItems });
+          } else {
+            occupSpecificDocs.push({ doc, docItems });
+          }
+        }
+      }
+
+      if (normalTasks.size > 0 || confirmationTasks.size > 0) {
+        emailEn += `\n\n--------------------------------------------------`;
+      }
+
+      if (generalAddDocs.length > 0) {
+        emailEn += `\n\nIn order to complete the evaluation of your employment application, we will need additional document(s):`;
+        for (const { doc, docItems } of generalAddDocs) {
+          emailEn += `\n\n• ${doc.nameEn}`;
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionEn)) {
+              uniqueInstructions.add(item.reason.instructionEn);
+              emailEn += `\n  → ${item.reason.instructionEn.replace(/\n/g, "\n    ")}`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
+              uniqueLinks.add(item.reason.linkEn);
+              emailEn += `\n  🔗 ${item.reason.linkEn}`;
+            }
+          }
+        }
+      }
+
+      const jobs = this.getDossierJobObjects();
+      const jobDocsMapEn = new Map<JobEntry, string[]>();
+      for (const job of jobs) {
+        const reqs: string[] = [];
+        for (const { doc, docItems } of occupSpecificDocs) {
+          if (this.isAdditionalDocRequiredForJob(doc.nameFr, job.id)) {
+            const isSelectedForJob = docItems.some((item: any) =>
+              this.isJobReasonSelected(job, doc, item.reason)
+            );
+            if (isSelectedForJob) {
+              const detail = this.getJobSpecificDocText(job.id, doc.nameFr, false);
+              if (detail && !reqs.includes(detail)) {
+                reqs.push(detail);
+              }
+            }
+          }
+        }
+        if (reqs.length > 0) {
+          jobDocsMapEn.set(job, reqs);
+        }
+      }
+
+      if (jobDocsMapEn.size > 0) {
+        const selectedJobsEn = Array.from(jobDocsMapEn.keys()).map(j => `${j.titleEn || j.title} (${j.id})`).join(', ');
+        const jobsHeaderTextEn = selectedJobsEn || dossierJobsEn;
+        emailEn += `\n\nIn order to evaluate your application for the selected occupation(s) (${jobsHeaderTextEn}), you must provide us with the following additional document(s) or proof that you meet the following condition(s) in direct reply to this email:`;
+        for (const [job, reqs] of jobDocsMapEn.entries()) {
+          emailEn += `\n\n• For ${job.id} - ${job.titleEn || job.title} : ` + reqs.join(", ");
+        }
+      }
+    }
+
     if (this.forceGeneralReminder()) {
       emailEn += `\n\nPlease also ensure that you complete the other missing tasks on your portal.`;
     }
 
-    emailEn += `\n\nDue to the high volume of applications, we must prioritize the processing of files where all tasks are complete.\n\nPlease log in to your portal to complete them: https://www.cafoap-pclfac.forces.gc.ca/`;
     emailEn += `\n\nIf you take no action, your file will be automatically deactivated after 30 days.`;
 
     emailEn += `\n\n` + this.sharedState.customSignatureEn();
@@ -2167,10 +3412,15 @@ export class AppComponent implements OnInit {
       Task,
       { doc: DocumentItem; reason: RejectionReason }[]
     >();
+    const additionalDocTasks = new Map<
+      Task,
+      { doc: DocumentItem; reason: RejectionReason }[]
+    >();
 
     for (const [task, items] of structure.entries()) {
-      const normalItems = items.filter((i) => !i.reason.isConfirmation);
-      const confItems = items.filter((i) => i.reason.isConfirmation);
+      const normalItems = items.filter((i) => !i.reason.isConfirmation && !i.reason.isAdditionalDoc);
+      const confItems = items.filter((i) => i.reason.isConfirmation && !i.reason.isAdditionalDoc);
+      const addItems = items.filter((i) => i.reason.isAdditionalDoc);
 
       if (
         normalItems.length > 0 ||
@@ -2181,14 +3431,18 @@ export class AppComponent implements OnInit {
       if (confItems.length > 0) {
         confirmationTasks.set(task, confItems);
       }
+      if (addItems.length > 0) {
+        additionalDocTasks.set(task, addItems);
+      }
     }
 
     // Base style
     let html = `<div style="font-family: Calibri, sans-serif; font-size: 11pt; color: #000;">`;
 
     // --- FRENCH BLOCK ---
-    html += `<p><span style="background-color: yellow;">English message will follow.</span></p>`;
+    html += `<p>English message will follow.</p>`;
     html += `<p>Bonjour,</p>`;
+    html += `<!-- START_TASK_BODY_FR -->`;
 
     if (normalTasks.size > 0) {
       html += `<p>Nous avons procédé à l'évaluation de vos documents. Bien que votre dossier progresse, certains éléments ne sont pas conformes et nécessitent des corrections de votre part pour nous permettre de poursuivre le traitement.</p>`;
@@ -2200,8 +3454,8 @@ export class AppComponent implements OnInit {
         html += `<ul style="margin-top: 5px; list-style-type: circle;">`;
         if (this.taskNotCompletedKeys().has(task.nameFr)) {
           html += `<li style="margin-bottom: 10px;">`;
-          html += `<span style="color: #FF0000; background-color: yellow; padding: 0 2px;">Vous n'avez pas complété cette tâche sur votre portail.</span>`;
-          html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; Veuillez vous connecter à votre portail et la compléter.</span>`;
+          html += `<span style="color: #FF0000; font-weight: bold;">Vous n'avez pas complété cette tâche sur votre portail.</span>`;
+          html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; Veuillez vous connecter à votre portail et la compléter.</div>`;
           html += `</li>`;
         }
         const groupedItems = new Map<any, any[]>();
@@ -2221,20 +3475,20 @@ export class AppComponent implements OnInit {
           }
           
           html += `<li style="margin-bottom: 10px;">`;
-          html += `<span style="background-color: yellow; padding: 0 2px;">${doc.nameFr} : <span style="color: #FF0000;">${labelsStr}</span></span>`;
+          html += `<span><strong>${doc.nameFr} : <span style="color: #FF0000;">${labelsStr}</span></strong></span>`;
           
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionFr)) {
               uniqueInstructions.add(item.reason.instructionFr);
-              html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
               uniqueLinks.add(item.reason.linkFr);
-              html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</span>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</div>`;
             }
           }
           html += `</li>`;
@@ -2242,6 +3496,8 @@ export class AppComponent implements OnInit {
         html += `</ul></li>`;
       }
       html += `</ul>`;
+      html += `<p>En raison du volume élevé de candidatures, nous devons prioriser le traitement des dossiers dont toutes les tâches sont complétées.</p>`;
+      html += `<p>Rendez-vous sur votre portail pour les compléter : <a href="https://www.cafoap-pclfac.forces.gc.ca/">https://www.cafoap-pclfac.forces.gc.ca/</a></p>`;
     }
 
     if (confirmationTasks.size > 0) {
@@ -2250,7 +3506,7 @@ export class AppComponent implements OnInit {
       } else {
         html += `<p>Afin de poursuivre le traitement de votre dossier, nous avons besoin d'une confirmation de votre part. Veuillez répondre directement à ce courriel avec les informations demandées pour l'élément suivant :</p>`;
       }
-      html += `<ul style="margin-top: 0; list-style-type: none; padding-left: 0;">`;
+      html += `<ul style="margin-top: 0; list-style-type: disc; padding-left: 20px;">`;
       for (const [task, items] of confirmationTasks.entries()) {
         const groupedItems = new Map<any, any[]>();
         for (const item of items) {
@@ -2268,20 +3524,20 @@ export class AppComponent implements OnInit {
             labelsStr = labels.slice(0, -1).join(', ') + ' et ' + labels[labels.length - 1];
           }
           
-          html += `<li style="margin-bottom: 15px; margin-left: 10px;"><strong>&bull; <span style="background-color: yellow; padding: 0 2px;">${doc.nameFr} : <span style="color: #d97706;">${labelsStr}</span></span></strong>`;
+          html += `<li style="margin-bottom: 15px;"><strong>${doc.nameFr} : <span style="color: #d97706;">${labelsStr}</span></strong>`;
           
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionFr)) {
               uniqueInstructions.add(item.reason.instructionFr);
-              html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
               uniqueLinks.add(item.reason.linkFr);
-              html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</span>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</div>`;
             }
           }
           html += `</li>`;
@@ -2290,12 +3546,93 @@ export class AppComponent implements OnInit {
       html += `</ul>`;
     }
 
+    if (additionalDocTasks.size > 0) {
+      const dossierJobsFr = this.getDossierJobsSummaryTextFr();
+      const generalAddDocs: { doc: any; docItems: any[] }[] = [];
+      const occupSpecificDocs: { doc: any; docItems: any[] }[] = [];
+
+      for (const [task, items] of additionalDocTasks.entries()) {
+        const groupedItems = new Map<any, any[]>();
+        for (const item of items) {
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          if (this.isSubsidizedDoc(doc) || this.isTaskBasedAdditionalDoc(doc)) {
+            generalAddDocs.push({ doc, docItems });
+          } else {
+            occupSpecificDocs.push({ doc, docItems });
+          }
+        }
+      }
+
+      if (normalTasks.size > 0 || confirmationTasks.size > 0) {
+        html += `<hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 25px 0;">`;
+      }
+
+      if (generalAddDocs.length > 0) {
+        html += `<p style="margin-top: 15px;"><strong>Afin de compléter l'évaluation de votre demande d'emploi, nous aurons besoin de document(s) supplémentaire(s) :</strong></p>`;
+        html += `<ul style="margin-top: 5px; list-style-type: disc; padding-left: 20px;">`;
+        for (const { doc, docItems } of generalAddDocs) {
+          html += `<li style="margin-bottom: 15px;"><strong><span style="color: #2563eb;">${doc.nameFr}</span></strong>`;
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionFr)) {
+              uniqueInstructions.add(item.reason.instructionFr);
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
+              uniqueLinks.add(item.reason.linkFr);
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</div>`;
+            }
+          }
+          html += `</li>`;
+        }
+        html += `</ul>`;
+      }
+
+      const jobs = this.getDossierJobObjects();
+      const jobDocsMapFr = new Map<JobEntry, string[]>();
+      for (const job of jobs) {
+        const reqs: string[] = [];
+        for (const { doc, docItems } of occupSpecificDocs) {
+          if (this.isAdditionalDocRequiredForJob(doc.nameFr, job.id)) {
+            const isSelectedForJob = docItems.some((item: any) =>
+              this.isJobReasonSelected(job, doc, item.reason)
+            );
+            if (isSelectedForJob) {
+              const detail = this.getJobSpecificDocText(job.id, doc.nameFr, true);
+              if (detail && !reqs.includes(detail)) {
+                reqs.push(detail);
+              }
+            }
+          }
+        }
+        if (reqs.length > 0) {
+          jobDocsMapFr.set(job, reqs);
+        }
+      }
+
+      if (jobDocsMapFr.size > 0) {
+        const selectedJobsFr = Array.from(jobDocsMapFr.keys()).map(j => `${j.title} (${j.id})`).join(', ');
+        const jobsHeaderTextFr = selectedJobsFr || dossierJobsFr;
+        html += `<p style="margin-top: 15px; font-weight: bold; color: #000000;">Afin d'évaluer votre dossier pour le(s) métier(s) sélectionné(s) (${jobsHeaderTextFr}), vous devez nous fournir le(s) document(s) supplémentaire(s) suivant(s) ou une(des) preuve(s) que vous remplissez la(les) condition(s) suivante(s) en réponse directe à ce courriel :</p>`;
+        html += `<ul style="margin-top: 5px; list-style-type: disc; padding-left: 20px;">`;
+        for (const [job, reqs] of jobDocsMapFr.entries()) {
+          html += `<li style="margin-bottom: 8px;"><span style="background-color: yellow; padding: 0 2px;"><strong>Pour ${job.id} - ${job.title} :</strong> ` + reqs.join(", ") + `</span></li>`;
+        }
+        html += `</ul>`;
+      }
+    }
+    html += `<!-- END_TASK_BODY_FR -->`;
+
     if (this.forceGeneralReminder()) {
       html += `<p>Veuillez également vous assurer de compléter les autres tâches manquantes sur votre portail.</p>`;
     }
 
-    html += `<p>En raison du volume élevé de candidatures, nous devons prioriser le traitement des dossiers dont toutes les tâches sont complétées.</p>`;
-    html += `<p>Rendez-vous sur votre portail pour les compléter : <a href="https://www.cafoap-pclfac.forces.gc.ca/">https://www.cafoap-pclfac.forces.gc.ca/</a></p>`;
     html += `<p><strong>Si vous ne prenez aucune action, votre dossier sera désactivé automatiquement après 30 jours.</strong></p>`;
 
     html += `<p>` + this.sharedState.getHtmlSignatureFr() + `</p>`;
@@ -2304,6 +3641,7 @@ export class AppComponent implements OnInit {
 
     // --- ENGLISH BLOCK ---
     html += `<p>Hello,</p>`;
+    html += `<!-- START_TASK_BODY_EN -->`;
 
     if (normalTasks.size > 0) {
       html += `<p>We have evaluated your documents. While your application is progressing, some items are not compliant and require corrections on your part to allow us to continue processing.</p>`;
@@ -2315,8 +3653,8 @@ export class AppComponent implements OnInit {
         html += `<ul style="margin-top: 5px; list-style-type: circle;">`;
         if (this.taskNotCompletedKeys().has(task.nameFr)) {
           html += `<li style="margin-bottom: 10px;">`;
-          html += `<span style="color: #FF0000; background-color: yellow; padding: 0 2px;">You have not completed this task on your portal.</span>`;
-          html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; Please log in to your portal and complete it.</span>`;
+          html += `<span style="color: #FF0000; font-weight: bold;">You have not completed this task on your portal.</span>`;
+          html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; Please log in to your portal and complete it.</div>`;
           html += `</li>`;
         }
         const groupedItems = new Map<any, any[]>();
@@ -2336,20 +3674,20 @@ export class AppComponent implements OnInit {
           }
           
           html += `<li style="margin-bottom: 10px;">`;
-          html += `<span style="background-color: yellow; padding: 0 2px;">${doc.nameEn} : <span style="color: #FF0000;">${labelsStr}</span></span>`;
+          html += `<span><strong>${doc.nameEn} : <span style="color: #FF0000;">${labelsStr}</span></strong></span>`;
           
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionEn)) {
               uniqueInstructions.add(item.reason.instructionEn);
-              html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
               uniqueLinks.add(item.reason.linkEn);
-              html += `<br><span style="margin-left: 20px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</span>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</div>`;
             }
           }
           html += `</li>`;
@@ -2357,6 +3695,8 @@ export class AppComponent implements OnInit {
         html += `</ul></li>`;
       }
       html += `</ul>`;
+      html += `<p>Due to the high volume of applications, we must prioritize the processing of files where all tasks are complete.</p>`;
+      html += `<p>Please log in to your portal to complete them: <a href="https://www.cafoap-pclfac.forces.gc.ca/">https://www.cafoap-pclfac.forces.gc.ca/</a></p>`;
     }
 
     if (confirmationTasks.size > 0) {
@@ -2365,7 +3705,7 @@ export class AppComponent implements OnInit {
       } else {
         html += `<p>To continue processing your application, we require confirmation from you. Please reply directly to this email with the requested information for the following item:</p>`;
       }
-      html += `<ul style="margin-top: 0; list-style-type: none; padding-left: 0;">`;
+      html += `<ul style="margin-top: 0; list-style-type: disc; padding-left: 20px;">`;
       for (const [task, items] of confirmationTasks.entries()) {
         const groupedItems = new Map<any, any[]>();
         for (const item of items) {
@@ -2383,20 +3723,20 @@ export class AppComponent implements OnInit {
             labelsStr = labels.slice(0, -1).join(', ') + ' and ' + labels[labels.length - 1];
           }
           
-          html += `<li style="margin-bottom: 15px; margin-left: 10px;"><strong>&bull; <span style="background-color: yellow; padding: 0 2px;">${doc.nameEn} : <span style="color: #d97706;">${labelsStr}</span></span></strong>`;
+          html += `<li style="margin-bottom: 15px;"><strong>${doc.nameEn} : <span style="color: #d97706;">${labelsStr}</span></strong>`;
           
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionEn)) {
               uniqueInstructions.add(item.reason.instructionEn);
-              html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;")}</span>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
               uniqueLinks.add(item.reason.linkEn);
-              html += `<br><span style="margin-left: 15px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</span>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</div>`;
             }
           }
           html += `</li>`;
@@ -2405,12 +3745,93 @@ export class AppComponent implements OnInit {
       html += `</ul>`;
     }
 
+    if (additionalDocTasks.size > 0) {
+      const dossierJobsEn = this.getDossierJobsSummaryTextEn();
+      const generalAddDocs: { doc: any; docItems: any[] }[] = [];
+      const occupSpecificDocs: { doc: any; docItems: any[] }[] = [];
+
+      for (const [task, items] of additionalDocTasks.entries()) {
+        const groupedItems = new Map<any, any[]>();
+        for (const item of items) {
+          if (!groupedItems.has(item.doc)) groupedItems.set(item.doc, []);
+          groupedItems.get(item.doc).push(item);
+        }
+        for (const [doc, docItems] of groupedItems.entries()) {
+          if (this.isSubsidizedDoc(doc) || this.isTaskBasedAdditionalDoc(doc)) {
+            generalAddDocs.push({ doc, docItems });
+          } else {
+            occupSpecificDocs.push({ doc, docItems });
+          }
+        }
+      }
+
+      if (normalTasks.size > 0 || confirmationTasks.size > 0) {
+        html += `<hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 25px 0;">`;
+      }
+
+      if (generalAddDocs.length > 0) {
+        html += `<p style="margin-top: 15px;"><strong>In order to complete the evaluation of your employment application, we will need additional document(s):</strong></p>`;
+        html += `<ul style="margin-top: 5px; list-style-type: disc; padding-left: 20px;">`;
+        for (const { doc, docItems } of generalAddDocs) {
+          html += `<li style="margin-bottom: 15px;"><strong><span style="color: #2563eb;">${doc.nameEn}</span></strong>`;
+          const uniqueInstructions = new Set<string>();
+          for (const item of docItems) {
+            if (!uniqueInstructions.has(item.reason.instructionEn)) {
+              uniqueInstructions.add(item.reason.instructionEn);
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
+            }
+          }
+          const uniqueLinks = new Set<string>();
+          for (const item of docItems) {
+            if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
+              uniqueLinks.add(item.reason.linkEn);
+              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</div>`;
+            }
+          }
+          html += `</li>`;
+        }
+        html += `</ul>`;
+      }
+
+      const jobs = this.getDossierJobObjects();
+      const jobDocsMapEn = new Map<JobEntry, string[]>();
+      for (const job of jobs) {
+        const reqs: string[] = [];
+        for (const { doc, docItems } of occupSpecificDocs) {
+          if (this.isAdditionalDocRequiredForJob(doc.nameFr, job.id)) {
+            const isSelectedForJob = docItems.some((item: any) =>
+              this.isJobReasonSelected(job, doc, item.reason)
+            );
+            if (isSelectedForJob) {
+              const detail = this.getJobSpecificDocText(job.id, doc.nameFr, false);
+              if (detail && !reqs.includes(detail)) {
+                reqs.push(detail);
+              }
+            }
+          }
+        }
+        if (reqs.length > 0) {
+          jobDocsMapEn.set(job, reqs);
+        }
+      }
+
+      if (jobDocsMapEn.size > 0) {
+        const selectedJobsEn = Array.from(jobDocsMapEn.keys()).map(j => `${j.titleEn || j.title} (${j.id})`).join(', ');
+        const jobsHeaderTextEn = selectedJobsEn || dossierJobsEn;
+        html += `<p style="margin-top: 15px; font-weight: bold; color: #000000;">In order to evaluate your application for the selected occupation(s) (${jobsHeaderTextEn}), you must provide us with the following additional document(s) or proof that you meet the following condition(s) in direct reply to this email:</p>`;
+        html += `<ul style="margin-top: 5px; list-style-type: disc; padding-left: 20px;">`;
+        for (const [job, reqs] of jobDocsMapEn.entries()) {
+          html += `<li style="margin-bottom: 8px;"><span style="background-color: yellow; padding: 0 2px;"><strong>For ${job.id} - ${job.titleEn || job.title} :</strong> ` + reqs.join(", ") + `</span></li>`;
+        }
+        html += `</ul>`;
+      }
+    }
+    html += `<!-- END_TASK_BODY_EN -->`;
+
     if (this.forceGeneralReminder()) {
       html += `<p>Please also ensure that you complete the other missing tasks on your portal.</p>`;
     }
 
-    html += `<p>Due to the high volume of applications, we must prioritize the processing of files where all tasks are complete.</p>`;
-    html += `<p>Please log in to your portal to complete them: <a href="https://www.cafoap-pclfac.forces.gc.ca/">https://www.cafoap-pclfac.forces.gc.ca/</a></p>`;
     html += `<p><strong>If you take no action, your file will be automatically deactivated after 30 days.</strong></p>`;
 
     html += `<p>` + this.sharedState.getHtmlSignatureEn() + `</p>`;

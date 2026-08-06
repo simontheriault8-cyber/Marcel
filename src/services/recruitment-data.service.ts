@@ -1500,19 +1500,19 @@ export class RecruitmentDataService {
           ],
         },
         {
-          nameFr: "Relevés de notes à l'étranger (en cas de dispense)",
-          nameEn: "Foreign transcripts (in case of exemption)",
+          nameFr: "Relevés de notes à l'étranger",
+          nameEn: "Foreign transcripts",
           reasons: [
             {
               id: "doc_supp_releves_etrangers",
-              labelFr: "Relevé de notes officiel de l'établissement d'enseignement à l'étranger (en cas de dispense de l'Évaluation comparative)",
-              labelEn: "Official foreign transcript (in case of Comparative Evaluation exemption)",
+              labelFr: "Relevé de notes officiel de l'établissement d'enseignement à l'étranger",
+              labelEn: "Official foreign transcript",
               instructionFr:
                 "Merci de nous avoir fourni votre évaluation comparative de vos études. Par contre, pour confirmer votre admissibilité académique aux métiers que vous avez choisis, nous aurons besoin de vos relevés de notes étrangers originaux s'ils sont écrits en français ou en anglais. Sinon, veuillez les faire traduire avant de nous les envoyer en répondant à ce courriel.",
               instructionEn:
                 "Thank you for providing your comparative evaluation of your studies. However, to confirm your academic eligibility for the occupations you have chosen, we will need your original foreign transcripts if they are written in French or English. Otherwise, please have them translated before sending them to us by replying to this email.",
               logNoteFr:
-                "Demande de relevés de notes étrangers (en cas de dispense d'évaluation comparative)",
+                "Demande de relevés de notes étrangers",
               isAdditionalDoc: true,
             },
           ],

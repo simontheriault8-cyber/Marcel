@@ -2737,9 +2737,10 @@ export class AppComponent implements OnInit {
 
   generatedNote = computed(() => {
     if (this.allTasksCompliant()) {
-      const jobsFr = this.getDossierJobsSummaryTextFr();
-      const jobsText = jobsFr ? jobsFr : "xxx, xxx, xxx";
-      return `Étape 1 (En cours) -Big ACE admissible pour les métiers ${jobsText}. \nQD complété, admissible. Webinaire CAF 101 à faire, tâche planifiez votre consultation attribuée.`;
+      const jobs = this.getDossierJobObjects();
+      const jobNumbers = jobs.map((j) => j.id).join(", ");
+      const jobsText = jobNumbers ? jobNumbers : "xxx, xxx, xxx";
+      return `Étape 1 (En cours) -Big ACE admissible pour les métiers ${jobsText}. \nQD complété, admissible. Webinaire CAF 101 à faire, tâche planifiez votre séance d'information des FAC 101 attribuée.`;
     }
 
     const closureSuffix =
@@ -2887,7 +2888,7 @@ export class AppComponent implements OnInit {
     
     html += `<p><strong>1-Vous informer :</strong></p>`;
     html += `<ul style="margin-top: 0; margin-bottom: 15px; list-style-type: disc; padding-left: 20px;">`;
-    html += `  <li style="margin-bottom: 5px;">Regarder et comprendre le contenu de la présentation suivante : <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=lERbMocV1UC7MYtmC38QOOZFGayJpy5JvxG9Z6Os6zRUQ0owN0pPSzhMRjJVUVFQSkg2OERWNVdQNS4u&route=shorturl" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Présentation Forces 101</a></li>`;
+    html += `  <li style="margin-bottom: 5px;">Regarder et comprendre le contenu de la présentation suivante : <a href="https://youtu.be/hYzMRYYBnag" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Présentation Forces 101</a></li>`;
     html += `  <li style="margin-bottom: 5px;">Regarder la vidéo et description du ou des métier/s pour lesquels vous êtes inscrits <a href="https://forces.ca/fr/carrieres/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Carrières | Forces armées canadiennes</a></li>`;
     html += `  <li style="margin-bottom: 5px;">Explorer et bien comprendre la section <a href="https://forces.ca/fr/instruction-de-base/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Instruction de base</a> du site Forces.ca</li>`;
     html += `</ul>`;
@@ -2910,7 +2911,7 @@ export class AppComponent implements OnInit {
 
     html += `<p><strong>1- Inform yourself :</strong></p>`;
     html += `<ul style="margin-top: 0; margin-bottom: 15px; list-style-type: disc; padding-left: 20px;">`;
-    html += `  <li style="margin-bottom: 5px;">Watch and understand the content of the following presentation: <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=lERbMocV1UC7MYtmC38QOOZFGayJpy5JvxG9Z6Os6zRUMDhDMkJFSUJGMVdQSTBYNkNaV1k4R1Q2Qi4u&route=shorturl" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Forces 101 Presentation</a></li>`;
+    html += `  <li style="margin-bottom: 5px;">Watch and understand the content of the following presentation: <a href="https://youtu.be/oKuX_ROtASw" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Forces 101 Presentation</a></li>`;
     html += `  <li style="margin-bottom: 5px;">Watch the video and review the description of the trade(s) you are registered for. <a href="https://forces.ca/en/careers/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Careers | Canadian Armed Forces</a></li>`;
     html += `  <li style="margin-bottom: 5px;">Explore and fully understand the <a href="https://forces.ca/en/basic-training/" target="_blank" style="color: #4f46e5; text-decoration: underline; font-weight: 500;">Basic Training</a> section of the Forces.ca website.</li>`;
     html += `</ul>`;
@@ -2937,7 +2938,7 @@ export class AppComponent implements OnInit {
     plain += `Merci beaucoup d’avoir fourni vos documents et fait votre choix de profession.\n\n`;
     plain += `Afin de pouvoir continuer votre processus, vous devrez OBLIGATOIREMENT :\n\n`;
     plain += `1-Vous informer :\n`;
-    plain += `•\tRegarder et comprendre le contenu de la présentation suivante : Présentation Forces 101 (https://forms.cloud.microsoft/pages/responsepage.aspx?id=lERbMocV1UC7MYtmC38QOOZFGayJpy5JvxG9Z6Os6zRUQ0owN0pPSzhMRjJVUVFQSkg2OERWNVdQNS4u&route=shorturl)\n`;
+    plain += `•\tRegarder et comprendre le contenu de la présentation suivante : Présentation Forces 101 (https://youtu.be/hYzMRYYBnag)\n`;
     plain += `•\tRegarder la vidéo et description du ou des métier/s pour lesquels vous êtes inscrits Carrières | Forces armées canadiennes (https://forces.ca/fr/carrieres/)\n`;
     plain += `•\tExplorer et bien comprendre la section Instruction de base du site Forces.ca (https://forces.ca/fr/instruction-de-base/)\n\n`;
     plain += `2-Après avoir regardé la vidéo, Prendre rendez-vous pour une consultation via le calendrier de votre portail. Lien vers le Portail d'enrôlement des Forces armées canadiennes (https://www.cafoap-pclfac.forces.gc.ca/) De nouvelles plages horaires ouvriront d’ici 14 jours sur votre portail.\n\n`;
@@ -2953,7 +2954,7 @@ export class AppComponent implements OnInit {
     plain += `Thank you very much for providing your documents and selecting your preferred occupation.\n\n`;
     plain += `In order to continue your application process, You will be REQUIRED to:\n\n`;
     plain += `1- Inform yourself :\n`;
-    plain += `•\tWatch and understand the content of the following presentation: Forces 101 Presentation (https://forms.cloud.microsoft/pages/responsepage.aspx?id=lERbMocV1UC7MYtmC38QOOZFGayJpy5JvxG9Z6Os6zRUMDhDMkJFSUJGMVdQSTBYNkNaV1k4R1Q2Qi4u&route=shorturl)\n`;
+    plain += `•\tWatch and understand the content of the following presentation: Forces 101 Presentation (https://youtu.be/oKuX_ROtASw)\n`;
     plain += `•\tWatch the video and review the description of the trade(s) you are registered for. Careers | Canadian Armed Forces (https://forces.ca/en/careers/)\n`;
     plain += `•\tExplore and fully understand the Basic Training section of the Forces.ca website (https://forces.ca/en/basic-training/)\n\n`;
     plain += `2-After viewing the video, Schedule an appointment for a consultation through your portal calendar. Canadian Armed Forces enrolment Portal link (https://www.cafoap-pclfac.forces.gc.ca/) New time slots will open on your portal within 14 days.\n\n`;
@@ -3447,15 +3448,15 @@ export class AppComponent implements OnInit {
     if (normalTasks.size > 0) {
       html += `<p>Nous avons procédé à l'évaluation de vos documents. Bien que votre dossier progresse, certains éléments ne sont pas conformes et nécessitent des corrections de votre part pour nous permettre de poursuivre le traitement.</p>`;
       html += `<p>Les tâches suivantes vous ont été réattribuées :</p>`;
-      html += `<ul style="margin-top: 0;">`;
+      html += `<ul style="margin-top: 0; padding-left: 20px;">`;
       for (const [task, items] of normalTasks.entries()) {
         const taskNameFr = task.nameFr;
-        html += `<li style="margin-bottom: 15px;"><strong>${taskNameFr}</strong>`;
-        html += `<ul style="margin-top: 5px; list-style-type: circle;">`;
+        html += `<li style="margin-bottom: 15px;"><span style="text-decoration: underline; font-weight: bold;">${taskNameFr}</span>`;
+        html += `<ul style="margin-top: 5px; list-style-type: circle; padding-left: 20px;">`;
         if (this.taskNotCompletedKeys().has(task.nameFr)) {
           html += `<li style="margin-bottom: 10px;">`;
           html += `<span style="color: #FF0000; font-weight: bold;">Vous n'avez pas complété cette tâche sur votre portail.</span>`;
-          html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; Veuillez vous connecter à votre portail et la compléter.</div>`;
+          html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&rarr; Veuillez vous connecter à votre portail et la compléter.</div>`;
           html += `</li>`;
         }
         const groupedItems = new Map<any, any[]>();
@@ -3475,20 +3476,20 @@ export class AppComponent implements OnInit {
           }
           
           html += `<li style="margin-bottom: 10px;">`;
-          html += `<span><strong>${doc.nameFr} : <span style="color: #FF0000;">${labelsStr}</span></strong></span>`;
+          html += `<span style="background-color: yellow; padding: 0 2px;"><strong>${doc.nameFr} : <span style="color: #FF0000;">${labelsStr}</span></strong></span>`;
           
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionFr)) {
               uniqueInstructions.add(item.reason.instructionFr);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
               uniqueLinks.add(item.reason.linkFr);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&#128279; ${item.reason.linkFr}</div>`;
             }
           }
           html += `</li>`;
@@ -3524,20 +3525,20 @@ export class AppComponent implements OnInit {
             labelsStr = labels.slice(0, -1).join(', ') + ' et ' + labels[labels.length - 1];
           }
           
-          html += `<li style="margin-bottom: 15px;"><strong>${doc.nameFr} : <span style="color: #d97706;">${labelsStr}</span></strong>`;
+          html += `<li style="margin-bottom: 15px;"><span style="background-color: yellow; padding: 0 2px;"><strong>${doc.nameFr} : <span style="color: #d97706;">${labelsStr}</span></strong></span>`;
           
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionFr)) {
               uniqueInstructions.add(item.reason.instructionFr);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
               uniqueLinks.add(item.reason.linkFr);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&#128279; ${item.reason.linkFr}</div>`;
             }
           }
           html += `</li>`;
@@ -3574,19 +3575,19 @@ export class AppComponent implements OnInit {
         html += `<p style="margin-top: 15px;"><strong>Afin de compléter l'évaluation de votre demande d'emploi, nous aurons besoin de document(s) supplémentaire(s) :</strong></p>`;
         html += `<ul style="margin-top: 5px; list-style-type: disc; padding-left: 20px;">`;
         for (const { doc, docItems } of generalAddDocs) {
-          html += `<li style="margin-bottom: 15px;"><strong><span style="color: #2563eb;">${doc.nameFr}</span></strong>`;
+          html += `<li style="margin-bottom: 15px;"><span style="background-color: yellow; padding: 0 2px;"><strong><span style="color: #2563eb;">${doc.nameFr}</span></strong></span>`;
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionFr)) {
               uniqueInstructions.add(item.reason.instructionFr);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&rarr; ${item.reason.instructionFr.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkFr && !uniqueLinks.has(item.reason.linkFr)) {
               uniqueLinks.add(item.reason.linkFr);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkFr}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&#128279; ${item.reason.linkFr}</div>`;
             }
           }
           html += `</li>`;
@@ -3622,7 +3623,7 @@ export class AppComponent implements OnInit {
         html += `<p style="margin-top: 15px; font-weight: bold; color: #000000;">Afin d'évaluer votre dossier pour le(s) métier(s) sélectionné(s) (${jobsHeaderTextFr}), vous devez nous fournir le(s) document(s) supplémentaire(s) suivant(s) ou une(des) preuve(s) que vous remplissez la(les) condition(s) suivante(s) en réponse directe à ce courriel :</p>`;
         html += `<ul style="margin-top: 5px; list-style-type: disc; padding-left: 20px;">`;
         for (const [job, reqs] of jobDocsMapFr.entries()) {
-          html += `<li style="margin-bottom: 8px;"><span style="background-color: yellow; padding: 0 2px;"><strong>Pour ${job.id} - ${job.title} :</strong> ` + reqs.join(", ") + `</span></li>`;
+          html += `<li style="margin-bottom: 8px;"><strong>Pour ${job.id} - ${job.title} :</strong> <span style="background-color: yellow; padding: 0 2px;">` + reqs.join(", ") + `</span></li>`;
         }
         html += `</ul>`;
       }
@@ -3646,15 +3647,15 @@ export class AppComponent implements OnInit {
     if (normalTasks.size > 0) {
       html += `<p>We have evaluated your documents. While your application is progressing, some items are not compliant and require corrections on your part to allow us to continue processing.</p>`;
       html += `<p>The following tasks have been reassigned to you:</p>`;
-      html += `<ul style="margin-top: 0;">`;
+      html += `<ul style="margin-top: 0; padding-left: 20px;">`;
       for (const [task, items] of normalTasks.entries()) {
         const taskNameEn = task.nameEn;
-        html += `<li style="margin-bottom: 15px;"><strong>${taskNameEn}</strong>`;
-        html += `<ul style="margin-top: 5px; list-style-type: circle;">`;
+        html += `<li style="margin-bottom: 15px;"><span style="text-decoration: underline; font-weight: bold;">${taskNameEn}</span>`;
+        html += `<ul style="margin-top: 5px; list-style-type: circle; padding-left: 20px;">`;
         if (this.taskNotCompletedKeys().has(task.nameFr)) {
           html += `<li style="margin-bottom: 10px;">`;
           html += `<span style="color: #FF0000; font-weight: bold;">You have not completed this task on your portal.</span>`;
-          html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; Please log in to your portal and complete it.</div>`;
+          html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&rarr; Please log in to your portal and complete it.</div>`;
           html += `</li>`;
         }
         const groupedItems = new Map<any, any[]>();
@@ -3674,20 +3675,20 @@ export class AppComponent implements OnInit {
           }
           
           html += `<li style="margin-bottom: 10px;">`;
-          html += `<span><strong>${doc.nameEn} : <span style="color: #FF0000;">${labelsStr}</span></strong></span>`;
+          html += `<span style="background-color: yellow; padding: 0 2px;"><strong>${doc.nameEn} : <span style="color: #FF0000;">${labelsStr}</span></strong></span>`;
           
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionEn)) {
               uniqueInstructions.add(item.reason.instructionEn);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
               uniqueLinks.add(item.reason.linkEn);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&#128279; ${item.reason.linkEn}</div>`;
             }
           }
           html += `</li>`;
@@ -3723,20 +3724,20 @@ export class AppComponent implements OnInit {
             labelsStr = labels.slice(0, -1).join(', ') + ' and ' + labels[labels.length - 1];
           }
           
-          html += `<li style="margin-bottom: 15px;"><strong>${doc.nameEn} : <span style="color: #d97706;">${labelsStr}</span></strong>`;
+          html += `<li style="margin-bottom: 15px;"><span style="background-color: yellow; padding: 0 2px;"><strong>${doc.nameEn} : <span style="color: #d97706;">${labelsStr}</span></strong></span>`;
           
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionEn)) {
               uniqueInstructions.add(item.reason.instructionEn);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
               uniqueLinks.add(item.reason.linkEn);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&#128279; ${item.reason.linkEn}</div>`;
             }
           }
           html += `</li>`;
@@ -3773,19 +3774,19 @@ export class AppComponent implements OnInit {
         html += `<p style="margin-top: 15px;"><strong>In order to complete the evaluation of your employment application, we will need additional document(s):</strong></p>`;
         html += `<ul style="margin-top: 5px; list-style-type: disc; padding-left: 20px;">`;
         for (const { doc, docItems } of generalAddDocs) {
-          html += `<li style="margin-bottom: 15px;"><strong><span style="color: #2563eb;">${doc.nameEn}</span></strong>`;
+          html += `<li style="margin-bottom: 15px;"><span style="background-color: yellow; padding: 0 2px;"><strong><span style="color: #2563eb;">${doc.nameEn}</span></strong></span>`;
           const uniqueInstructions = new Set<string>();
           for (const item of docItems) {
             if (!uniqueInstructions.has(item.reason.instructionEn)) {
               uniqueInstructions.add(item.reason.instructionEn);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&rarr; ${item.reason.instructionEn.replace(/\n/g, "<br>")}</div>`;
             }
           }
           const uniqueLinks = new Set<string>();
           for (const item of docItems) {
             if (item.reason.linkEn && !uniqueLinks.has(item.reason.linkEn)) {
               uniqueLinks.add(item.reason.linkEn);
-              html += `<div style="margin-left: 20px; margin-top: 4px; background-color: yellow; padding: 0 2px;">&#128279; ${item.reason.linkEn}</div>`;
+              html += `<div style="margin-left: 20px; margin-top: 4px; color: #000000;">&#128279; ${item.reason.linkEn}</div>`;
             }
           }
           html += `</li>`;
@@ -3821,7 +3822,7 @@ export class AppComponent implements OnInit {
         html += `<p style="margin-top: 15px; font-weight: bold; color: #000000;">In order to evaluate your application for the selected occupation(s) (${jobsHeaderTextEn}), you must provide us with the following additional document(s) or proof that you meet the following condition(s) in direct reply to this email:</p>`;
         html += `<ul style="margin-top: 5px; list-style-type: disc; padding-left: 20px;">`;
         for (const [job, reqs] of jobDocsMapEn.entries()) {
-          html += `<li style="margin-bottom: 8px;"><span style="background-color: yellow; padding: 0 2px;"><strong>For ${job.id} - ${job.titleEn || job.title} :</strong> ` + reqs.join(", ") + `</span></li>`;
+          html += `<li style="margin-bottom: 8px;"><strong>For ${job.id} - ${job.titleEn || job.title} :</strong> <span style="background-color: yellow; padding: 0 2px;">` + reqs.join(", ") + `</span></li>`;
         }
         html += `</ul>`;
       }

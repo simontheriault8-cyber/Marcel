@@ -2,42 +2,47 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # Remplace par "master" si ta branche principale s'appelle master
+    branches:
+      - main  # Changez pour 'master' si votre branche principale s'appelle master
 
+# Autorisations requises pour déployer sur GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Permet un seul déploiement simultané
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout du code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Configuration de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: 20
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Installation des dépendances
+        run: npm install
 
-      - name: Build Angular App
-        # Remplace "NomDuRepo" par le nom exact de ton dépôt GitHub (ex: /mon-app/)
-        run: npx ng build --base-href /Marcel/
+      - name: Build de l'application Angular
+        run: npm run build -- --base-href=/Marcel/
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
-      - name: Upload artifact
+      - name: Dupliquer index.html vers 404.html (gestion SPA)
+        run: cp dist/browser/index.html dist/browser/404.html
+
+      - name: Upload de l'artefact pour GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          # CRUCIAL : Pointer directement sur dist/browser
-          path: './dist/browser'
+          path: 'dist/browser'
 
   deploy:
     environment:
@@ -46,6 +51,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Déploiement sur GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

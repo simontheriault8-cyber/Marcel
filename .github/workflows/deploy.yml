@@ -1,9 +1,8 @@
-name: Deploy Angular to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"] # Remplace par "master" si ta branche principale s'appelle master
 
 permissions:
   contents: read
@@ -11,35 +10,34 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
-      - name: Build
-        run: npm run build -- --base-href=/Marcel/
-
-      - name: Copy index.html to 404.html for SPA routing
-        run: cp ./dist/browser/index.html ./dist/browser/404.html
+      - name: Build Angular App
+        # Remplace "NomDuRepo" par le nom exact de ton dépôt GitHub (ex: /mon-app/)
+        run: npx ng build --base-href /Marcel/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist/browser
+          # CRUCIAL : Pointer directement sur dist/browser
+          path: './dist/browser'
 
   deploy:
     environment:

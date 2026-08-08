@@ -691,30 +691,21 @@ type AppStage = "intro" | "minor-check" | "main";
                 <span>Tout Conforme</span>
               </button>
             </div>
-            <div class="flex-1 overflow-y-auto p-3 space-y-2">
-              @for (task of visibleTasks(); track task.nameFr) {
-                @if (task.nameFr.includes("Documents Supplémentaires")) {
-                  <hr class="my-3 border-t-2 border-slate-300" />
-                }
-                <button
-                  (click)="selectTask(task)"
-                  class="w-full text-left p-3 rounded-xl transition-all duration-200 border border-transparent group relative overflow-hidden flex justify-between items-center"
-                  [class.bg-slate-800]="selectedTask() === task"
-                  [class.text-white]="selectedTask() === task"
-                  [class.shadow-md]="selectedTask() === task"
-                  [class.hover:bg-slate-100]="selectedTask() !== task"
-                >
-                  <!-- Dynamic Task Name logic inside the button -->
-                  <div class="font-semibold text-sm pr-2 leading-snug">
-                    {{ task.nameFr }}
-                  </div>
-
-                  <div class="flex items-center gap-2">
-                    @if (!task.nameFr.includes("Documents Supplémentaires")) {
-                      @if (isTaskCompliant(task)) {
+            <div class="flex-1 overflow-y-auto p-3 space-y-4">
+              @for (group of groupedVisibleTasks().groups; track group.id) {
+                <div class="space-y-1 bg-slate-100/70 p-2 rounded-xl border-2 border-slate-200/90 shadow-xs">
+                  <!-- Collapsible Header -->
+                  <button
+                    (click)="toggleGroupCollapse(group.id)"
+                    class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold tracking-wider text-slate-800 bg-slate-200/80 hover:bg-slate-300/80 transition-colors select-none border border-slate-300/70"
+                  >
+                    <span class="flex items-center gap-2">
+                      <span class="bg-slate-800 text-white px-2 py-0.5 rounded text-[11px] font-extrabold tracking-wide">Groupe {{ group.title }}</span>
+                      <span class="text-[11px] font-semibold text-slate-500">({{ group.tasks.length }} {{ group.tasks.length > 1 ? 'tâches' : 'tâche' }})</span>
+                      @if (isGroupCompliant(group)) {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 text-green-500 shrink-0"
+                          class="h-4 w-4 text-green-600 shrink-0"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -724,10 +715,10 @@ type AppStage = "intro" | "minor-check" | "main";
                             clip-rule="evenodd"
                           />
                         </svg>
-                      } @else if (hasTaskRejections(task)) {
+                      } @else if (hasGroupRejections(group)) {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 text-red-500 shrink-0"
+                          class="h-4 w-4 text-red-600 shrink-0"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -738,8 +729,92 @@ type AppStage = "intro" | "minor-check" | "main";
                           />
                         </svg>
                       }
-                    }
-                    <!-- Indicator for active -->
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 transition-transform duration-200 text-slate-600"
+                      [class.rotate-180]="isGroupCollapsed(group.id)"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  <!-- Grouped Tasks -->
+                  @if (!isGroupCollapsed(group.id)) {
+                    <div class="space-y-1 mt-1">
+                      @for (task of group.tasks; track task.nameFr) {
+                        <button
+                          (click)="selectTask(task)"
+                          class="w-full text-left p-2.5 rounded-lg transition-all duration-200 border border-transparent group relative overflow-hidden flex justify-between items-center"
+                          [class.bg-slate-800]="selectedTask() === task"
+                          [class.text-white]="selectedTask() === task"
+                          [class.shadow-md]="selectedTask() === task"
+                          [class.hover:bg-slate-200/80]="selectedTask() !== task"
+                          [class.bg-white]="selectedTask() !== task"
+                        >
+                          <div class="font-semibold text-xs pr-2 leading-snug">
+                            {{ task.nameFr }}
+                          </div>
+
+                          <div class="flex items-center gap-1.5 shrink-0">
+                            @if (!task.nameFr.includes("Documents Supplémentaires")) {
+                              @if (isTaskCompliant(task)) {
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="h-4 w-4 text-green-500 shrink-0"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                >
+                                  <path
+                                    fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd"
+                                  />
+                                </svg>
+                              } @else if (hasTaskRejections(task)) {
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="h-4 w-4 text-red-500 shrink-0"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                >
+                                  <path
+                                    fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"
+                                  />
+                                </svg>
+                              }
+                            }
+                            @if (selectedTask() === task) {
+                              <div class="w-1.5 h-1.5 rounded-full bg-white shrink-0"></div>
+                            }
+                          </div>
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Additional Tasks (Documents Supplémentaires) separated by line -->
+              @for (task of groupedVisibleTasks().additionalTasks; track task.nameFr) {
+                <hr class="my-3 border-t-2 border-slate-300" />
+                <button
+                  (click)="selectTask(task)"
+                  class="w-full text-left p-3 rounded-xl transition-all duration-200 border border-transparent group relative overflow-hidden flex justify-between items-center bg-white hover:bg-slate-100"
+                  [class.bg-slate-800]="selectedTask() === task"
+                  [class.text-white]="selectedTask() === task"
+                  [class.shadow-md]="selectedTask() === task"
+                >
+                  <div class="font-semibold text-xs pr-2 leading-snug">
+                    {{ task.nameFr }}
+                  </div>
+                  <div class="flex items-center gap-2">
                     @if (selectedTask() === task) {
                       <div class="w-2 h-2 rounded-full bg-white shrink-0"></div>
                     }
@@ -1617,6 +1692,80 @@ export class AppComponent implements OnInit {
   toggleJobSearch() {
     this.showJobSearch.update((v) => !v);
   }
+
+  // Task Groups Definition & Expansion State
+  collapsedGroups = signal<Set<string>>(new Set());
+
+  toggleGroupCollapse(groupId: string) {
+    this.collapsedGroups.update((set) => {
+      const next = new Set(set);
+      if (next.has(groupId)) {
+        next.delete(groupId);
+      } else {
+        next.add(groupId);
+      }
+      return next;
+    });
+  }
+
+  isGroupCollapsed(groupId: string): boolean {
+    return this.collapsedGroups().has(groupId);
+  }
+
+  isGroupCompliant(group: { tasks: Task[] }): boolean {
+    return group.tasks.length > 0 && group.tasks.every((t) => this.isTaskCompliant(t));
+  }
+
+  hasGroupRejections(group: { tasks: Task[] }): boolean {
+    return group.tasks.some((t) => this.hasTaskRejections(t));
+  }
+
+  getGroupForTask(task: Task): { id: string; title: string } | null {
+    const name = task.nameFr;
+    if (name.includes("Documents Supplémentaires")) {
+      return null;
+    }
+    if (
+      name.includes("Relevé") ||
+      name.includes("Relevés") ||
+      name.includes("Pièce d'identité") ||
+      name.includes("Certificat de naissance") ||
+      name.includes("Consentement du parent")
+    ) {
+      return { id: "0.1", title: "0.1" };
+    }
+    if (name.includes("MDN 2977")) {
+      return { id: "0.5", title: "0.5" };
+    }
+    return { id: "1.0", title: "1.0" };
+  }
+
+  groupedVisibleTasks = computed(() => {
+    const tasks = this.visibleTasks();
+    const groups: { id: string; title: string; tasks: Task[] }[] = [
+      { id: "0.1", title: "0.1", tasks: [] },
+      { id: "0.5", title: "0.5", tasks: [] },
+      { id: "1.0", title: "1.0", tasks: [] },
+    ];
+    const additionalTasks: Task[] = [];
+
+    for (const task of tasks) {
+      const g = this.getGroupForTask(task);
+      if (!g) {
+        additionalTasks.push(task);
+      } else {
+        const foundGroup = groups.find((grp) => grp.id === g.id);
+        if (foundGroup) {
+          foundGroup.tasks.push(task);
+        }
+      }
+    }
+
+    return {
+      groups: groups.filter((g) => g.tasks.length > 0),
+      additionalTasks,
+    };
+  });
 
   // Signals
   private allTasks = signal<Task[]>(this.dataService.getTasks());
